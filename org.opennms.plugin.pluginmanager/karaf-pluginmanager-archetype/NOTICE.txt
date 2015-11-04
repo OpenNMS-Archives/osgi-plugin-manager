@@ -1,0 +1,5 @@
+OSGi Licence Manager
+Copyright [2015] OpenNMS Group Inc , Entimoss ltd.
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).

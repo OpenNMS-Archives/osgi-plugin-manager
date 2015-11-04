@@ -1,0 +1,38 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+  xsi:schemaLocation="
+		http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+		http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-cm/src/main/resources/org/apache/aries/blueprint/compendium/cm/blueprint-cm-1.1.0.xsd
+		http://www.osgi.org/xmlns/blueprint-ext/v1.1.0 https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-core/src/main/resources/org/apache/aries/blueprint/ext/blueprint-ext.xsd
+	">
+
+  <!-- karaf features service interface -->
+  <reference id="featuresService" interface="org.apache.karaf.features.FeaturesService"/>
+
+
+  <!-- ReST Servelet configuration for jersey -->
+
+  <service interface="javax.servlet.http.HttpServlet">
+    <service-properties>
+      <entry key="alias" value="/featuremgr/rest" />
+    </service-properties>
+    <bean class="com.sun.jersey.spi.container.servlet.ServletContainer">
+      <argument ref="featureManagerRestApplication" />
+    </bean>
+  </service>
+
+  <bean id="featureManagerRestApplication" class="org.opennms.karaf.featuremgr.rest.impl.FeatureManagerRestApplication" destroy-method="destroyMethod"/>
+
+  <!-- ServiceLoader(FeaturesService featuresService) -->
+  <bean id="serviceLoader" class="org.opennms.karaf.featuremgr.rest.impl.ServiceLoader">
+    <argument ref="featuresService" />
+  </bean>
+
+  <!-- Maps in the test resource files for serving basic test pages -->
+  <bean id="testResourceMapping" class="org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping">
+    <property name="alias" value="/featuremgr/diagnostics" />
+    <property name="path" value="/diagnostics" />
+  </bean>
+
+  <service id="testResources" ref="testResourceMapping" interface="org.ops4j.pax.web.extender.whiteboard.ResourceMapping" />
+
+</blueprint>

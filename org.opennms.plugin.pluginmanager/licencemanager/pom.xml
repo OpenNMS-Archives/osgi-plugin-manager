@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.opennms.plugins</groupId>
+    <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>org.opennms.plugin.licencemanager</artifactId>
+  <packaging>bundle</packaging>
+  <name>org.opennms.plugin.licencemanager</name>
+
+  <properties>
+    <bundle.symbolicName>org.opennms.plugin.licencemanager</bundle.symbolicName>
+    <bundle.namespace>org.opennms.karaf</bundle.namespace>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <target>1.8</target>
+          <source>1.8</source>
+        </configuration>
+      </plugin>
+
+      <!-- <plugin> -->
+      <!-- <groupId>org.apache.felix</groupId> -->
+      <!-- <artifactId>maven-bundle-plugin</artifactId> -->
+      <!-- <version>2.5.3</version> -->
+      <!-- <extensions>true</extensions> -->
+      <!-- <configuration> -->
+      <!-- <instructions> -->
+      <!-- <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName> -->
+      <!-- <Bundle-Version>${project.version}</Bundle-Version> -->
+      <!-- <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency> -->
+      <!-- <Export-Package> -->
+      <!-- org.opennms.karaf*;version=${project.version} -->
+      <!-- </Export-Package> -->
+      <!-- <Import-Package> -->
+      <!-- com.sun.ws.rs.ext, -->
+      <!-- org.apache.felix.service.command, -->
+      <!-- org.apache.felix.gogo.commands, -->
+      <!-- org.apache.karaf.shell.console, -->
+      <!-- * -->
+      <!-- </Import-Package> -->
+      <!-- </instructions> -->
+      <!-- </configuration> -->
+      <!-- </plugin> -->
+
+      <plugin>
+        <groupId>org.opennms.maven.plugins</groupId>
+        <artifactId>features-maven-plugin</artifactId>
+        <version>1.2.0</version>
+        <executions>
+          <execution>
+            <id>features.xml</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>generate-features-xml</goal>
+            </goals>
+            <configuration>
+              <bundles>
+                <bundle>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}</bundle>
+              </bundles>
+              <features>
+                <feature>http</feature>
+                <feature>http-whiteboard</feature>
+              </features>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+
+        <configuration>
+          <excludes>
+            <!-- prevent tests running in this package. These are one off development tests -->
+            <exclude>**/org/opennms/karaf/licencemgr/rest/client/test/manual/*.java</exclude>
+          </excludes>
+          <!-- allows tests to run in order with static variable passed between tests -->
+          <reuseForks>false</reuseForks>
+          <forkCount>0</forkCount>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+
+    <!-- karaf / osgi dependencies -->
+    <!-- Note these dependencies match org.apache.karaf.shell.console 2.2.11 -->
+    <!-- Version may need altered for OpenNMS -->
+    <dependency>
+      <groupId>org.apache.karaf.shell</groupId>
+      <artifactId>org.apache.karaf.shell.console</artifactId>
+      <scope>provided</scope>
+      <version>2.2.11</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+      <version>4.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <version>4.2.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Jersey Dependencies -->
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-server</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-servlet</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-core</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+      <version>2.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+</project>

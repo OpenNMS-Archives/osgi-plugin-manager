@@ -1,0 +1,8 @@
+OSGi Licence Manager
+Copyright 2015 OpenNMS Group Inc , Entimoss ltd.
+
+This product includes software developed at:
+
+The Apache Software Foundation (http://www.apache.org/).
+
+base64.js (MIT Licence ) Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2014 OpenNMS Group Inc., Entimoss ltd. -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); -->
+<!-- you may not use this file except in compliance with the License. -->
+<!-- You may obtain a copy of the License at -->
+<!-- -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- -->
+<!-- Unless required by applicable law or agreed to in writing, software -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS, -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and -->
+<!-- limitations under the License. -->
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+  xsi:schemaLocation="
+		http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+		http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-cm/src/main/resources/org/apache/aries/blueprint/compendium/cm/blueprint-cm-1.1.0.xsd
+		http://www.osgi.org/xmlns/blueprint-ext/v1.1.0 https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-core/src/main/resources/org/apache/aries/blueprint/ext/blueprint-ext.xsd
+	">
+
+
+  <!-- load default properties from  org.opennms.features.licencemgr.config.cfg if exists -->
+  <cm:property-placeholder persistent-id="org.opennms.features.licencemgr.config" update-strategy="reload">
+    <cm:default-properties>
+      <!-- local location to persist licence file -->
+      <cm:property name="org.opennms.karaf.licencemanager.licencefile" value="./licenceService.xml" />
+      <!-- if true, will try to download licence list from remote urls -->
+      <cm:property name="org.opennms.karaf.licencemanager.use-remote-licence-managers" value="false" />
+      <!-- comma separated local list of urls to contact remote licence managers -->
+      <!-- in order to download licence list for this system. Urls will be tried in order -->
+      <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers" value="" />
+      <!-- basic authentication username to access remote licence manager -->
+      <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers-username" value="admin" />
+      <!-- basic authentication password to access remote licence manager -->
+      <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers-password" value="admin" />
+    </cm:default-properties>
+  </cm:property-placeholder>
+
+  <!-- licence manager -->
+  <service ref="licenceServiceImpl" interface="org.opennms.karaf.licencemgr.LicenceService" />
+
+  <bean id="licenceServiceImpl" class="org.opennms.karaf.licencemgr.LicenceServiceImpl" init-method="init" destroy-method="close">
+    <property name="fileUri" value="${org.opennms.karaf.licencemanager.licencefile}" />
+    <property name="useRemoteLicenceManagers" value="${org.opennms.karaf.licencemanager.use-remote-licence-managers}" />
+    <property name="remoteLicenceMgrs" value="${org.opennms.karaf.licencemanager.remote-licence-managers}" />
+    <property name="remoteLicenceManagerUserName" value="${org.opennms.karaf.licencemanager.remote-licence-managers-username}" />
+    <property name="remoteLicenceManagerPassword" value="${org.opennms.karaf.licencemanager.remote-licence-managers-password}" />
+  </bean>
+
+  <!-- licence publisher -->
+  <service ref="licencePublisherImpl" interface="org.opennms.karaf.licencepub.LicencePublisher" />
+
+  <bean id="licencePublisherImpl" class="org.opennms.karaf.licencepub.LicencePublisherImpl">
+  </bean>
+
+  <!-- product publisher -->
+  <service ref="productPublisherImpl" interface="org.opennms.karaf.productpub.ProductPublisher" />
+
+  <bean id="productPublisherImpl" class="org.opennms.karaf.productpub.ProductPublisherImpl">
+  </bean>
+
+  <!-- product register -->
+  <service ref="productRegisterImpl" interface="org.opennms.karaf.productpub.ProductRegister" />
+
+  <bean id="productRegisterImpl" class="org.opennms.karaf.productpub.ProductPublisherImpl">
+  </bean>
+
+  <!-- command line commands -->
+  <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+
+    <!-- licence manager service commands -->
+    <command name="licence-mgr/list">
+      <action class="org.opennms.karaf.licencemgr.cmd.ListLicencesCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/listforsystemid">
+      <action class="org.opennms.karaf.licencemgr.cmd.ListLicencesForSystemIdCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/getlicence">
+      <action class="org.opennms.karaf.licencemgr.cmd.GetProductLicenceCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/addlicence">
+      <action class="org.opennms.karaf.licencemgr.cmd.AddLicenceCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/removelicence">
+      <action class="org.opennms.karaf.licencemgr.cmd.RemoveLicenceCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/getsystemid">
+      <action class="org.opennms.karaf.licencemgr.cmd.GetSystemInstanceCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/setsystemid">
+      <action class="org.opennms.karaf.licencemgr.cmd.SetSystemInstanceCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/makesystemid">
+      <action class="org.opennms.karaf.licencemgr.cmd.MakeSystemInstanceCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/checksumForString">
+      <action class="org.opennms.karaf.licencemgr.cmd.ChecksumForStringCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+    <command name="licence-mgr/isauthenticated">
+      <action class="org.opennms.karaf.licencemgr.cmd.IsAuthenticatedProductIdCommand">
+        <property name="licenceService" ref="licenceServiceImpl" />
+      </action>
+    </command>
+
+    <!-- licence publisher service commands -->
+    <command name="licence-pub/createlicence">
+      <action class="org.opennms.karaf.licencepub.cmd.CreateLicenceCommand">
+        <property name="licencePublisher" ref="licencePublisherImpl" />
+      </action>
+    </command>
+    <command name="licence-pub/listspecs">
+      <action class="org.opennms.karaf.licencepub.cmd.ListLicenceSpecsCommand">
+        <property name="licencePublisher" ref="licencePublisherImpl" />
+      </action>
+    </command>
+    <command name="licence-pub/list">
+      <action class="org.opennms.karaf.licencepub.cmd.ListLicenceMetadataCommand">
+        <property name="licencePublisher" ref="licencePublisherImpl" />
+      </action>
+    </command>
+    <command name="licence-pub/getlicencemetadata">
+      <action class="org.opennms.karaf.licencepub.cmd.GetLicenceMetadataCommand">
+        <property name="licencePublisher" ref="licencePublisherImpl" />
+      </action>
+    </command>
+    <command name="licence-pub/getlicencespec">
+      <action class="org.opennms.karaf.licencepub.cmd.GetLicenceSpecCommand">
+        <property name="licencePublisher" ref="licencePublisherImpl" />
+      </action>
+    </command>
+
+    <!-- product publisher service commands -->
+    <command name="product-pub/addproductspec">
+      <action class="org.opennms.karaf.productpub.cmd.AddProductSpecCommand">
+        <property name="productPublisher" ref="productPublisherImpl" />
+      </action>
+    </command>
+    <command name="product-pub/getproductspec">
+      <action class="org.opennms.karaf.productpub.cmd.GetProductSpecCommand">
+        <property name="productPublisher" ref="productPublisherImpl" />
+      </action>
+    </command>
+    <command name="product-pub/list">
+      <action class="org.opennms.karaf.productpub.cmd.ListProductSpecsCommand">
+        <property name="productPublisher" ref="productPublisherImpl" />
+      </action>
+    </command>
+    <command name="product-pub/removeproductspec">
+      <action class="org.opennms.karaf.productpub.cmd.RemoveProductSpecCommand">
+        <property name="productPublisher" ref="productPublisherImpl" />
+      </action>
+    </command>
+
+    <!-- product registry service commands -->
+    <command name="product-reg/addproductspec">
+      <action class="org.opennms.karaf.productreg.cmd.AddRegProductSpecCommand">
+        <property name="productRegister" ref="productRegisterImpl" />
+      </action>
+    </command>
+    <command name="product-reg/getproductspec">
+      <action class="org.opennms.karaf.productreg.cmd.GetRegProductSpecCommand">
+        <property name="productRegister" ref="productRegisterImpl" />
+      </action>
+    </command>
+    <command name="product-reg/list">
+      <action class="org.opennms.karaf.productreg.cmd.ListRegProductSpecsCommand">
+        <property name="productRegister" ref="productRegisterImpl" />
+      </action>
+    </command>
+    <command name="product-reg/removeproductspec">
+      <action class="org.opennms.karaf.productreg.cmd.RemoveRegProductSpecCommand">
+        <property name="productRegister" ref="productRegisterImpl" />
+      </action>
+    </command>
+  </command-bundle>
+
+  <!-- ReST Servelet configuration -->
+
+  <service interface="javax.servlet.http.HttpServlet">
+    <service-properties>
+      <entry key="alias" value="/licencemgr/rest" />
+    </service-properties>
+    <bean class="com.sun.jersey.spi.container.servlet.ServletContainer">
+      <argument ref="licenceManagerRestApplication" />
+    </bean>
+  </service>
+
+  <bean id="licenceManagerRestApplication" class="org.opennms.karaf.licencemgr.rest.impl.LicenceManagerRestApplication" />
+
+  <!-- ServiceLoader(LicenceService licenceService, LicencePublisher licencePublisher, ProductPublisher productPublisher, ProductRegister productRegister ) -->
+  <bean id="serviceLoader" class="org.opennms.karaf.licencemgr.rest.impl.ServiceLoader">
+    <argument ref="licenceServiceImpl" />
+    <argument ref="licencePublisherImpl" />
+    <argument ref="productPublisherImpl" />
+    <argument ref="productRegisterImpl" />
+  </bean>
+
+  <!-- Maps in the test resource files for serving basic test pages -->
+  <bean id="testResourceMapping" class="org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping">
+    <property name="alias" value="/licencemgr/diagnostics" />
+    <property name="path" value="/diagnostics" />
+  </bean>
+
+  <service id="testResources" ref="testResourceMapping" interface="org.ops4j.pax.web.extender.whiteboard.ResourceMapping" />
+
+
+</blueprint>

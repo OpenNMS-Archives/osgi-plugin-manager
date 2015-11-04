@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+## Note the velocity directives have to start after the xml definition line because they
+## create a new line before the xml definition which effects XML parsing
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<product>
+  <!-- productId is expected to contain the name of the product in the form <name>/<version> -->
+  <!-- The productId is used as the feature name for installing into Karaf the top level feature -->
+  <!-- definition of the licensed product such that the feature can be installed using -->
+  <!-- features:install name/version (version is optional) (Karaf 2.4.0) -->
+  <!-- Karaf features can reference dependent features with a range of versions -->
+  <!-- e.g. feature version="[2.5.6,4)" -->
+  <!-- so this allows us to have a single licence which can cover a range of releases of the -->
+  <!-- feature which implements the product. -->
+  <productId>${rootArtifactId}/${version}</productId>
+
+  <!-- featureRepository is expected to contain the url of the features repository -->
+  <!-- which describes the Karaf feature using the concatenated form -->
+  <!-- mvn:<groupId>/<artifactId>/<version>/xml/features -->
+  <!-- such that the repository can be installed using features:addurl (Karaf 2.4.0) -->
+  <!-- e.g. features:addurl mvn:org.apache.camel/camel-example-osgi/2.10.0/xml/features -->
+  <featureRepository>mvn:${groupId}/${rootArtifactId}/${version}/xml/features</featureRepository>
+	
+  <organization>OpenNMS Project</organization>
+  <productDescription>Test product description</productDescription>
+  <productName>test Bundle</productName>
+  <productUrl>http:${symbol_escape}${symbol_escape}opennms.co.uk</productUrl>
+  <licenceKeyRequired>true</licenceKeyRequired>
+  <licenceType>OpenNMS EULA See http:${symbol_escape}${symbol_escape}opennms.co.uk${symbol_escape}EULA</licenceType>
+</product>

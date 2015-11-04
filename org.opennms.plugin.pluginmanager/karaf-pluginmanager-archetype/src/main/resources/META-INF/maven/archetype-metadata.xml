@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
+  name="org.opennms.co.uk.newfeature" xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <fileSets>
+    <!-- filtered files -->
+    <fileSet filtered="true" encoding="UTF-8">
+      <directory></directory>
+      <includes>
+        <include>README.txt</include>
+      </includes>
+    </fileSet>
+    <!-- un-filtered files -->
+    <fileSet encoding="UTF-8">
+      <directory></directory>
+      <includes>
+        <include>.gitignore</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+  <modules>
+    <module name="${rootArtifactId}.licence-generator" id="${rootArtifactId}.licence-generator" dir="licence-generator">
+      <fileSets>
+        <!-- filtered files -->
+        <fileSet filtered="true" encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>src/main/resources/*.xml</include>
+          </includes>
+        </fileSet>
+        <!-- un-filtered files -->
+        <fileSet encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.gitignore</include>
+          </includes>
+        </fileSet>
+      </fileSets>
+    </module>
+
+    <module name="${rootArtifactId}.licence-spec" id="${rootArtifactId}.licence-spec" dir="licence-spec">
+      <fileSets>
+        <!-- filtered files -->
+        <!-- <fileSet filtered="true" encoding="UTF-8"> -->
+        <!-- <directory></directory> -->
+        <!-- <includes> -->
+        <!-- <include>**/*.xml</include> -->
+        <!-- </includes> -->
+        <!-- </fileSet> -->
+        <!-- un-filtered files -->
+        <fileSet encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.gitignore</include>
+          </includes>
+        </fileSet>
+      </fileSets>
+    </module>
+
+    <module name="${rootArtifactId}.licence-authenticator" id="${rootArtifactId}.licence-authenticator" dir="licence-authenticator">
+      <fileSets>
+        <!-- filtered files -->
+        <!-- <fileSet filtered="true" encoding="UTF-8"> -->
+        <!-- <directory></directory> -->
+        <!-- <includes> -->
+        <!-- <include>**/*.xml</include> -->
+        <!-- </includes> -->
+        <!-- </fileSet> -->
+        <!-- un-filtered files -->
+        <fileSet encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.gitignore</include>
+          </includes>
+        </fileSet>
+      </fileSets>
+    </module>
+    
+    <module name="${rootArtifactId}.product-descriptor" id="${rootArtifactId}.product-descriptor" dir="product-descriptor">
+      <fileSets>
+        <!-- filtered files -->
+        <!-- <fileSet filtered="true" encoding="UTF-8"> -->
+        <!-- <directory></directory> -->
+        <!-- <includes> -->
+        <!-- <include>**/*.xml</include> -->
+        <!-- </includes> -->
+        <!-- </fileSet> -->
+        <!-- un-filtered files -->
+        <fileSet encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.gitignore</include>
+          </includes>
+        </fileSet>
+      </fileSets>
+    </module>
+    
+    <module name="${rootArtifactId}" id="${rootArtifactId}" dir="feature">
+      <fileSets>
+        <!-- filtered files -->
+        <!-- <fileSet filtered="true" encoding="UTF-8"> -->
+        <!-- <directory></directory> -->
+        <!-- <includes> -->
+        <!-- <include>**/*.xml</include> -->
+        <!-- </includes> -->
+        <!-- </fileSet> -->
+        <!-- un-filtered files -->
+        <fileSet encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.gitignore</include>
+          </includes>
+        </fileSet>
+      </fileSets>
+    </module>
+
+  </modules>
+
+</archetype-descriptor>

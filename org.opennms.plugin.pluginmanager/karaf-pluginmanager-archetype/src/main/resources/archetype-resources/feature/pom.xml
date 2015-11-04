@@ -1,0 +1,68 @@
+
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>${groupId}</groupId>
+    <artifactId>${rootArtifactId}.parent</artifactId>
+    <version>${version}</version>
+  </parent>
+  
+  <!-- Feature Definition -->
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${rootArtifactId}</artifactId>
+  <name>${rootArtifactId}</name>
+  <description>Feature definition for ${rootArtifactId}</description>
+  <packaging>pom</packaging>
+
+  <build>
+
+    <plugins>
+      <plugin>
+        <groupId>org.opennms.maven.plugins</groupId>
+        <artifactId>features-maven-plugin</artifactId>
+        <version>1.2.0</version>
+        <executions>
+          <execution>
+            <id>features.xml</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>generate-features-xml</goal>
+            </goals>
+            <configuration>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.opennms.project</groupId>
+      <artifactId>${rootArtifactId}.licence-authenticator</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.opennms.project</groupId>
+      <artifactId>${rootArtifactId}.product-descriptor</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+  <pluginRepositories>
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>opennms-repo</id>
+      <name>OpenNMS Repository</name>
+      <url>http://maven.opennms.org/content/groups/opennms.org-release</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>

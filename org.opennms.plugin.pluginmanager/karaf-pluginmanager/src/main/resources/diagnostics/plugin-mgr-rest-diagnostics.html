@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--  Copyright 2014 OpenNMS Group Inc., Entimoss ltd. -->
+<!--  Licensed under the Apache License, Version 2.0 (the "License"); -->
+<!--  you may not use this file except in compliance with the License. -->
+<!--  You may obtain a copy of the License at -->
+<!-- -->
+<!--     http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- -->
+<!--  Unless required by applicable law or agreed to in writing, software -->
+<!--  distributed under the License is distributed on an "AS IS" BASIS, -->
+<!--  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!--  See the License for the specific language governing permissions and -->
+<!--  limitations under the License. -->
+<html>
+<head>
+<title>Plugin Manager Test Page</title>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<!-- https://code.google.com/p/javascriptbase64/ MIT licence -->
+<script src="../diagnostics/base64.js"></script>
+<script>
+	function onLoad() {
+		// default values for test page
+		var user = "admin";
+		var password = "admin";
+		
+		// test pluginId
+		var defaultPluginId="32e396e36b28ef5d-a48ef1cb";
+		
+		var updateremotekarafstateStr="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+				+"<remoteKarafState>\n"
+				+"  <systemId>32e396e36b28ef5d-a48ef1cb</systemId>\n"
+				+"    <installedPlugins>\n"
+				+"      <product>\n"
+				+"        <productId>myproject/1.0-SNAPSHOT</productId>\n"
+				+"        <featureRepository>org.opennms.project/myproject/1.0-SNAPSHOT/xml/features</featureRepository>\n"
+				+"        <productName>test Bundle</productName>\n"
+				+"        <productDescription>Test product description</productDescription>\n"
+				+"        <productUrl>http:\\opennms.co.uk</productUrl>\n"
+				+"        <organization>OpenNMS Project</organization>\n"
+				+"        <licenceType>OpenNMS EULA See http:\\opennms.co.uk\EULA</licenceType>\n"
+				+"        <licenceKeyRequired>true</licenceKeyRequired>\n"
+				+"      </product>\n"
+				+"    </installedPlugins>\n"
+				+"    <installedLicenceList>\n"
+				+"     <licenceList>\n"
+				+"        <licenceEntry>\n"
+				+"          <productId>myproject/1.0-SNAPSHOT</productId>\n"
+				+"          <licenceStr>3C3F786D6C2076657273696F6E3D22312E302220656E636F64696E673D225554462D3822207374616E64616C6F6E653D22796573223F3E3C6C6963656E63654D657461646174613E3C70726F6475637449643E6D7970726F6A6563742F312E302D534E415053484F543C2F70726F6475637449643E3C666561747572655265706F7369746F72793E6F72672E6F70656E6E6D732E70726F6A6563742F6D7970726F6A6563742F312E302D534E415053484F542F786D6C2F66656174757265733C2F666561747572655265706F7369746F72793E3C6C6963656E7365653E637573746F6D6572312C202C202C202C202C202C202C203C2F6C6963656E7365653E3C6C6963656E736F723E4F70656E4E4D5320554B3C2F6C6963656E736F723E3C7374617274446174653E323031352D30392D32395431363A33343A35352E3038302B30313A30303C2F7374617274446174653E3C6475726174696F6E3E3C2F6475726174696F6E3E3C6D617853697A6553797374656D4964733E353C2F6D617853697A6553797374656D4964733E3C73797374656D4964733E3C73797374656D49643E333265333936653336623238656635642D61343865663163623C2F73797374656D49643E3C2F73797374656D4964733E3C6F7074696F6E733E3C6F7074696F6E3E3C6465736372697074696F6E3E7468697320697320746865206465736372697074696F6E206F66206F7074696F6E20313C2F6465736372697074696F6E3E3C6E616D653E6F7074696F6E313C2F6E616D653E3C76616C75653E3C2F76616C75653E3C2F6F7074696F6E3E3C2F6F7074696F6E733E3C2F6C6963656E63654D657461646174613E:6E6FB5B308BDBC42F3A1A03D123963F0AB11A8083FC9DEFF71434D05D20B48E7328A6F4FB940AEE4248D6D82DCD66A3379DAA821C7B51A2FCE630F4F08530D90CCB0377BEABE4D6013FA3E41ABB60E3233C4DCCA3A6EE5E8658F96DB2BD3A13562DE1D0618B54250B148824E128226A5169B24CDBCC4B550111E84D93CDB64653361208FF3312EC71063BBF1F535B326D40065C326A413E633F4F210648D77504AEE42704D8C2FE31291E59AFA2340539ABFFA95BE2F92AEA964AD2F8D1104BEE373008EA172FA81225F3BA1905B927605620E19D094500735C7D9143615413CE83DF64CB0A300DDD860B35A8350A52D1B9F53428EFD8D26ADBEB3CF3B4CA728:32C32F317A8C9DFFBD9064B5361C18D6-f42141a4</licenceStr>\n"
+				+"        </licenceEntry>\n"
+				+"      </licenceList>\n"
+				+"    </installedLicenceList>\n"
+				+"</remoteKarafState>\n";
+
+        // username password default
+		document.getElementById('user').value = user;
+		document.getElementById('password').value = password;
+				
+		//plugin manager
+		document.getElementById('pluginId1').value = defaultPluginId;
+		
+		document.getElementById('updateremotekarafstateEntry').value = updateremotekarafstateStr;
+
+	}
+
+    // uses HTML POST to send an xml message and asynchronouly receive a reply
+	function sendPOSTXMLDoc(postRequest, xmlMessage) {
+
+		//clear response panel
+		document.getElementById("eventResponse").value = "";
+		document.getElementById("httpresponsecode").value = "";
+
+		var user = document.getElementById('user').value;
+		var password = document.getElementById('password').value;
+
+		var xmlhttp;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				document.getElementById("httpresponsecode").value = xmlhttp.status;
+				document.getElementById("eventResponse").value = xmlhttp.responseText;
+			} else if (xmlhttp.readyState == 4) {
+				document.getElementById("httpresponsecode").value = xmlhttp.status;
+				document.getElementById("eventResponse").value = xmlhttp.responseText;
+			}
+		};
+
+		xmlhttp.open("POST", postRequest, true);
+		xmlhttp.setRequestHeader("Content-type", "application/xml");
+		xmlhttp.setRequestHeader("Authorization", "Basic "
+				+ Base64.encode(user + ":" + password));
+		xmlhttp.send(xmlMessage);
+	}
+
+    // uses HTML GET to send an xml message and asynchronouly receive a reply
+	function sendGETXMLDoc(getRequest) {
+
+		//clear response panel
+		document.getElementById("eventResponse").value = "";
+		document.getElementById("httpresponsecode").value = "";
+
+		var user = document.getElementById('user').value;
+		var password = document.getElementById('password').value;
+
+		var xmlhttp;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				document.getElementById("httpresponsecode").value = xmlhttp.status;
+				document.getElementById("eventResponse").value = xmlhttp.responseText;
+			} else if (xmlhttp.readyState == 4) {
+				document.getElementById("httpresponsecode").value = xmlhttp.status;
+				document.getElementById("eventResponse").value = xmlhttp.responseText;
+			}
+		};
+
+		xmlhttp.open("GET", getRequest, true);
+		xmlhttp.setRequestHeader("Content-type", "application/xml");
+		xmlhttp.setRequestHeader("Authorization", "Basic "
+				+ Base64.encode(user + ":" + password));
+		xmlhttp.send();
+	}
+
+	function updateremotekarafstate() {
+		var postRequest = "../rest/updateremotekarafstate"
+		var xmlMessage = document.getElementById('updateremotekarafstateEntry').value;
+		sendPOSTXMLDoc(postRequest, xmlMessage);
+	}
+	
+</script>
+<!-- This positions the response text always visible on the right when scrolling -->
+<style type="text/css">
+#main-container {
+    width:990px; 
+    font-size:xx-small;
+}
+#left-column {
+    width:500px;
+    float:left;
+    margin-left: 15px;
+}
+#right-column {
+    position: fixed;
+	left: 850px;
+    top:  20px;
+}
+
+</style>
+</head>
+<body onload="onLoad()">
+<div id="main-container">
+ <div id="left-column">
+	<h1>Plugin Manager ReST Test Page</h1>
+	<p>This page provides very simple tests for the plugin manager service</p>
+
+	<form name="usrform">
+		<input type="text" id="user"> user (http basic authentication
+		user name)<BR>
+		<input type="text" id="password"> password
+		(http basic authentication password)<BR>
+	</form>
+
+	<h2>Plugin Manager</h2>
+	<p>The Plugin Manager service manages plugin installs in remote karaf instances .</p>
+
+	<table border=1>
+		<tr>
+			<th style="width: 300px">Command</th>
+			<th style="width: 300px">Example</th>
+		</tr>
+		<tr>
+			<td>/manifest-list (GET systemId)
+				<p>returns manifest list of product specs to install for a given systemId if found</p>
+			</td>
+			<td>URL Command Example:<BR><a href="../rest/manifest-list?systemId=">[baseUrl:port]/pluginmgr/rest/rest/manifest-list?systemId=</a>
+			<BR><BR>Button command Example:<BR>
+			<input type="text" id="pluginId1" form="usrform" style="width: 500px; "> productId<BR><BR>
+			<button type="button" onclick="sendGETXMLDoc('../rest/manifest-list?systemId='+document.getElementById('pluginId1').value)">Get Product Manifest for systemId </button>
+			</td>
+		</tr>
+				<tr>
+			<td>/updateremotekarafstate (POST RemoteKarafState)
+				<p>Updates the karaf state known to the plugin manager using a RemoteKarafState xml message.<br>
+				remoteKarafState contains the following xml elements<br>
+                String systemId - the systemId of the remote karaf instance updating its state<br> 
+                installedPlugins - a list of product specs of installed plugins including licenceAuthenticated state<br>
+                installedLicenceList - list of licences installed in remote karaf. If null, it should be ignored <br>
+                (if null it should be ignored - i.e. a null entry indicates do not change the installedLicenceList in the plugin manager)<br>
+                </p>
+                <p>http://localhost:8980/opennms/pluginmgr/rest/updateremotekarafstate</p>
+			</td>
+			<td>
+				<p>remote karaf state</p> 
+				<textarea rows="15" cols="75"
+					id="updateremotekarafstateEntry" form="usrform" style="resize: none;"></textarea>
+				<button type="button" onclick="updateremotekarafstate()">Update Remote Karaf State</button>
+			</td>
+		</tr>
+		
+	</table>
+</div> 
+
+ <div id="right-column">
+	<h2>Command Response</h2>
+	<h3>Http response code</h3>
+	<textarea rows="1" cols="10" id="httpresponsecode"
+		style="resize: none;"></textarea>
+	<h3>Http response content</h3>
+	<textarea rows="20" cols="50" id="eventResponse" ></textarea>
+	<BR>
+</div>
+
+</div>
+</body>
+</html>
