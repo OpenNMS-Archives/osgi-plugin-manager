@@ -26,9 +26,9 @@
 	</properties>
 
 	<modules>
-        <module>licencemanager</module>
-        <module>featuremanager</module>
-        <module>karaf-pluginmanager-archetype</module>
+		<module>licencemanager</module>
+		<module>featuremanager</module>
+		<module>karaf-pluginmanager-archetype</module>
 		<module>pluginmanager-core</module>
 		<module>karaf-pluginmanager</module>
 	</modules>
@@ -294,20 +294,6 @@
 	</dependencyManagement>
 
 
-
-	<!-- Change this to match your repo for the licenced product modules (i.e. 
-		containing the authenticator) -->
-	<distributionManagement>
-		<repository>
-			<id>osgi-licenced-products</id>
-			<url>http://devel2.entimoss.org:8081/nexus/content/repositories/osgi-licenced-products</url>
-		</repository>
-		<snapshotRepository>
-			<id>osgi-licenced-products-snapshots</id>
-			<url>http://devel2.entimoss.org:8081/nexus/content/repositories/osgi-licenced-products-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<repositories>
 		<repository>
 			<id>vaadin-snapshots</id>
@@ -360,5 +346,23 @@
 			<url>http://maven.opennms.org/content/groups/opennms.org-release</url>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<distributionManagement>
+		<site>
+			<id>opennms-site</id>
+			<name>OpenNMS Build Website</name>
+			<url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/sites/opennms/${project.version}/</url>
+		</site>
+		<repository>
+			<id>opennms-repo</id>
+			<name>OpenNMS Maven Repository</name>
+			<url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>opennms-snapshots</id>
+			<name>OpenNMS Snapshot Maven Repository</name>
+			<url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

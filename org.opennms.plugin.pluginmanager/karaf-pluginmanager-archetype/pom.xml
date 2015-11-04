@@ -39,15 +39,5 @@
     </pluginManagement>
   </build>
 
-  <distributionManagement>
-    <repository>
-      <id>osgi-licenced-products</id>
-      <url>http://devel2.entimoss.org:8081/nexus/content/repositories/osgi-licenced-products</url>
-    </repository>
-    <snapshotRepository>
-      <id>osgi-licenced-products-snapshots</id>
-      <url>http://devel2.entimoss.org:8081/nexus/content/repositories/osgi-licenced-products-snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
   
 </project>
