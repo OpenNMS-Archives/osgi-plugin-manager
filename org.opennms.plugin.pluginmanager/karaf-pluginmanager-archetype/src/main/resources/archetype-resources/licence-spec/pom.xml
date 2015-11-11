@@ -10,7 +10,7 @@
 
   <!-- LicenceSpec -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId> ${rootArtifactId}.licence-spec</artifactId>
+  <artifactId>${rootArtifactId}.licence-spec</artifactId>
   <name>${rootArtifactId}.licence-spec</name>
   <description>LicenceSpec for ${rootArtifactId}</description>
   <packaging>bundle</packaging>
