@@ -52,6 +52,8 @@
         </configuration>
       </plugin>
       
+      <!-- We copy the diagnostics resources directly into this bundle since     -->
+      <!-- pax-web DefaultResources cannot expose resources on the class path    -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
