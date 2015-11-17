@@ -78,7 +78,7 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 		
 		// Handle the installPluginButton events with an anonymous class
 		uninstallPluginButton.addClickListener(new Button.ClickListener() {

@@ -43,6 +43,8 @@ import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.ProductRegisterClient
 
 public class PluginManagerImpl implements PluginManager {
 
+
+
 	private static String PRODUCT_PUB_BASE_PATH = "/licencemgr/rest/product-pub";
 	private static String PRODUCT_REG_BASE_PATH = "/licencemgr/rest/product-reg";
 
@@ -54,6 +56,16 @@ public class PluginManagerImpl implements PluginManager {
 	private String fileUri="./pluginmodeldata.xml";
 
 	private PluginModelJaxb pluginModelJaxb = new PluginModelJaxb();
+	
+	// default local values for local karaf system
+	// can be set from blueprint config
+	private String localKarafInstanceName="localhost";
+	private String localKarafInstanceUserName="admin";
+	private String localKarafInstancePassword="admin";
+	private String localKarafInstanceUrl="http://localhost:8980/opennms";
+	private boolean localRemoteIsAccessible=true;
+	private boolean localAllowUpdateMessages=false;
+
 
 	/**
 	 * fileUri is the location of the persisted plugin data
@@ -69,6 +81,54 @@ public class PluginManagerImpl implements PluginManager {
 	 */
 	public void setFileUri(String fileUri) {
 		this.fileUri = fileUri;
+	}
+	
+	public String getLocalKarafInstanceName() {
+		return localKarafInstanceName;
+	}
+
+	public void setLocalKarafInstanceName(String localKarafInstanceName) {
+		this.localKarafInstanceName = localKarafInstanceName;
+	}
+
+	public String getLocalKarafInstanceUserName() {
+		return localKarafInstanceUserName;
+	}
+
+	public void setLocalKarafInstanceUserName(String localKarafInstanceUserName) {
+		this.localKarafInstanceUserName = localKarafInstanceUserName;
+	}
+
+	public String getLocalKarafInstancePassword() {
+		return localKarafInstancePassword;
+	}
+
+	public void setLocalKarafInstancePassword(String localKarafInstancePassword) {
+		this.localKarafInstancePassword = localKarafInstancePassword;
+	}
+
+	public String getLocalKarafInstanceUrl() {
+		return localKarafInstanceUrl;
+	}
+
+	public void setLocalKarafInstanceUrl(String localKarafInstanceUrl) {
+		this.localKarafInstanceUrl = localKarafInstanceUrl;
+	}
+
+	public boolean getLocalRemoteIsAccessible() {
+		return localRemoteIsAccessible;
+	}
+
+	public void setLocalRemoteIsAccessible(boolean localRemoteIsAccessible) {
+		this.localRemoteIsAccessible = localRemoteIsAccessible;
+	}
+
+	public boolean getLocalAllowUpdateMessages() {
+		return localAllowUpdateMessages;
+	}
+
+	public void setLocalAllowUpdateMessages(boolean localAllowUpdateMessages) {
+		this.localAllowUpdateMessages = localAllowUpdateMessages;
 	}
 
 
@@ -159,17 +219,16 @@ public class PluginManagerImpl implements PluginManager {
 		SortedMap<String, KarafManifestEntryJaxb> karafInstances = pluginModelJaxb.getKarafManifestEntryMap();
 
 		// creates a localhost entry if doesn't exist in karafInstances
-		// TODO SET DEFAULTS IN BLUEPRINT
-		if (! karafInstances.containsKey("localhost")){
+		if (! karafInstances.containsKey(localKarafInstanceName)){
 			KarafManifestEntryJaxb localhostManifest= new KarafManifestEntryJaxb();
-			localhostManifest.setKarafInstanceName("localhost");
-			localhostManifest.setKarafInstanceUserName("admin");
-			localhostManifest.setKarafInstancePassword("admin");
-			localhostManifest.setKarafInstanceUrl("http://localhost:8980/opennms");
-			localhostManifest.setRemoteIsAccessible(true);
-			localhostManifest.setAllowUpdateMessages(false);
 
-			karafInstances.put("localhost",localhostManifest);
+			localhostManifest.setKarafInstanceName(localKarafInstanceName);
+			localhostManifest.setKarafInstanceUserName(localKarafInstanceUserName);
+			localhostManifest.setKarafInstancePassword(localKarafInstancePassword);
+			localhostManifest.setKarafInstanceUrl(localKarafInstanceUrl);
+			localhostManifest.setRemoteIsAccessible(localRemoteIsAccessible);
+			localhostManifest.setAllowUpdateMessages(localAllowUpdateMessages);
+			karafInstances.put(localKarafInstanceName,localhostManifest);
 			persist();
 		}
 

@@ -74,7 +74,7 @@ public class InstalledLicencesControlsPanel extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 		// Handle the installPluginButton events with an anonymous class
 		uninstallLicenceButton.addClickListener(new Button.ClickListener() {
 			private static final long serialVersionUID = 1L;

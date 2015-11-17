@@ -148,7 +148,7 @@ public class SimpleInstanceListEditor extends InstanceListEditor  {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 
 		// karaf select panel
 		karafListSelect.setRows(KARAF_LIST_SELECT_ROWS); 	// Show n items and a scrollbar if there are more

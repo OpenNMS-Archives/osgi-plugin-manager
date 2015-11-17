@@ -78,7 +78,7 @@ public class LicenceDescriptorTablePanel extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 		
 		licenceListSelect.setRows(LICENCE_LIST_SELECT_ROWS); 	// Show n items and a scrollbar if there are more
 		licenceListSelect.setNullSelectionAllowed(false);

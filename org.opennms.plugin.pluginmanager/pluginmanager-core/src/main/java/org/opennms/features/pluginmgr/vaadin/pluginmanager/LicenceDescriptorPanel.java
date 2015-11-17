@@ -106,7 +106,7 @@ public class LicenceDescriptorPanel extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 	}
 
 	/**

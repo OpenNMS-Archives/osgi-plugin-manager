@@ -333,7 +333,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 		setCompositionRoot(mainLayout);
 
 
-		// TODO add user code here
+		// manually add user code here
 		systemMessages.setMessageTextArea(this.systemMessagesTextArea);
 		
 		seeFullMessageButton.addClickListener(new ClickListener() {

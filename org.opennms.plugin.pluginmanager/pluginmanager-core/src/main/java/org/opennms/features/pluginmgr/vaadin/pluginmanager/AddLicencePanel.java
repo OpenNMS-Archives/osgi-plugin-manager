@@ -70,7 +70,7 @@ public class AddLicencePanel extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 
 		// Handle the verifyLicenceButton events with an anonymous class
 		verifyLicenceButton.addClickListener(new Button.ClickListener() {

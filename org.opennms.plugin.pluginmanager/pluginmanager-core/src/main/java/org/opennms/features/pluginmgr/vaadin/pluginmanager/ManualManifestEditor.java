@@ -100,7 +100,7 @@ public class ManualManifestEditor extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 		productMetadata.setProductDescription("USER ADDED PLUGIN MANIFEST");
 		
 		ProductDescriptorPanel productDescriptorPanel = new ProductDescriptorPanel();

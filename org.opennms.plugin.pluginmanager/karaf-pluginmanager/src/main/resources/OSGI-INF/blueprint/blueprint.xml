@@ -54,6 +54,13 @@
     <property name="pluginServerPassword" value="${pluginServerPassword}" />
     <property name="pluginServerUrl" value="${pluginServerUrl}" />
     <property name="licenceShoppingCartUrl" value="${licenceShoppingCartUrl}" />
+    <!-- default local values for local karaf system if no pluginmodeldata.xml -->
+    <property name="localKarafInstanceName" value="${localKarafInstanceName}" />
+    <property name="localKarafInstanceUserName" value="${localKarafInstanceUserName}" />
+    <property name="localKarafInstanceUserName" value="${localKarafInstanceUserName}" />
+    <property name="localKarafInstanceUrl" value="${localKarafInstanceUrl}" />
+    <property name="localRemoteIsAccessible" value="${localRemoteIsAccessible}" />
+    <property name="localAllowUpdateMessages" value="${localAllowUpdateMessages}" />
   </bean>
   
 
@@ -127,6 +134,13 @@
       <cm:property name="pluginServerPassword" value="admin" />
       <cm:property name="pluginServerUrl" value="http://localhost:8081" />
       <cm:property name="licenceShoppingCartUrl" value="http://opennms.org" />
+      <!-- default local values for local karaf system if no pluginmodeldata.xml -->
+      <cm:property name="localKarafInstanceName" value="localhost" />
+      <cm:property name="localKarafInstanceUserName" value="admin" />
+      <cm:property name="localKarafInstancePassword" value="admin" />
+      <cm:property name="localKarafInstanceUrl" value="http://localhost:8081" />
+      <cm:property name="localRemoteIsAccessible" value="true" />
+      <cm:property name="localAllowUpdateMessages" value="false" />
     </cm:default-properties>
   </cm:property-placeholder>
 

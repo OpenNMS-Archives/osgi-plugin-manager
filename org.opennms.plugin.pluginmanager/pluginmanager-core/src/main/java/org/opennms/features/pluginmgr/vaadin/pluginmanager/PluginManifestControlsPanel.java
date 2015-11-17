@@ -84,7 +84,7 @@ public class PluginManifestControlsPanel extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 		
 		// Handle the removeManifestPluginButton events with an anonymous class
 		removeManifestPluginButton.addClickListener(new Button.ClickListener() {

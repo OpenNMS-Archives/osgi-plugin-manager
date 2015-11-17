@@ -76,7 +76,7 @@ public class ProductDescriptorTablePanel extends CustomComponent {
 		buildMainLayout();
 		setCompositionRoot(mainLayout);
 
-		// TODO add user code here
+		// manually add user code here
 
 		productListSelect.setRows(PRODUCT_LIST_SELECT_ROWS); 	// Show n items and a scrollbar if there are more
 		productListSelect.setNullSelectionAllowed(false);
