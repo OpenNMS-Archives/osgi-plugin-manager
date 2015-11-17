@@ -42,9 +42,9 @@ This project is licenced under the Apache 2 licence to provide a widely reusable
 This project, written as a PHP plugin for Wordpress is an extension to the Wordpress Easy Digital Downloads shopping cart (https://easydigitaldownloads.com/). It adds the ability to sell/purchase and generate licences for licenced plugins.
 This project is licenced under the GPL to match the licence regime of Wordpress and Easy Digital Downloads
 
-### org.opennms.plugin.opennms-pluginmanager
-This is a project which integrates the plugin management system into OpenNMS. This module is temporarily hosted here but will eventually be fully integrated into the OpenNMS build. 
-This project is licenced under the AGPL to match the licence regime of OpenNMS
+### vaadin-opennms-pluginmanager
+This is a project which integrates the plugin management system into OpenNMS. This module is hosted within the OpenNMS build under
+opennms/features/vaadin-opennms-pluginmanager
 
 
 
