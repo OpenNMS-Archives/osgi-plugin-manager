@@ -133,7 +133,7 @@
 	}
 
 	function updateremotekarafstate() {
-		var postRequest = "../rest/updateremotekarafstate"
+		var postRequest = "../rest/v1-0/updateremotekarafstate"
 		var xmlMessage = document.getElementById('updateremotekarafstateEntry').value;
 		sendPOSTXMLDoc(postRequest, xmlMessage);
 	}
@@ -183,10 +183,10 @@
 			<td>/manifest-list (GET systemId)
 				<p>returns manifest list of product specs to install for a given systemId if found</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/manifest-list?systemId=">[baseUrl:port]/pluginmgr/rest/rest/manifest-list?systemId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/manifest-list?systemId=">[baseUrl:port]/pluginmgr/rest/v1-0/rest/v1-0/manifest-list?systemId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="pluginId1" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/manifest-list?systemId='+document.getElementById('pluginId1').value)">Get Product Manifest for systemId </button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/manifest-list?systemId='+document.getElementById('pluginId1').value)">Get Product Manifest for systemId </button>
 			</td>
 		</tr>
 				<tr>
@@ -198,7 +198,7 @@
                 installedLicenceList - list of licences installed in remote karaf. If null, it should be ignored <br>
                 (if null it should be ignored - i.e. a null entry indicates do not change the installedLicenceList in the plugin manager)<br>
                 </p>
-                <p>http://localhost:8980/opennms/pluginmgr/rest/updateremotekarafstate</p>
+                <p>http://localhost:8980/opennms/pluginmgr/rest/v1-0/updateremotekarafstate</p>
 			</td>
 			<td>
 				<p>remote karaf state</p> 

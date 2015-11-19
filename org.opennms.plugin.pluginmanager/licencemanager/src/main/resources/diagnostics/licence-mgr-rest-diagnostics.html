@@ -185,25 +185,25 @@
 
     // page specific post requests
 	function publishProductspec() {
-		var postRequest = "../rest/product-pub/addproductspec"
+		var postRequest = "../rest/v1-0/product-pub/addproductspec"
 		var xmlMessage = document.getElementById('publishProductMetadata').value;
 		sendPOSTXMLDoc(postRequest, xmlMessage);
 	}
 	
 	function registerProductspec() {
-		var postRequest = "../rest/product-reg/addproductspec"
+		var postRequest = "../rest/v1-0/product-reg/addproductspec"
 		var xmlMessage = document.getElementById('registerProductMetadata').value;
 		sendPOSTXMLDoc(postRequest, xmlMessage);
 	}
 
 	function createlicence() { 
-		var postRequest = "../rest/licence-pub/createlicence"
+		var postRequest = "../rest/v1-0/licence-pub/createlicence"
 		var xmlMessage = document.getElementById('createlicenceMetadata').value;
 		sendPOSTXMLDoc(postRequest, xmlMessage);
 	}
 
 	function addlicencespec() {
-		var postRequest = "../rest/licence-pub/addlicencespec"
+		var postRequest = "../rest/v1-0/licence-pub/addlicencespec"
 		var xmlMessage = document.getElementById('addLicenceSpec').value;
 		sendPOSTXMLDoc(postRequest, xmlMessage);
 	}
@@ -273,20 +273,20 @@
 			<td>/removeproductspec (GET productId)
 				<p>Checks the productId removes any entry for productId</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/product-pub/removeproductspec?productId=">[baseUrl:port]/licencemgr/rest/product-pub/removeproductspec?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-pub/removeproductspec?productId=">[baseUrl:port]/licencemgr/rest/v1-0/product-pub/removeproductspec?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="removeproductspecpubId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/product-pub/removeproductspec?productId='+document.getElementById('removeproductspecpubId').value)">Remove Product Specification from Publisher </button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/product-pub/removeproductspec?productId='+document.getElementById('removeproductspecpubId').value)">Remove Product Specification from Publisher </button>
 			</td>
 		</tr>
 		<tr>
 			<td>/getproductspec (GET productId)
 				<p>returns product description for productId if found</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/product-pub/getproductspec?productId=">[baseUrl:port]/licencemgr/rest/product-pub/getproductspec?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-pub/getproductspec?productId=">[baseUrl:port]/licencemgr/rest/v1-0/product-pub/getproductspec?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="getproductspecpubId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/product-pub/getproductspec?productId='+document.getElementById('getproductspecpubId').value)">Get Product Specification from Publisher </button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/product-pub/getproductspec?productId='+document.getElementById('getproductspecpubId').value)">Get Product Specification from Publisher </button>
 			</td>
 		</tr>
 		<tr>
@@ -294,16 +294,16 @@
 				<p>returns a map of product description entries with
 					key=productId</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/product-pub/list">[baseUrl:port]/licencemgr/rest/product-pub/list</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-pub/list">[baseUrl:port]/licencemgr/rest/v1-0/product-pub/list</a>
 			<BR><BR>Button command Example:<BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/product-pub/list')">List Product Specifications installed in Publisher </button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/product-pub/list')">List Product Specifications installed in Publisher </button>
 			</td>
 		</tr>
 		<tr>
 			<td>/clearproductspecs (GET )
 				<p>Deletes all product descriptions. Will only delete descriptions if paramater confirm=true</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/product-pub/clearproductspecs?confirm=false">[baseUrl:port]/licencemgr/rest/product-pub/clearproductspecs?confirm=false</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-pub/clearproductspecs?confirm=false">[baseUrl:port]/licencemgr/rest/v1-0/product-pub/clearproductspecs?confirm=false</a>
 			<BR><BR>Button command Example: Not provided to prevent accidental deletion - use URL<BR>
 		</tr>
 	</table>
@@ -363,10 +363,10 @@
 			<td>/removelicencespec (GET productId)
 				<p>removes the entry for productId from the licenceSpecMap</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-pub/removelicencespec?productId=">[baseUrl:port]/licencemgr/rest/licence-pub/removelicencespec?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-pub/removelicencespec?productId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-pub/removelicencespec?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="removelicencespecpubId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-pub/removelicencespec?productId='+document.getElementById('removelicencespecpubId').value)">Remove Licence Publisher Licence Specification</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-pub/removelicencespec?productId='+document.getElementById('removelicencespecpubId').value)">Remove Licence Publisher Licence Specification</button>
              </td>
 		</tr>
 		<tr>
@@ -374,10 +374,10 @@
 				<p>the LicenceSpecification stored for productId. Returns error
 					message if no LicenceSpecification found for productId</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-pub/getlicencespec?productId=">[baseUrl:port]/licencemgr/rest/licence-pub/getlicencespec?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-pub/getlicencespec?productId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-pub/getlicencespec?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="getlicencespecpubId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-pub/getlicencespec?productId='+document.getElementById('getlicencespecpubId').value)">Get Licence Publisher Licence Specification</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-pub/getlicencespec?productId='+document.getElementById('getlicencespecpubId').value)">Get Licence Publisher Licence Specification</button>
              </td>
 		</tr>
 		<tr>
@@ -385,35 +385,35 @@
 				<p>the LicenceSpecification stored for productId. Returns error
 					message if no LicenceSpecification found for productId</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-pub/getlicencemetadataspec?productId=">[baseUrl:port]/licencemgr/rest/licence-pub/getlicencemetadataspec?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-pub/getlicencemetadataspec?productId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-pub/getlicencemetadataspec?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="getlicencemetadataspecpubId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-pub/getlicencemetadataspec?productId='+document.getElementById('getlicencemetadataspecpubId').value)">Get Licence Publisher Licence Metadata Specification</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-pub/getlicencemetadataspec?productId='+document.getElementById('getlicencemetadataspecpubId').value)">Get Licence Publisher Licence Metadata Specification</button>
              </td>
 		</tr>
 		<tr>
 			<td>/listspecs (GET )
 				<p>returns a list of the LicenceSpecifications (including the keys)</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-pub/listspecs">[baseUrl:port]/licencemgr/rest/licence-pub/listspecs</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-pub/listspecs">[baseUrl:port]/licencemgr/rest/v1-0/licence-pub/listspecs</a>
 			<BR><BR>Button command Example:<BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-pub/listspecs')">List Licence Publisher Licence Specifications</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-pub/listspecs')">List Licence Publisher Licence Specifications</button>
 			</td>
 		</tr>
 		<tr>
 			<td>/list (GET )
 				<p>returns a list of the LicenceMetadata specifications (not the full licence specs with keys)</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-pub/list">[baseUrl:port]/licencemgr/rest/licence-pub/list</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-pub/list">[baseUrl:port]/licencemgr/rest/v1-0/licence-pub/list</a>
 			<BR><BR>Button command Example:<BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-pub/list')">List Licence Publisher Licence Metadata Specifications</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-pub/list')">List Licence Publisher Licence Metadata Specifications</button>
 			</td>
 		</tr>
 		<tr>
 			<td>/clearlicencespecs (GET )
 				<p>deletes all values of the licenceSpecMap. Will only delete specs if paramater confirm=true</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-pub/clearlicencespecs?confirm=false">[baseUrl:port]/licencemgr/rest/licence-pub/clearlicencespecs?confirm=false</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-pub/clearlicencespecs?confirm=false">[baseUrl:port]/licencemgr/rest/v1-0/licence-pub/clearlicencespecs?confirm=false</a>
 			<BR><BR>Button command Example: Not provided to prevent accidental deletion - use URL<BR>
 			</td>
 		</tr>
@@ -444,34 +444,34 @@
 			<td>/removeproductspec (GET productId)
 				<p>Same as command in Product Publisher</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/product-reg/removeproductspec?productId=">[baseUrl:port]/licencemgr/rest/product-reg/removeproductspec?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-reg/removeproductspec?productId=">[baseUrl:port]/licencemgr/rest/v1-0/product-reg/removeproductspec?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="removeproductspecregId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/product-reg/removeproductspec?productId='+document.getElementById('removeproductspecregId').value)">Remove Registered Product Specification</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/product-reg/removeproductspec?productId='+document.getElementById('removeproductspecregId').value)">Remove Registered Product Specification</button>
              </td>
 		</tr>
 		<tr>
 			<td>/getproductspec (GET productId)
 				<p>Same as command in Product Publisher</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/product-reg/getproductspec?productId=">[baseUrl:port]/licencemgr/rest/product-reg/getproductspec?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-reg/getproductspec?productId=">[baseUrl:port]/licencemgr/rest/v1-0/product-reg/getproductspec?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="getproductspecregId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/product-reg/getproductspec?productId='+document.getElementById('getproductspecregId').value)">Get Registered Product Specification</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/product-reg/getproductspec?productId='+document.getElementById('getproductspecregId').value)">Get Registered Product Specification</button>
              </td>
 		</tr>
 		<tr>
 			<td>/list (GET )</td>
-			<td>URL Command Example:<BR><a href="../rest/product-reg/list">[baseUrl:port]/licencemgr/rest/product-reg/list</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-reg/list">[baseUrl:port]/licencemgr/rest/v1-0/product-reg/list</a>
 			<BR><BR>Button command Example:<BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/product-reg/list')">List Registered Product Specifications</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/product-reg/list')">List Registered Product Specifications</button>
 			</td>
 		</tr>
 		<tr>
 			<td>/clearproductspecs (GET )
 				<p>Same as command in Product Publisher.  Will only delete licences if paramater confirm=true</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/product-reg/clearproductspecs?confirm=false">[baseUrl:port]/licencemgr/rest/product-reg/clearproductspecs?confirm=false</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/product-reg/clearproductspecs?confirm=false">[baseUrl:port]/licencemgr/rest/v1-0/product-reg/clearproductspecs?confirm=false</a>
 			<BR><BR>Button command Example: Not provided to prevent accidental deletion - use URL<BR>
 			</td>
 	</table>
@@ -500,32 +500,32 @@
 					for productId corresponding to the productId in the LicenceMetadata
 					previous entries for that productId are overwritten</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/addlicence?licence=">[baseUrl:port]/licencemgr/rest/licence-mgr/addlicence?licence=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/addlicence?licence=">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/addlicence?licence=</a>
 			<BR><BR>Button command Example:<BR>
 <!-- 			<input type="textarea" id="addlicence" form="usrform" style="width: 500px; "> Licence String<BR><BR> -->
 			 Licence String<BR><BR>
 			<textarea rows="25" cols="60" id="addlicence" form="usrform"></textarea>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/addlicence?licence='+document.getElementById('addlicence').value)">Licence Manager Add Licence</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/addlicence?licence='+document.getElementById('addlicence').value)">Licence Manager Add Licence</button>
              </td>
 		</tr>
 		<tr>
 			<td>/removelicence (GET productId)
 				<p>removes any licence corresponding to productId.</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/removelicence?productId=">[baseUrl:port]/licencemgr/rest/licence-mgr/removelicence?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/removelicence?productId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/removelicence?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="removelicenceId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/removelicence?productId='+document.getElementById('removelicenceId').value)">Licence Manager Remove Licence</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/removelicence?productId='+document.getElementById('removelicenceId').value)">Licence Manager Remove Licence</button>
              </td>
 		</tr>
 		<tr>
 			<td>/getlicence (GET productId)
 				<p>gets the licence corresponding to the productId</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/getlicence?productId=">[baseUrl:port]/licencemgr/rest/licence-mgr/getlicence?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/getlicence?productId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/getlicence?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="getlicenceId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/getlicence?productId='+document.getElementById('getlicenceId').value)">Licence Manager Get Licence</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/getlicence?productId='+document.getElementById('getlicenceId').value)">Licence Manager Get Licence</button>
              </td>
 		</tr>
 		<tr>
@@ -533,10 +533,10 @@
 				<p>checks if the licence corresponding to the productId is authenticated</p>
 				<p>Throws 400 error if licence not installed for this productId</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/isauthenticated?productId=">[baseUrl:port]/licencemgr/rest/licence-mgr/isauthenticated?productId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/isauthenticated?productId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/isauthenticated?productId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="getisAuthenticatedId" form="usrform" style="width: 500px; "> productId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/isauthenticated?productId='+document.getElementById('getisAuthenticatedId').value)">Licence Manager Check Licence Is Authenticated</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/isauthenticated?productId='+document.getElementById('getisAuthenticatedId').value)">Licence Manager Check Licence Is Authenticated</button>
              </td>
 		</tr>
 		<tr>
@@ -544,9 +544,9 @@
 				<p>returns a map of all installed licences with key=productId
 					and value = licence string</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/list">[baseUrl:port]/licencemgr/rest/licence-mgr/list</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/list">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/list</a>
 			<BR><BR>Button command Example:<BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/list')">Licence Manager Get Installed Licences</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/list')">Licence Manager Get Installed Licences</button>
 			</td>
 		</tr>
 		<tr>
@@ -554,10 +554,10 @@
 				<p>returns a map of all installed licences which will authenticate for given systemId 
 				with key=productId and value = licence string</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/listforsystemid?systemId=">[baseUrl:port]/licencemgr/rest/licence-mgr/listforsystemid?systemId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/listforsystemid?systemId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/listforsystemid?systemId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="listLicencesSystemId" form="usrform" style="width: 500px; "> systemId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/listforsystemid?systemId='+document.getElementById('listLicencesSystemId').value)">Licence Manager List licences for systemId</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/listforsystemid?systemId='+document.getElementById('listLicencesSystemId').value)">Licence Manager List licences for systemId</button>
 			</td>
 		</tr>
 		<tr>
@@ -565,7 +565,7 @@
 				<p>deletes all licence entries. Will only delete licences if paramater confirm=true
 				<p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/clearlicences?confirm=false">[baseUrl:port]/licencemgr/rest/licence-mgr/clearlicences?confirm=false</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/clearlicences?confirm=false">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/clearlicences?confirm=false</a>
 			<BR><BR>Button command Example: Not provided to prevent accidental deletion - use URL<BR>
 			</td>
 		</tr>
@@ -573,9 +573,9 @@
 			<td>/getsystemid (GET )
 				<p>gets the systemId for this system</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/getsystemid">[baseUrl:port]/licencemgr/rest/licence-mgr/getsystemid</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/getsystemid">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/getsystemid</a>
 			<BR><BR>Button command Example:<BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/getsystemid')">Licence Manager Get System ID</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/getsystemid')">Licence Manager Get System ID</button>
 			</td>
 		</tr>
 		<tr>
@@ -583,10 +583,10 @@
 				<p>sets the systemId. Note that the checksum for the systemId
 					must be correct</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/setsystemid?systemId=">[baseUrl:port]/licencemgr/rest/licence-mgr/setsystemid?systemId=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/setsystemid?systemId=">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/setsystemid?systemId=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="systemId" form="usrform" style="width: 500px; "> systemId<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/setsystemid?systemId='+document.getElementById('systemId').value)">Licence Manager Set SystemId</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/setsystemid?systemId='+document.getElementById('systemId').value)">Licence Manager Set SystemId</button>
              </td>
 		</tr>
 		<tr>
@@ -594,9 +594,9 @@
 				<p>Makes a new systemId with a random identifier and checksum.
 					Sets the systemId to the newly generated value</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/makesystemid">[baseUrl:port]/licencemgr/rest/licence-mgr/makesystemid</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/makesystemid">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/makesystemid</a>
 			<BR><BR>Button command Example:<BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/makesystemid')">Licence Manager Make SystemId</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/makesystemid')">Licence Manager Make SystemId</button>
              </td>
 		</tr>
 		<tr>
@@ -609,10 +609,10 @@
 					in form 'valueString'-'CRC32 in Hex'
 				</p>
 			</td>
-			<td>URL Command Example:<BR><a href="../rest/licence-mgr/checksumforstring?string=">[baseUrl:port]/licencemgr/rest/licence-mgr/checksumforstring?string=</a>
+			<td>URL Command Example:<BR><a href="../rest/v1-0/licence-mgr/checksumforstring?string=">[baseUrl:port]/licencemgr/rest/v1-0/licence-mgr/checksumforstring?string=</a>
 			<BR><BR>Button command Example:<BR>
 			<input type="text" id="string" form="usrform" style="width: 500px; "> string<BR><BR>
-			<button type="button" onclick="sendGETXMLDoc('../rest/licence-mgr/checksumforstring?string='+document.getElementById('string').value)">Licence Manager Add Checksum to String</button>
+			<button type="button" onclick="sendGETXMLDoc('../rest/v1-0/licence-mgr/checksumforstring?string='+document.getElementById('string').value)">Licence Manager Add Checksum to String</button>
              </td>
 		</tr>
 	</table>

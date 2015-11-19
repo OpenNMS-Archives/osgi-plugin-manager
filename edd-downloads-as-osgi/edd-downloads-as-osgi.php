@@ -362,7 +362,7 @@ if (! class_exists ( 'EDD_Downloads_As_Osgi' )) {
 					if ($this->osgipub_osgi_debug)
 						$content .= "<p>debug: retrieving product matadata</p>";
 					
-					$uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/product-pub/getproductspec?productId=' . $edd_osgiProductIdStr;
+					$uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/v1-0/product-pub/getproductspec?productId=' . $edd_osgiProductIdStr;
 					
 					if ($this->osgipub_osgi_debug)
 						$content .= "<p>debug: Get Product Spec request to licence publisher: Basic Authentication\n" . "     username='" . $osgi_username . "' password='" . $osgi_password . "'\n" . "     uri='" . $uri . "</p>\n";

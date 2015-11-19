@@ -198,7 +198,7 @@
 
   <service interface="javax.servlet.http.HttpServlet">
     <service-properties>
-      <entry key="alias" value="/licencemgr/rest" />
+      <entry key="alias" value="/licencemgr/rest/v1-0" />
     </service-properties>
     <bean class="com.sun.jersey.spi.container.servlet.ServletContainer">
       <argument ref="licenceManagerRestApplication" />

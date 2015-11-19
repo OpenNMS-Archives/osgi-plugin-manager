@@ -195,7 +195,7 @@ if ($osgipub_osgi_debug) {
 // }
 // }
 
-// $uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/licence-pub/createlicence';
+// $uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/v1-0/licence-pub/createlicence';
 
 // $payload = ( string ) $_licenceMetadata->asXML ();
 // // save updated licence metadata
@@ -302,7 +302,7 @@ try {
 		$noEditMetadata = TRUE;
 	}
 	
-	// $uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/licence-pub/getlicencemetadataspec?productId=' . $edd_osgiProductIdStr;
+	// $uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/v1-0/licence-pub/getlicencemetadataspec?productId=' . $edd_osgiProductIdStr;
 	
 	// if ($osgipub_osgi_debug)
 	// echo "Get Licence Metadata Spec request to licence publisher: Basic Authentication\n" . " username='" . $osgi_username . "' password='" . $osgi_password . "'\n" . " uri='" . $uri . "\n";

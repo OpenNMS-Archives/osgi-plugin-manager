@@ -360,7 +360,7 @@ class EddOsgiLicences {
 			throw new Exception ( 'edd-osgi-class: You must set the OSGi Password in the plugin settings' );
 		}
 
-		$uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/licence-pub/createlicence';
+		$uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/v1-0/licence-pub/createlicence';
 		
 		$payload = ( string ) $_licenceMetadata->asXML ();
 		
@@ -429,7 +429,7 @@ class EddOsgiLicences {
 		
 		try {
 			
-			$uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/licence-pub/getlicencemetadataspec?productId=' . $edd_osgiProductIdStr;
+			$uri = $osgiLicenceGeneratorUrl . '/licencemgr/rest/v1-0/licence-pub/getlicencemetadataspec?productId=' . $edd_osgiProductIdStr;
 			
 			if ($osgipub_osgi_debug)
 				echo "Get Licence Metadata Spec request to licence publisher: Basic Authentication\n" . "     username='" . $osgi_username . "' password='" . $osgi_password . "'\n" . "     uri='" . $uri . "\n";

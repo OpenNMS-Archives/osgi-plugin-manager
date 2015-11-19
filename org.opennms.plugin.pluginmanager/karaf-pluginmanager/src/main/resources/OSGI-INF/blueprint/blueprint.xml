@@ -11,7 +11,7 @@
   <!-- ReST Servelet configuration for jersey -->
   <service interface="javax.servlet.http.HttpServlet">
     <service-properties>
-      <entry key="alias" value="/pluginmgr/rest" />
+      <entry key="alias" value="/pluginmgr/rest/v1-0" />
     </service-properties>
     <bean class="com.sun.jersey.spi.container.servlet.ServletContainer">
       <argument ref="pluginManagerRestApplication" />
