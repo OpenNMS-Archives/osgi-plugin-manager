@@ -38,7 +38,7 @@ public interface PluginManagerRest {
 
 	/**
 	 * Returns manifest list in XML format in response to HTTP GET request.
-	 * e.g. http://localhost:8980/opennms/pluginmgr/rest/manifest-list?systemId=
+	 * e.g. http://localhost:8181/pluginmgr/rest/v1-0/manifest-list?systemId=
 	 * @param systemId the system id for which to get the manifest
 	 * @return response containing manifest list or an error message if not found
 	 * @throws Exception 
@@ -52,7 +52,7 @@ public interface PluginManagerRest {
 	/**
 	 * Updates the karaf state known to the plugin manager using a RemoteKarafState xml message
 	 * 
-	 * http://localhost:8980/opennms/pluginmgr/rest/updateRemoteKaraState
+	 * http://localhost:8181/pluginmgr/rest/v1-0/updateRemoteKaraState
 	 * 
 	 * @param remoteKarafState contains the following xml elements
 	 *    String systemId - the systemId of the remote karaf instance updating its state 

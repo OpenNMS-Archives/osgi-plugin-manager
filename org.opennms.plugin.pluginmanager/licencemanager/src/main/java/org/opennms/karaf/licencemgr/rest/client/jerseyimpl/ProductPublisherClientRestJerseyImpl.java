@@ -32,7 +32,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 public class ProductPublisherClientRestJerseyImpl implements ProductPublisherClient {
 	
 	private String baseUrl = "http://localhost:8181";
-	private String basePath = "/licencemgr/rest/product-pub";
+	private String basePath = "/licencemgr/rest/v1-0/product-pub";
 	private String userName = null; // If userName is null no basic authentication is generated
 	private String password = "";
 	
@@ -87,7 +87,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 
 	/**
 	 * base path of service starting with '/' such that service is accessed using baseUrl/basePath... 
-	 * e.g http://localhost:8181/licencemgr/rest/product-pub
+	 * e.g http://localhost:8181/licencemgr/rest/v1-0/product-pub
 	 * @return basePath
 	 */
 	public String getBasePath() {
@@ -96,7 +96,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 
 	/**
 	 * base path of service starting with '/' such that service is accessed using baseUrl/basePath... 
-	 * e.g http://localhost:8181/licencemgr/rest/product-pub
+	 * e.g http://localhost:8181/licencemgr/rest/v1-0/product-pub
 	 * @return basePath
 	 */
 	public void setBasePath(String basePath) {
@@ -116,7 +116,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/product-pub/addproductspec
+		//http://localhost:8181/licencemgr/rest/v1-0/product-pub/addproductspec
 		
 		String getStr= baseUrl+basePath+"/addproductspec";
 		
@@ -153,7 +153,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/product-pub/removeproductspec?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/product-pub/removeproductspec?productId=
 		
 		String getStr= baseUrl+basePath+"/removeproductspec?productId="+productId;
 		
@@ -191,7 +191,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/product-pub/getproductspec?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/product-pub/getproductspec?productId=
 		
 		String getStr= baseUrl+basePath+"/getproductspec?productId="+productId;
 		
@@ -215,7 +215,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/product-pub/list
+		//http://localhost:8181/licencemgr/rest/v1-0/product-pub/list
 		
 		String getStr= baseUrl+basePath+"/list";
 		
@@ -246,7 +246,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/product-pub/clearproductspecs?confirm=false
+		//http://localhost:8181/licencemgr/rest/v1-0/product-pub/clearproductspecs?confirm=false
 		
 		String getStr= baseUrl+basePath+"/clearproductspecs?confirm="+ (confirm ? "true":"false");
 		

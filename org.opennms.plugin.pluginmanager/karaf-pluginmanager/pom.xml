@@ -27,6 +27,9 @@
       <resource>
         <directory>${project.build.directory}/imported-resources</directory>
       </resource>
+      <resource>
+        <directory>${project.build.directory}/filtered-resources</directory>
+      </resource>
     </resources>
     <plugins>
       <plugin>
@@ -51,9 +54,9 @@
 
         </configuration>
       </plugin>
-      
-      <!-- We copy the diagnostics resources directly into this bundle since     -->
-      <!-- pax-web DefaultResources cannot expose resources on the class path    -->
+
+      <!-- We copy the diagnostics resources directly into this bundle since -->
+      <!-- pax-web DefaultResources cannot expose resources on the class path -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -80,11 +83,34 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
+      <!-- copy and process the product descriptor for this project -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>filter-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/filtered-resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/filtered-resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+     </plugins>
   </build>
 
   <dependencies>
-  
+
     <!-- Jersey Dependencies -->
     <dependency>
       <groupId>com.sun.jersey</groupId>
@@ -106,7 +132,7 @@
       <artifactId>jersey-client</artifactId>
       <scope>compile</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
@@ -215,7 +241,7 @@
       <artifactId>org.opennms.plugin.featuremanager</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- plugin-manager core dependencies -->
     <dependency>
       <groupId>org.opennms.plugins</groupId>
@@ -224,13 +250,13 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--test dependencies-->
+    <!--test dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 
 </project>

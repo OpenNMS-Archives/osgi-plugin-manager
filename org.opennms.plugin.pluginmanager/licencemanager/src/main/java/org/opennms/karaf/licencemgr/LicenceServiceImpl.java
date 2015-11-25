@@ -331,7 +331,7 @@ public class LicenceServiceImpl implements LicenceService {
 		try {
 			LicenceManagerClientRestJerseyImpl licenceManagerClient = new LicenceManagerClientRestJerseyImpl();
 
-			String basePath = "/licencemgr/rest/licence-mgr";
+			String basePath = "/licencemgr/rest/v1-0/licence-mgr";
 
 			licenceManagerClient.setBasePath(basePath);
 			licenceManagerClient.setBaseUrl(remoteLicenceManagerUrl);

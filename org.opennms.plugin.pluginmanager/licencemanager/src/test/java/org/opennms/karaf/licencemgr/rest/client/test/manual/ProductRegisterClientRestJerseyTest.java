@@ -46,8 +46,8 @@ public class ProductRegisterClientRestJerseyTest {
 
 	private static String TEST_PROPERTIES_FILE="/licenceServiceTest.properties";
 	
-	//TODO THIS WAS wrong /licencemgr/rest/product-pub
-	private String basePath = "/licencemgr/rest/product-reg";
+	//TODO THIS WAS wrong /licencemgr/rest/v1-0/product-pub
+	private String basePath = "/licencemgr/rest/v1-0/product-reg";
 	
 	//defaults for test running on standard karaf
 	private String baseUrl = "http://localhost:8181";

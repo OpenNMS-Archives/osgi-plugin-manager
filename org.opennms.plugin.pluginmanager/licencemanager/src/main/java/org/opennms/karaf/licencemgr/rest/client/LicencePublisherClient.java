@@ -26,7 +26,7 @@ public interface LicencePublisherClient {
 	/**
 	 * /addlicencespec (POST LicenceSpecification)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-pub/addlicencespec
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-pub/addlicencespec
 	 * 
 	 * Adds a new licence specification to the licence publisher. 
 	 * Looks for the productId in the licence specification and adds an 
@@ -43,7 +43,7 @@ public interface LicencePublisherClient {
 	/**
 	 * /removelicencespec (GET productId)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-pub/removelicencespec?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-pub/removelicencespec?productId=
 	 * 
 	 * removes the entry for productId from the licenceSpecMap
 	 * 
@@ -57,7 +57,7 @@ public interface LicencePublisherClient {
 	/**
 	 * /getlicencespec (GET productId)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-pub/getlicencespec?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-pub/getlicencespec?productId=
 	 * 
 	 * gets the LicenceSpecification stored for productId. 
 	 * Returns error message if no LicenceSpecification found for productId
@@ -71,7 +71,7 @@ public interface LicencePublisherClient {
 	/**
 	 * /getlicencemetadataspec (GET productId)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-pub/getlicencemetadataspec?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-pub/getlicencemetadataspec?productId=
 	 * 
 	 * gets the LicenceSpecification stored for productId.
 	 * Returns error message if no LicenceSpecification found for productId
@@ -86,7 +86,7 @@ public interface LicencePublisherClient {
 	/**
 	 * /listspecs (GET )
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-pub/listspecs
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-pub/listspecs
 	 * 
 	 * returns a list of the LicenceSpecifications (including the keys)
 	 * @return
@@ -98,7 +98,7 @@ public interface LicencePublisherClient {
 	/**
 	 * /list (GET )
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-pub/list
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-pub/list
 	 * 
 	 * returns a list of the LicenceMetadata specifications 
 	 * (not the full licence specs with keys)
@@ -109,7 +109,7 @@ public interface LicencePublisherClient {
 	/**
 	 * /clearlicencespecs (GET ) deletes all values of the licenceSpecMap. 
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-pub/clearlicencespecs?confirm=false
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-pub/clearlicencespecs?confirm=false
 	 * 
 	 * Will only delete specs if paramater confirm=true
 	 * @param confirm

@@ -30,7 +30,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient {
 	
 	private String baseUrl = "http://localhost:8181";
-	private String basePath = "/licencemgr/rest/licence-mgr";
+	private String basePath = "/licencemgr/rest/v1-0/licence-mgr";
 	private String userName = null; // If userName is null no basic authentication is generated
 	private String password = "";
 	
@@ -114,7 +114,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/addlicence?licence=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/addlicence?licence=
 		
 		String getStr= baseUrl+basePath+"/addlicence?licence="+licence;
 		
@@ -154,7 +154,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/removelicence?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/removelicence?productId=
 		
 		String getStr= baseUrl+basePath+"/removelicence?productId="+productId;
 		
@@ -189,7 +189,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/getlicence?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/getlicence?productId=
 		
 		String getStr= baseUrl+basePath+"/getlicence?productId="+productId;
 		
@@ -230,7 +230,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/isauthenticated?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/isauthenticated?productId=
 		
 		String getStr= baseUrl+basePath+"/isauthenticated?productId="+productId;
 		
@@ -270,7 +270,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/list
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/list
 		
 		String getStr= baseUrl+basePath+"/list";
 		
@@ -308,7 +308,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8980/opennms/licencemgr/rest/licence-mgr/listforsystemid?systemId=32e396e36b28ef5d-a48ef1cb
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/listforsystemid?systemId=32e396e36b28ef5d-a48ef1cb
 		
 		String getStr= baseUrl+basePath+"/listforsystemid?systemId="+systemId;
 		
@@ -347,7 +347,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 
 		Client client = newClient();
 
-		//http://localhost:8181/licencemgr/rest/licence-mgr/clearlicences?confirm=false
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/clearlicences?confirm=false
 		
 		String getStr= baseUrl+basePath+"/clearlicences?confirm="+ (confirm ? "true":"false");
 		
@@ -381,7 +381,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/getsystemid
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/getsystemid
 		
 		String getStr= baseUrl+basePath+"/getsystemid";
 		
@@ -421,7 +421,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/setsystemid?systemId=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/setsystemid?systemId=
 		
 		String getStr= baseUrl+basePath+"/setsystemid?systemId="+systemId;
 		
@@ -455,7 +455,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/makesystemid
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/makesystemid
 		
 		String getStr= baseUrl+basePath+"/makesystemid";
 		
@@ -495,7 +495,7 @@ public class LicenceManagerClientRestJerseyImpl implements LicenceManagerClient 
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-mgr/checksumforstring?string=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/checksumforstring?string=
 		
 		String getStr= baseUrl+basePath+"/checksumforstring?string="+string;
 		

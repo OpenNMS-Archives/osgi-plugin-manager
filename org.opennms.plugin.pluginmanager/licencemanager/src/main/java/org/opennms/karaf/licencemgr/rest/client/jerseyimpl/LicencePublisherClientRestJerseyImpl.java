@@ -35,7 +35,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 public class LicencePublisherClientRestJerseyImpl implements LicencePublisherClient {
 	
 	private String baseUrl = "http://localhost:8181";
-	private String basePath = "/licencemgr/rest/licence-pub";
+	private String basePath = "/licencemgr/rest/v1-0/licence-pub";
 	private String userName = null; // If userName is null no basic authentication is generated
 	private String password = "";
 	
@@ -119,7 +119,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-pub/addlicencespec
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/addlicencespec
 		
 		String getStr= baseUrl+basePath+"/addlicencespec";
 		
@@ -155,7 +155,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-pub/removelicencespec?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/removelicencespec?productId=
 		
 		String getStr= baseUrl+basePath+"/removelicencespec?productId="+productId;
 		
@@ -192,7 +192,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-pub/getlicencespec?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/getlicencespec?productId=
 		
 		String getStr= baseUrl+basePath+"/getlicencespec?productId="+productId;
 		
@@ -233,7 +233,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-pub/getlicencemetadataspec?productId=
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/getlicencemetadataspec?productId=
 		
 		String getStr= baseUrl+basePath+"/getlicencemetadataspec?productId="+productId;
 		
@@ -272,7 +272,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-pub/listspecs
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/listspecs
 		
 		String getStr= baseUrl+basePath+"/listspecs";
 		
@@ -301,7 +301,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-pub/list
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/list
 		
 		String getStr= baseUrl+basePath+"/list";
 		
@@ -331,7 +331,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 
 		Client client = newClient();
 		
-		////http://localhost:8181/licencemgr/rest/licence-pub/clearlicencespecs?confirm=false
+		////http://localhost:8181/licencemgr/rest/v1-0/licence-pub/clearlicencespecs?confirm=false
 		
 		String getStr= baseUrl+basePath+"/clearlicencespecs?confirm="+ (confirm ? "true":"false");
 		
@@ -366,7 +366,7 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/licencemgr/rest/licence-pub/createlicence
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/createlicence
 		
 		String getStr= baseUrl+basePath+"/createlicence";
 		

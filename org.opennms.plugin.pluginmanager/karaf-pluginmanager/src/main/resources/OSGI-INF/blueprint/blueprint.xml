@@ -6,6 +6,14 @@
 					http://www.osgi.org/xmlns/blueprint-ext/v1.1.0 
 					https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-core/src/main/resources/org/apache/aries/blueprint/ext/blueprint-ext.xsd">
 
+  <!-- register product information with product registry -->
+  <reference id="productRegister" interface="org.opennms.karaf.productpub.ProductRegister" timeout="10000" />
+
+  <bean id="localBundleProductDescription" class="org.opennms.karaf.productpub.BundleProductSpecImpl" init-method="registerSpec" destroy-method="unregisterSpec">
+    <property name="bundleContext" ref="blueprintBundleContext"></property>
+    <property name="productPublisher" ref="productRegister"></property>
+    <property name="productMetadataUri" value="/productSpec.xml"></property>
+  </bean>
   
   <!-- configure the rest service for plugin manager -->
   <!-- ReST Servelet configuration for jersey -->

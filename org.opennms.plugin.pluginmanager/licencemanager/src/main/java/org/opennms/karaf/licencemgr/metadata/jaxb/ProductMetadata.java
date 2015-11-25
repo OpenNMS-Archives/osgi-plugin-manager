@@ -32,8 +32,11 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="product")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType (propOrder={"productId","featureRepository","productName","productDescription","productUrl","organization","licenceType","licenceKeyRequired","licenceKeyAuthenticated"})
+@XmlType (propOrder={"productId","featureRepository","productName","productDescription","productUrl","organization","licenceType","licenceKeyRequired","licenceKeyAuthenticated","systemPlugin"})
 public class ProductMetadata {
+
+
+
 
 	/**
 	 * productId is expected to contain the name of the product in the form <name>/<version>
@@ -92,6 +95,11 @@ public class ProductMetadata {
 	 * (this is only used by licence manager and not the product publisher)
 	 */
 	private Boolean licenceKeyAuthenticated=null;
+	
+	/**
+	 * If true this is a system plugin and should not be uninstalled by the plugin manager
+	 */
+	private Boolean systemPlugin=null;
 
 
 	/**
@@ -231,6 +239,23 @@ public class ProductMetadata {
 	public void setLicenceKeyAuthenticated(Boolean licenceKeyAuthenticated) {
 		this.licenceKeyAuthenticated = licenceKeyAuthenticated;
 	}
+
+	/**
+	 * If true this is a system plugin and should  not be uninstalled by the plugin manager
+	 * @return
+	 */
+	public Boolean getSystemPlugin() {
+		return systemPlugin;
+	}
+
+	/**
+	 * If true this is a system plugin and should  not be uninstalled by the plugin manager
+	 * @param systemPlugin
+	 */
+	@XmlElement(name="systemPlugin")
+	public void setSystemPlugin(Boolean systemPlugin) {
+		this.systemPlugin = systemPlugin;
+	}
 	
 	/**
 	 * @return XML encoded version of ProductMetadata
@@ -269,6 +294,7 @@ public class ProductMetadata {
 			this.licenceKeyRequired=productMetadata.licenceKeyRequired;
 			this.licenceKeyAuthenticated=productMetadata.licenceKeyAuthenticated;
 			this.licenceType=productMetadata.licenceType;
+			this.systemPlugin=productMetadata.systemPlugin;
 		} catch (JAXBException e) {
 			throw new RuntimeException("Problem unmarshalling ProductMetadata:",e);
 		}
@@ -305,10 +331,6 @@ public class ProductMetadata {
 
 	//NOTE IF YOU MODIFY THIS CLASS YOU MUST REGENERATE THE equals and hashCode methods
 	//AND change the fromXml() method
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -339,12 +361,11 @@ public class ProductMetadata {
 				+ ((productName == null) ? 0 : productName.hashCode());
 		result = prime * result
 				+ ((productUrl == null) ? 0 : productUrl.hashCode());
+		result = prime * result
+				+ ((systemPlugin == null) ? 0 : systemPlugin.hashCode());
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -400,9 +421,12 @@ public class ProductMetadata {
 				return false;
 		} else if (!productUrl.equals(other.productUrl))
 			return false;
+		if (systemPlugin == null) {
+			if (other.systemPlugin != null)
+				return false;
+		} else if (!systemPlugin.equals(other.systemPlugin))
+			return false;
 		return true;
 	}
-
-
 
 }

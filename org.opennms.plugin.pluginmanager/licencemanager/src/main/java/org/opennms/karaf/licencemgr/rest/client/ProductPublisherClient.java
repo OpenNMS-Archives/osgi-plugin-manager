@@ -40,7 +40,7 @@ public interface ProductPublisherClient {
 	 * /removeproductspec (GET productId)
 	 * 
 	 * Checks the product publisher and removes any entry for productId
-	 * e.g. http://localhost:8181/licencemgr/rest/product-pub/removeproductspec?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/product-pub/removeproductspec?productId=
 	 * 
 	 * @param productId
 	 * @throws Exception
@@ -52,7 +52,7 @@ public interface ProductPublisherClient {
 	 * /getproductspec (GET productId)
 	 * returns product description metadata for productId if found
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/product-pub/getproductspec?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/product-pub/getproductspec?productId=
 	 * 
 	 * @param productId
 	 * @return productMetadata contains description of product
@@ -65,7 +65,7 @@ public interface ProductPublisherClient {
 	 * /list (GET )
 	 * returns a map of product description entries with key=productId, value= ProductMetadata
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/product-pub/list
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/product-pub/list
 	 * 
 	 * @return productSpecList 
 	 * @throws Exception
@@ -79,7 +79,7 @@ public interface ProductPublisherClient {
 	 * Deletes all product descriptions. 
 	 * Will only delete descriptions if parameter confirm=true
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/product-pub/clearproductspecs?confirm=false
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/product-pub/clearproductspecs?confirm=false
 	 * 
 	 * @param confirm
 	 * @throws Exception

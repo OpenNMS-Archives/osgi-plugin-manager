@@ -45,11 +45,11 @@ public class PluginManagerImpl implements PluginManager {
 
 
 
-	private static String PRODUCT_PUB_BASE_PATH = "/licencemgr/rest/product-pub";
-	private static String PRODUCT_REG_BASE_PATH = "/licencemgr/rest/product-reg";
+	private static String PRODUCT_PUB_BASE_PATH = "/licencemgr/rest/v1-0/product-pub";
+	private static String PRODUCT_REG_BASE_PATH = "/licencemgr/rest/v1-0/product-reg";
 
-	private static String LICENCE_PUB_BASE_PATH = "/licencemgr/rest/licence-pub"; // not used
-	private static String LICENCE_MGR_BASE_PATH = "/licencemgr/rest/licence-mgr";
+	private static String LICENCE_PUB_BASE_PATH = "/licencemgr/rest/v1-0/licence-pub"; // not used
+	private static String LICENCE_MGR_BASE_PATH = "/licencemgr/rest/v1-0/licence-mgr";
 
 	private static String FEATURE_MGR_BASE_PATH = "/featuremgr";
 

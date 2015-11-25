@@ -119,7 +119,7 @@ public class FeaturesServiceClientRestJerseyTest {
 	public void featuresAddRepository() {
 		System.out.println("@Test - featuresAddRepository.START");
 
-		//http://localhost:8181/featuremgr/rest/features-addrepositoryurl?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
+		//http://localhost:8181/featuremgr/rest/v1-0/features-addrepositoryurl?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
@@ -156,7 +156,7 @@ public class FeaturesServiceClientRestJerseyTest {
 		
 		String name=null;
 
-		//http://localhost:8181/featuremgr/rest/features-repositoryinfo?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
+		//http://localhost:8181/featuremgr/rest/v1-0/features-repositoryinfo?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 				
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
@@ -211,7 +211,7 @@ public class FeaturesServiceClientRestJerseyTest {
 		
 		System.out.println("@Test - getFeaturesInfo.START");
 		
-		//http://localhost:8181/featuremgr/rest/features-info?name=myproject.Feature&version=1.0-SNAPSHOT
+		//http://localhost:8181/featuremgr/rest/v1-0/features-info?name=myproject.Feature&version=1.0-SNAPSHOT
 
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
@@ -245,7 +245,7 @@ public class FeaturesServiceClientRestJerseyTest {
 	public void featuresRemoveRepository() {
 		System.out.println("@Test - featuresRemoveRepository.START");
 		
-		//http://localhost:8181/featuremgr/rest/features-removerepository?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
+		//http://localhost:8181/featuremgr/rest/v1-0/features-removerepository?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 				
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {

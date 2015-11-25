@@ -126,10 +126,10 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 		
 		Client client = newClient();
 		
-		//http://localhost:8181/featuremgr/rest/features-list
+		//http://localhost:8181/featuremgr/rest/v1-0/features-list
 		
 		WebResource r = client
-				.resource(baseUrl+basePath+"/rest/features-list");
+				.resource(baseUrl+basePath+"/rest/v1-0/features-list");
 
 		FeatureList featurelist = r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
@@ -150,9 +150,9 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/featuremgr/rest/features-info?name=myproject.Feature&version=1.0-SNAPSHOT
+		//http://localhost:8181/featuremgr/rest/v1-0/features-info?name=myproject.Feature&version=1.0-SNAPSHOT
 		
-		String getStr= baseUrl+basePath+"/rest/features-info?name="+name;
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-info?name="+name;
 		if(version != null) getStr=getStr+"&version="+version;
 		
 		WebResource r = client
@@ -176,9 +176,9 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/featuremgr/rest/features-install?name=myproject.Feature&version=1.0-SNAPSHOT
+		//http://localhost:8181/featuremgr/rest/v1-0/features-install?name=myproject.Feature&version=1.0-SNAPSHOT
 		
-		String getStr= baseUrl+basePath+"/rest/features-install?name="+name;
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-install?name="+name;
 		if(version != null) getStr=getStr+"&version="+version;
 		
 		WebResource r = client.resource(getStr);
@@ -213,9 +213,9 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/featuremgr/rest/features-uninstall?name=myproject.Feature&version=1.0-SNAPSHOT
+		//http://localhost:8181/featuremgr/rest/v1-0/features-uninstall?name=myproject.Feature&version=1.0-SNAPSHOT
 		
-		String getStr= baseUrl+basePath+"/rest/features-uninstall?name="+name;
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-uninstall?name="+name;
 		if(version != null) getStr=getStr+"&version="+version;
 		
 		WebResource r = client.resource(getStr);
@@ -250,10 +250,10 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 		
 		Client client = newClient();
 		
-		//http://localhost:8181/featuremgr/rest/features-listrepositories
+		//http://localhost:8181/featuremgr/rest/v1-0/features-listrepositories
 		
 		WebResource r = client
-				.resource(baseUrl+basePath+"/rest/features-listrepositories");
+				.resource(baseUrl+basePath+"/rest/v1-0/features-listrepositories");
 
 		RepositoryList repositoryList = r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
@@ -275,9 +275,9 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	    
 		Client client = newClient();
 
-		//http://localhost:8181/featuremgr/rest/features-repositoryinfo?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
+		//http://localhost:8181/featuremgr/rest/v1-0/features-repositoryinfo?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 		
-		String getStr= baseUrl+basePath+"/rest/features-repositoryinfo?"+ ( (uriStr==null)? "name="+name : "uri="+uriStr);
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-repositoryinfo?"+ ( (uriStr==null)? "name="+name : "uri="+uriStr);
 		
 		WebResource r = client
 				.resource(getStr);
@@ -300,9 +300,9 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/featuremgr/rest/features-removerepository?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
+		//http://localhost:8181/featuremgr/rest/v1-0/features-removerepository?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 		
-		String getStr= baseUrl+basePath+"/rest/features-removerepository?uri="+uriStr;
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-removerepository?uri="+uriStr;
 		
 		WebResource r = client.resource(getStr);
 
@@ -337,9 +337,9 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	    
 		Client client = newClient();
 		
-		//http://localhost:8181/featuremgr/rest/features-addrepositoryurl?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
+		//http://localhost:8181/featuremgr/rest/v1-0/features-addrepositoryurl?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 		
-		String getStr= baseUrl+basePath+"/rest/features-addrepositoryurl?uri="+uriStr;
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-addrepositoryurl?uri="+uriStr;
 		
 		WebResource r = client.resource(getStr);
 

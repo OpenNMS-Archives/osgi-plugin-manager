@@ -46,7 +46,7 @@ public class ProductPublisherClientRestJerseyTest {
 
 	private static String TEST_PROPERTIES_FILE="/licenceServiceTest.properties";
 	
-	private String basePath = "/licencemgr/rest/product-pub";
+	private String basePath = "/licencemgr/rest/v1-0/product-pub";
 	
 	//defaults for test running on standard karaf
 	private String baseUrl = "http://localhost:8181";

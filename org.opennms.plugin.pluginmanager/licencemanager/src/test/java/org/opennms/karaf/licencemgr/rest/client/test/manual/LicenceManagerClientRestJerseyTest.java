@@ -37,7 +37,7 @@ public class LicenceManagerClientRestJerseyTest {
 
 	private static String TEST_PROPERTIES_FILE="/licenceServiceTest.properties";
 	
-	private String basePath = "/licencemgr/rest/licence-mgr";
+	private String basePath = "/licencemgr/rest/v1-0/licence-mgr";
 	
 	//defaults for test running on standard karaf
 	private String baseUrl = "http://localhost:8181";
@@ -114,7 +114,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 * 
 	 * Adds a licence to the licence service. 
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/addlicence?licence=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/addlicence?licence=
 
 	 */
 	//@Test
@@ -138,7 +138,7 @@ public class LicenceManagerClientRestJerseyTest {
 	/**
 	 * /removelicence (GET productId)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/removelicence?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/removelicence?productId=
 	 * 
 	 * removes any licence corresponding to productId.
 	 */
@@ -166,7 +166,7 @@ public class LicenceManagerClientRestJerseyTest {
     /**
 	 * /isauthenticated (GET productId)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/isauthenticated?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/isauthenticated?productId=
 	 * 
 	 * tests if product id is authenticated.
 	 */
@@ -193,7 +193,7 @@ public class LicenceManagerClientRestJerseyTest {
 	/**
 	 * /getlicence (GET productId)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/getlicence?productId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/getlicence?productId=
 	 * 
 	 * Gets the licence corresponding to the productId
 	 */
@@ -218,7 +218,7 @@ public class LicenceManagerClientRestJerseyTest {
 
 	/**
 	 * /list (GET )
-	 * e.g http://localhost:8181/licencemgr/rest/licence-mgr/list
+	 * e.g http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/list
 	 * 
 	 * returns a map of all installed licences 
 	 * with key=productId and value = licence string
@@ -249,7 +249,7 @@ public class LicenceManagerClientRestJerseyTest {
 	
 	/**
 	 * /list (GET )
-	 * e.g http://localhost:8181/licencemgr/rest/licence-mgr/list
+	 * e.g http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/list
 	 * 
 	 * returns a map of all installed licences 
 	 * with key=productId and value = licence string
@@ -281,7 +281,7 @@ public class LicenceManagerClientRestJerseyTest {
 	/**
 	 * /clearlicences (GET )
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/clearlicences?confirm=false
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/clearlicences?confirm=false
 	 * 
 	 * deletes all licence entries. Will only delete licences if paramater confirm=true 
 	 */
@@ -306,7 +306,7 @@ public class LicenceManagerClientRestJerseyTest {
 	/**
 	 * /getsystemid (GET ) 
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/getsystemid
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/getsystemid
 	 * 
 	 * gets the systemId for this system
 	 */
@@ -331,7 +331,7 @@ public class LicenceManagerClientRestJerseyTest {
 	/**
 	 * /setsystemid (GET systemId) 
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/setsystemid?systemId=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/setsystemid?systemId=
 	 * 
 	 * sets the systemId. 
 	 * Note that the checksum for the systemId must be correct
@@ -358,7 +358,7 @@ public class LicenceManagerClientRestJerseyTest {
 	/**
 	 * /makesystemid (GET )
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/makesystemid
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/makesystemid
 	 * 
 	 * Makes a new systemId with a random identifier and checksum.
 	 * Sets the systemId to the newly generated value.
@@ -387,7 +387,7 @@ public class LicenceManagerClientRestJerseyTest {
 	/**
 	 * /checksumforstring (GET string)
 	 * 
-	 * e.g. http://localhost:8181/licencemgr/rest/licence-mgr/checksumforstring?string=
+	 * e.g. http://localhost:8181/licencemgr/rest/v1-0/licence-mgr/checksumforstring?string=
 	 * 
 	 * Generates a checksum for the supplied string
 	 * Adds a CRC32 encoded string to supplied string separated by '-' 
