@@ -6,7 +6,7 @@
 					http://www.osgi.org/xmlns/blueprint-ext/v1.1.0 
 					https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-core/src/main/resources/org/apache/aries/blueprint/ext/blueprint-ext.xsd">
 
-  <!-- register product information with product registry -->
+  <!-- register product information with product registry in licence manager-->
   <reference id="productRegister" interface="org.opennms.karaf.productpub.ProductRegister" timeout="10000" />
 
   <bean id="localBundleProductDescription" class="org.opennms.karaf.productpub.BundleProductSpecImpl" init-method="registerSpec" destroy-method="unregisterSpec">
@@ -56,13 +56,13 @@
   <service ref="pluginManagerImpl" interface="org.opennms.features.pluginmgr.PluginManager" />
      
   <bean id="pluginManagerImpl" class="org.opennms.features.pluginmgr.PluginManagerImpl" init-method="load" destroy-method="close">
-    <!-- setting defaults if no pluginmodeldata.xml -->
+    <!-- setting defaults if no pluginManifestData.xml -->
     <property name="fileUri" value="${pluginModelfileUri}" />
     <property name="pluginServerUsername" value="${pluginServerUsername}" />
     <property name="pluginServerPassword" value="${pluginServerPassword}" />
     <property name="pluginServerUrl" value="${pluginServerUrl}" />
     <property name="licenceShoppingCartUrl" value="${licenceShoppingCartUrl}" />
-    <!-- default local values for local karaf system if no pluginmodeldata.xml -->
+    <!-- default local values for local karaf system if no pluginManifestData.xml -->
     <property name="localKarafInstanceName" value="${localKarafInstanceName}" />
     <property name="localKarafInstanceUserName" value="${localKarafInstanceUserName}" />
     <property name="localKarafInstanceUserName" value="${localKarafInstanceUserName}" />
@@ -137,12 +137,12 @@
   <!-- load default properties from  org.opennms.features.pluginmgr.config.cfg if exists -->
   <cm:property-placeholder persistent-id="org.opennms.features.pluginmgr.config" update-strategy="reload">
     <cm:default-properties>
-      <cm:property name="pluginModelfileUri" value="./pluginmodeldata.xml" />
+      <cm:property name="pluginModelfileUri" value="./etc/pluginManifestData.xml" />
       <cm:property name="pluginServerUsername" value="admin" />
       <cm:property name="pluginServerPassword" value="admin" />
       <cm:property name="pluginServerUrl" value="http://localhost:8081" />
       <cm:property name="licenceShoppingCartUrl" value="http://opennms.org" />
-      <!-- default local values for local karaf system if no pluginmodeldata.xml -->
+      <!-- default local values for local karaf system if no pluginManifestData.xml -->
       <cm:property name="localKarafInstanceName" value="localhost" />
       <cm:property name="localKarafInstanceUserName" value="admin" />
       <cm:property name="localKarafInstancePassword" value="admin" />

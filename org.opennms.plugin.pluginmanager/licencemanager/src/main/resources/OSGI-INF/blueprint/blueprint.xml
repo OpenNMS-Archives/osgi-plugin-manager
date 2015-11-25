@@ -25,7 +25,7 @@
   <cm:property-placeholder persistent-id="org.opennms.features.licencemgr.config" update-strategy="reload">
     <cm:default-properties>
       <!-- local location to persist licence file -->
-      <cm:property name="org.opennms.karaf.licencemanager.licencefile" value="./licenceService.xml" />
+      <cm:property name="org.opennms.karaf.licencemanager.licencefile" value="./etc/pluginLicenceData.xml" />
       <!-- if true, will try to download licence list from remote urls -->
       <cm:property name="org.opennms.karaf.licencemanager.use-remote-licence-managers" value="false" />
       <!-- comma separated local list of urls to contact remote licence managers -->

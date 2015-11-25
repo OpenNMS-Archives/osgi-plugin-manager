@@ -52,7 +52,7 @@ public class LicenceManagerTest {
 		try {
 			// added to solve problems with JAXB not unmarshalling relative paths
 			// this gives JAXB an absolute path to work with
-			String uri="target"+File.separator+"licenceService.xml";
+			String uri="target"+File.separator+"pluginLicenceData.xml";
 			File licenceManagerFile = new File(uri);
 			String absolutePath=licenceManagerFile.getAbsolutePath();
 			System.out.println("oneTimeSetUp() absolute file fileUri:"+absolutePath);

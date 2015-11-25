@@ -53,7 +53,7 @@ public class PluginManagerImpl implements PluginManager {
 
 	private static String FEATURE_MGR_BASE_PATH = "/featuremgr";
 
-	private String fileUri="./pluginmodeldata.xml";
+	private String fileUri="./etc/pluginManifestData.xml";
 
 	private PluginModelJaxb pluginModelJaxb = new PluginModelJaxb();
 	
