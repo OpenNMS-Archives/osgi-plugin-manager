@@ -11,9 +11,9 @@
 
   <!-- LicenceAuthenticator -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${rootArtifactId}.licence-authenticator</artifactId>
-  <name>${rootArtifactId}.licence-authenticator</name>
-  <description>Licence Authenticator for ${rootArtifactId}</description>
+  <artifactId>${symbol_dollar}{productName}.licence-authenticator</artifactId>
+  <name>${symbol_dollar}{productName}.licence-authenticator</name>
+  <description>Licence Authenticator for ${symbol_dollar}{productName}</description>
   <packaging>bundle</packaging>
 
   <build>
@@ -34,7 +34,7 @@
               <artifactItems>
                 <artifactItem>
                   <groupId>${symbol_dollar}{project.groupId}</groupId>
-                  <artifactId>${rootArtifactId}.licence-generator</artifactId>
+                  <artifactId>${symbol_dollar}{productName}.licence-generator</artifactId>
                   <version>${symbol_dollar}{project.version}</version>
                   <type>jar</type>
                   <classifier>sources</classifier>
@@ -45,7 +45,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>${symbol_dollar}{project.groupId}</groupId>
-                  <artifactId>${rootArtifactId}.licence-generator</artifactId>
+                  <artifactId>${symbol_dollar}{productName}.licence-generator</artifactId>
                   <version>${symbol_dollar}{project.version}</version>
                   <type>jar</type>
                   <classifier>sources</classifier>
@@ -130,7 +130,7 @@
     <dependency>
       <groupId>org.opennms.plugins</groupId>
       <artifactId>org.opennms.plugin.licencemanager</artifactId>
-      <version>$symbol_dollar{org.opennms.plugin.licencemanager.version}</version>
+      <version>${symbol_dollar}{org.opennms.plugin.licencemanager.version}</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>

@@ -19,6 +19,7 @@
     <!-- <productId>${project.groupId}/${project.artifactId}/${project.version}</productId> -->
     <!-- <productId>${project.groupId}/org.opennms.co.uk.newfeature/${project.version}</productId> -->
     <productId>${rootArtifactId}/${symbol_dollar}{project.version}</productId>
+    <productName>${rootArtifactId}</productName>
     <!-- <licenceClassPath>org.opennms.co.uk.newfeature</licenceClassPath> -->
     <licenceClassPath>${package}</licenceClassPath>
     

@@ -3,15 +3,16 @@ This project provides a maven archetype to generate licences for use with the li
 To build the licence archetype generator use 
 mvn clean install
 
-After Building the archetype, to create a project move to an empty folder and use
+After Building the archetype, to create a project move to an empty folder and use a command like
 
-mvn archetype:generate -DarchetypeCatalog=local -DarchetypeGroupId=org.opennms \
+mvn archetype:generate -DarchetypeCatalog=local -DarchetypeGroupId=org.opennms.plugins \
 -DarchetypeArtifactId=karaf-pluginmanager-archetype \
--DarchetypeVersion=0.0.1-SNAPSHOT \
--DgroupId=org.opennms.project \
+-DarchetypeVersion=1.0-SNAPSHOT \
+-DgroupId=org.opennms.plugins \
 -DartifactId=myproject \
--Dpackage=org.opennms.project.packagename
+-Dpackage=org.opennms.plugins.myproject.packagename
  
- Where -DgroupId=org.opennms.project  is the group id of your generated project
--DartifactId=myproject is the artifact id of your generated project
--Dpackage=org.opennms.project.packagename is the route package in which the generated licence artifacts will be placed
+ Where -DgroupId=org.opennms.plugins is the maven group id of your generated project
+-DartifactId=myproject is the maven artifact id of your generated project
+-Dpackage=org.opennms.plugins.myproject.packagename is the route java package in which the generated licence artifacts will be placed
+

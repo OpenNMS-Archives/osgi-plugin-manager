@@ -10,13 +10,38 @@
 
   <!-- Licence Generator -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${rootArtifactId}.licence-generator</artifactId>
-  <name>${rootArtifactId}.licence-generator</name>
-  <description>Licence Generator for ${rootArtifactId}</description>
+  <artifactId>${symbol_dollar}{productName}.licence-generator</artifactId>
+  <name>${symbol_dollar}{productName}.licence-generator</name>
+  <description>Licence Generator for ${symbol_dollar}{productName}</description>
   <packaging>jar</packaging>
 
   <build>
     <plugins>
+      <!-- copy and process the productSpec and licenceMetadataSpec for this project -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>filter-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${symbol_dollar}{project.build.directory}/filtered-resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/filtered-resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+ 
+    
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -43,7 +68,7 @@
           <dependency>
             <groupId>org.opennms.plugins</groupId>
             <artifactId>org.opennms.plugin.licencemanager</artifactId>
-            <version>$symbol_dollar{org.opennms.plugin.licencemanager.version}</version>
+            <version>${symbol_dollar}{org.opennms.plugin.licencemanager.version}</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -75,6 +100,9 @@
               <resources>
                 <resource>
                   <directory>${symbol_dollar}{project.build.directory}/generated-licence/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${symbol_dollar}{project.build.directory}/filtered-resources</directory>
                 </resource>
               </resources>
             </configuration>
@@ -124,7 +152,7 @@
     <dependency>
       <groupId>org.opennms.plugins</groupId>
       <artifactId>org.opennms.plugin.licencemanager</artifactId>
-      <version>$symbol_dollar{org.opennms.plugin.licencemanager.version}</version>
+      <version>${symbol_dollar}{org.opennms.plugin.licencemanager.version}</version>
       <scope>provided</scope>
     </dependency>
     <!-- Note these dependencies match org.apache.karaf.shell.console 2.2.11 -->

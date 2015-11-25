@@ -35,6 +35,7 @@
           <directory></directory>
           <includes>
             <include>**/*.gitignore</include>
+            <include>src/main/filtered-resources/*.xml</include>
           </includes>
         </fileSet>
       </fileSets>

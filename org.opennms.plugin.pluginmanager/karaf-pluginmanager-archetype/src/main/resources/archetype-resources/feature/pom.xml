@@ -11,9 +11,9 @@
   
   <!-- Feature Definition -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${rootArtifactId}</artifactId>
-  <name>${rootArtifactId}</name>
-  <description>Feature definition for ${rootArtifactId}</description>
+  <artifactId>${symbol_dollar}{productName}</artifactId>
+  <name>${symbol_dollar}{productName}</name>
+  <description>Feature definition for ${symbol_dollar}{productName}</description>
   <packaging>pom</packaging>
 
   <build>
@@ -41,14 +41,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.opennms.project</groupId>
-      <artifactId>${rootArtifactId}.licence-authenticator</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>${groupId}</groupId>
+      <artifactId>${symbol_dollar}{productName}.licence-authenticator</artifactId>
+      <version>${symbol_dollar}{project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.opennms.project</groupId>
-      <artifactId>${rootArtifactId}.product-descriptor</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>${groupId}</groupId>
+      <artifactId>${symbol_dollar}{productName}.product-descriptor</artifactId>
+      <version>${symbol_dollar}{project.version}</version>
     </dependency>
   </dependencies>
   <pluginRepositories>
