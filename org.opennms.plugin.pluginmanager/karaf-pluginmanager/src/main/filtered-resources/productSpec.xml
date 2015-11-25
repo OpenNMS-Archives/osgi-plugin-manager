@@ -22,8 +22,8 @@
   <packageingDescriptor>Not Defined</packageingDescriptor>
 	
   <organization>OpenNMS</organization>
-  <productDescription>Plugin Manager</productDescription>
-  <productName>test Bundle</productName>
+  <productDescription>Plugin Manager for Karaf</productDescription>
+  <productName>${productName}</productName>
   <productUrl>http://www.opennms.co.uk</productUrl>
   <licenceKeyRequired>false</licenceKeyRequired>
   <licenceType>Apache 2</licenceType>

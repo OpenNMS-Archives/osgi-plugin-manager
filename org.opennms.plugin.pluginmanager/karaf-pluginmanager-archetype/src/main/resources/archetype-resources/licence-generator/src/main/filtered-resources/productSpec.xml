@@ -23,11 +23,11 @@
   <packageingDescriptor>Not Defined</packageingDescriptor>
 	
   <organization>OpenNMS Project</organization>
-  <productDescription>Test product description</productDescription>
-  <productName>test Bundle</productName>
+  <productDescription>TODO complete product description for ${productName}</productDescription>
+  <productName>${productName}</productName>
   <productUrl>http:\\opennms.co.uk</productUrl>
   <licenceKeyRequired>true</licenceKeyRequired>
-  <licenceType>OpenNMS EULA See http:\\opennms.co.uk\EULA</licenceType>
+  <licenceType>See Plugin Documentation for ELUA</licenceType>
   
   <!-- a plugin marked as a system plugin will not be removable by the plugin manager -->
   <systemPlugin>false</systemPlugin>
