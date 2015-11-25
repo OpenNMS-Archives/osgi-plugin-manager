@@ -88,7 +88,7 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 				systemMessages.setValue("");
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
-					sessionPluginManager.unInstallPlugin(selectedProductId);
+                    sessionPluginManager.unInstallPlugin(selectedProductId);
 					systemMessages.setValue("uninstalled product Id "+selectedProductId);
 				    ProductSpecList productSpeclist = sessionPluginManager.getInstalledPlugins();
 					if (productSpeclist!=null) productDescriptorTablePanel.addProductList(productSpeclist);

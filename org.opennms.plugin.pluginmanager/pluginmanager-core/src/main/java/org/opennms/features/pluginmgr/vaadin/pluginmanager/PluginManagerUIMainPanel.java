@@ -413,7 +413,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 		});
 
 		remoteIsAccessibleCheckBox.addValueChangeListener(new Property.ValueChangeListener() {
-			private static final long serialVersionUID = -1L;
+			private static final long serialVersionUID = 1L;
 			public void valueChange(ValueChangeEvent event) {
 				boolean remoteIsAccessible = (Boolean) event.getProperty().getValue();
 				sessionPluginManager.setRemoteIsAccessible(remoteIsAccessible);
@@ -433,7 +433,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 
 
 		allowUpdateMessagesCheckBox.addValueChangeListener(new Property.ValueChangeListener() {
-			private static final long serialVersionUID = -1L;
+			private static final long serialVersionUID = 1L;
 			public void valueChange(ValueChangeEvent event) {
 				boolean allowUpdateMessages = (Boolean) event.getProperty().getValue();
 				sessionPluginManager.setAllowUpdateMessages(allowUpdateMessages);

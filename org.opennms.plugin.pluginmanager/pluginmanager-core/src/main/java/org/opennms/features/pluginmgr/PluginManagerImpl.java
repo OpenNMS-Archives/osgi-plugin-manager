@@ -20,8 +20,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -712,6 +714,19 @@ public class PluginManagerImpl implements PluginManager {
 
 		SortedMap<String, KarafManifestEntryJaxb> karafInstances = getKarafInstances();
 		if (! karafInstances.containsKey(karafInstance)) throw new RuntimeException("system does not know karafInstance="+karafInstance);
+		
+		// check if this is a systemPlugin before trying to remove
+		ProductSpecList installedPluginsList = getInstalledPlugins(karafInstance);
+		Map<String,ProductMetadata> pmap = new TreeMap<String,ProductMetadata>();
+		for (ProductMetadata pmeta: installedPluginsList.getProductSpecList()){
+			pmap.put(pmeta.getProductId(), pmeta);
+		}
+		ProductMetadata selectedProductMetadata= pmap.get(selectedProductId);
+		if(selectedProductMetadata==null)throw new RuntimeException("cannot uninstall "+selectedProductId+" as not installed.");
+		if(selectedProductMetadata.getSystemPlugin()!=null && selectedProductMetadata.getSystemPlugin()==true )
+			throw new RuntimeException(selectedProductId+" is a system plugin and cannot be uninstalled.");
+		
+		// not a system plugin so try to uninstall plugin
 		KarafManifestEntryJaxb karafManifest = karafInstances.get(karafInstance);
 		String karafInstanceUrl=karafManifest.getKarafInstanceUrl();
 

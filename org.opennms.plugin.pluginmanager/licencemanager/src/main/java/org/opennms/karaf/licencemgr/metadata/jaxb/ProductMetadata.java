@@ -32,11 +32,11 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="product")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType (propOrder={"productId","featureRepository","productName","productDescription","productUrl","organization","licenceType","licenceKeyRequired","licenceKeyAuthenticated","systemPlugin"})
+@XmlType (propOrder={"productId","featureRepository", "packageingDescriptor", "productName","productDescription","productUrl","organization","licenceType","licenceKeyRequired","licenceKeyAuthenticated","systemPlugin"})
 public class ProductMetadata {
 
-
-
+	//NOTE IF YOU MODIFY THIS CLASS YOU MUST REGENERATE THE equals and hashCode methods
+	//AND change the fromXml() method
 
 	/**
 	 * productId is expected to contain the name of the product in the form <name>/<version>
@@ -49,7 +49,7 @@ public class ProductMetadata {
 	 * so this allows us to have a single licence which can cover a range of releases of the
 	 * feature which implements the product.
 	 */
-	String productId=null;
+	private String productId=null;
 	
 	/**
 	 * featureRepository is expected to contain the url of the features repository 
@@ -58,7 +58,13 @@ public class ProductMetadata {
 	 * such that the repository can be installed using features:addurl (Karaf 2.4.0)
 	 * e.g. features:addurl mvn:org.apache.camel/camel-example-osgi/2.10.0/xml/features
 	 */
-	String featureRepository=null;
+	private String featureRepository=null;
+	
+	/**
+	 * packageingDescriptor Describes the packaging of this feature. This gives an locator for the Karaf kar or rpm
+	 * in which this feature was packaged for delivery. Null or empty if no packaging described.  
+	 */
+	private String packageingDescriptor=null;
 
 	/**
 	 * product name - plain text name of product- usually maven name field
@@ -130,6 +136,23 @@ public class ProductMetadata {
 	@XmlElement(name="featureRepository")
 	public void setFeatureRepository(String featureRepository) {
 		this.featureRepository = featureRepository;
+	}
+	
+
+
+	/**
+	 * @return the packageingDescriptor
+	 */
+	public String getPackageingDescriptor() {
+		return packageingDescriptor;
+	}
+
+	/**
+	 * @param packageingDescriptor the packageingDescriptor to set
+	 */
+	@XmlElement(name="packageingDescriptor")
+	public void setPackageingDescriptor(String packageingDescriptor) {
+		this.packageingDescriptor = packageingDescriptor;
 	}
 
 	/**
@@ -287,6 +310,7 @@ public class ProductMetadata {
 			ProductMetadata productMetadata= (ProductMetadata) jaxbUnmarshaller.unmarshal(reader);
 			this.productId=productMetadata.productId;
 			this.featureRepository=productMetadata.featureRepository;
+			this.packageingDescriptor=productMetadata.packageingDescriptor;
 			this.productDescription=productMetadata.productDescription;
 			this.organization=productMetadata.organization;
 			this.productName=productMetadata.productName;
@@ -331,6 +355,8 @@ public class ProductMetadata {
 
 	//NOTE IF YOU MODIFY THIS CLASS YOU MUST REGENERATE THE equals and hashCode methods
 	//AND change the fromXml() method
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -351,6 +377,10 @@ public class ProductMetadata {
 				+ ((licenceType == null) ? 0 : licenceType.hashCode());
 		result = prime * result
 				+ ((organization == null) ? 0 : organization.hashCode());
+		result = prime
+				* result
+				+ ((packageingDescriptor == null) ? 0 : packageingDescriptor
+						.hashCode());
 		result = prime
 				* result
 				+ ((productDescription == null) ? 0 : productDescription
@@ -400,6 +430,11 @@ public class ProductMetadata {
 			if (other.organization != null)
 				return false;
 		} else if (!organization.equals(other.organization))
+			return false;
+		if (packageingDescriptor == null) {
+			if (other.packageingDescriptor != null)
+				return false;
+		} else if (!packageingDescriptor.equals(other.packageingDescriptor))
 			return false;
 		if (productDescription == null) {
 			if (other.productDescription != null)

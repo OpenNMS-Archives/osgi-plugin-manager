@@ -83,7 +83,7 @@ public class ProductDescriptorTablePanel extends CustomComponent {
 
 		// Feedback on value changes
 		productListSelect.addValueChangeListener(new Property.ValueChangeListener() {
-			private static final long serialVersionUID = 4777915807221505438L;
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {

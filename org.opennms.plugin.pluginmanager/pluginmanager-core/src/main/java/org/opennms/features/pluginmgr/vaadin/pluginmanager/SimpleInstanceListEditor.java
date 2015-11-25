@@ -180,7 +180,7 @@ public class SimpleInstanceListEditor extends InstanceListEditor  {
 		
 		// handle allowUpdateMessagesCheckBox
 		allowUpdateMessagesCheckBox.addValueChangeListener(new Property.ValueChangeListener() {
-			private static final long serialVersionUID = -1L;
+			private static final long serialVersionUID = 1L;
 			public void valueChange(ValueChangeEvent event) {
 				deleteConfirmVerticalLayout.setVisible(false);
 				boolean allowUpdateMessages = (Boolean) event.getProperty().getValue();
@@ -190,7 +190,7 @@ public class SimpleInstanceListEditor extends InstanceListEditor  {
 		
 		// handle remoteIsAccessibleCheckBox
 		remoteIsAccessibleCheckBox.addValueChangeListener(new Property.ValueChangeListener() {
-			private static final long serialVersionUID = -1L;
+			private static final long serialVersionUID = 1L;
 			public void valueChange(ValueChangeEvent event) {
 				deleteConfirmVerticalLayout.setVisible(false);
 				boolean allowUpdateMessages = (Boolean) event.getProperty().getValue();
