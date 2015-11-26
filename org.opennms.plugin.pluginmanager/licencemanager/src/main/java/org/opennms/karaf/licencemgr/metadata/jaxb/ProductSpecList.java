@@ -15,11 +15,17 @@
 
 package org.opennms.karaf.licencemgr.metadata.jaxb;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -36,6 +42,9 @@ public class ProductSpecList  {
 	@XmlElementWrapper(name="productSpecList")
 	@XmlElement(name="productMetadata")
 	private List<ProductMetadata> productSpecList = new ArrayList<ProductMetadata>();
+	
+	@XmlElement(name="productListSource")
+	private String productListSource=null;
 
 	/**
 	 * @return the productSpecList
@@ -50,5 +59,52 @@ public class ProductSpecList  {
 	public void setProductSpecList(List<ProductMetadata> productSpecList) {
 		this.productSpecList = productSpecList;
 	}
+	
+	public String getProductListSource() {
+		return productListSource;
+	}
+
+	public void setProductListSource(String productListSource) {
+		this.productListSource = productListSource;
+	}
+	
+	//NOTE IF YOU MODIFY THIS CLASS YOU MUST change the fromXml() method
+	/**
+	 * load this object with data from xml string
+	 * @parm XML encoded version of ProductSpecList
+	 */
+	public void fromXml(String xmlStr){
+
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(org.opennms.karaf.licencemgr.metadata.jaxb.ObjectFactory.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			StringReader reader = new StringReader(xmlStr);
+			ProductSpecList prodSpecList= (ProductSpecList) jaxbUnmarshaller.unmarshal(reader);
+			this.productSpecList=prodSpecList.getProductSpecList();
+			this.productListSource=prodSpecList.getProductListSource();
+
+		} catch (JAXBException e) {
+			throw new RuntimeException("Problem unmarshalling ProductSpecList:",e);
+		}
+	}
+	
+	/**
+	 * @return XML encoded version of ProductSpecList
+	 */
+	public String toXml(){
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(org.opennms.karaf.licencemgr.metadata.jaxb.ObjectFactory.class);
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+			jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+			StringWriter stringWriter = new StringWriter();
+			jaxbMarshaller.marshal(this,stringWriter);
+			return stringWriter.toString();
+		} catch (JAXBException e) {
+			throw new RuntimeException("Problem marshalling ProductSpecList:",e);
+		}
+	}
+
+
+
 
 }

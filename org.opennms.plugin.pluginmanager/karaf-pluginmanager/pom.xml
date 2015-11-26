@@ -17,6 +17,7 @@
   <properties>
     <bundle.symbolicName>org.opennms.plugin.pluginmanager.karaf-pluginmanager</bundle.symbolicName>
     <bundle.namespace>UNDEFINED</bundle.namespace>
+    <productName>org.opennms.plugin.pluginmanager.karaf-pluginmanager</productName>
   </properties>
 
   <build>

@@ -39,4 +39,8 @@ public interface BundleProductSpec {
 	public void setBundleContext(BundleContext bundleContext);
 
 	public BundleContext getBundleContext();
+
+	public void registerSpecificationList();
+
+	public void unregisterSpecificationList();
 }
