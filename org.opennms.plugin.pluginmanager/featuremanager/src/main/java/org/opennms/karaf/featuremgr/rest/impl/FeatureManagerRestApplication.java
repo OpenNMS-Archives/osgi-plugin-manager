@@ -20,11 +20,15 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FeatureManagerRestApplication extends Application {
+	private static final Logger LOG = LoggerFactory.getLogger(FeatureManagerRestApplication.class);
 	
 	public FeatureManagerRestApplication(){
 		super();
-		System.out.println("Feature Manager starting.");
+		LOG.info("Feature Manager starting.");
 	}
 
 	// doing this because the com.sun.ws.rest.api.core.PackagesResourceConfig 
@@ -43,7 +47,7 @@ public class FeatureManagerRestApplication extends Application {
 	//	}
 	
 	public void destroyMethod(){
-		System.out.println("Feature Manager shutting down.");
+		LOG.info("Feature Manager shutting down.");
 	}
 
 }

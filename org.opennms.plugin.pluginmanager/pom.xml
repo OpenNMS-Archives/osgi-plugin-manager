@@ -1,393 +1,417 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.opennms.plugins</groupId>
-	<artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+  <groupId>org.opennms.plugins</groupId>
+  <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-	<name>org.opennms.plugin.pluginmanager.parent</name>
-	<description>feature manager karaf plugin parent project</description>
+  <name>org.opennms.plugin.pluginmanager.parent</name>
+  <description>feature manager karaf plugin parent project</description>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.surefire.plugin.version>2.15</maven.surefire.plugin.version>
-		<jerseyVersion>1.19</jerseyVersion>
-		<vaadinVersion>7.2.7</vaadinVersion>
-		<vaadin.plugin.version>7.2.7</vaadin.plugin.version>
-		<vaadinExtenderVersion>1.0.0</vaadinExtenderVersion>
-		<licencemanagerVersion>1.0-SNAPSHOT</licencemanagerVersion>
-		<featuremanagerVersion>1.0-SNAPSHOT</featuremanagerVersion>
-		<jettyVersion>8.1.10.v20130312</jettyVersion>
-		<guavaVersion>17.0</guavaVersion>
-	</properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.surefire.plugin.version>2.15</maven.surefire.plugin.version>
+    <jerseyVersion>1.19</jerseyVersion>
+    <vaadinVersion>7.2.7</vaadinVersion>
+    <vaadin.plugin.version>7.2.7</vaadin.plugin.version>
+    <vaadinExtenderVersion>1.0.0</vaadinExtenderVersion>
+    <licencemanagerVersion>1.0-SNAPSHOT</licencemanagerVersion>
+    <featuremanagerVersion>1.0-SNAPSHOT</featuremanagerVersion>
+    <jettyVersion>8.1.10.v20130312</jettyVersion>
+    <guavaVersion>17.0</guavaVersion>
+    <log4j2Version>2.1</log4j2Version>
+    <slf4jVersion>1.7.7</slf4jVersion>
+  </properties>
 
-	<modules>
-		<module>licencemanager</module>
-		<module>featuremanager</module>
-		<module>karaf-pluginmanager-archetype</module>
-		<module>pluginmanager-core</module>
-		<module>karaf-pluginmanager</module>
-	</modules>
+  <modules>
+    <module>licencemanager</module>
+    <module>featuremanager</module>
+    <module>karaf-pluginmanager-archetype</module>
+    <module>pluginmanager-core</module>
+    <module>karaf-pluginmanager</module>
+  </modules>
 
-	<build>
-		<plugins>
-			<plugin>
-				<!-- | the following instructions build a simple set of public/private 
-					classes into an OSGi bundle -->
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<configuration>
-					<instructions>
-						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
-						<Bundle-Version>${project.version}</Bundle-Version>
-						<!-- | assume public classes are in the top package, and private classes 
-							are under ".internal" -->
-						<Export-Package>!${bundle.namespace}.internal.*,${bundle.namespace}.*;version="${project.version}"</Export-Package>
-						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
-						<!-- | each module can override these defaults in their osgi.bnd file -->
-						<_include>-osgi.bnd</_include>
-					</instructions>
-				</configuration>
-			</plugin>
-		</plugins>
+  <build>
+    <plugins>
+      <plugin>
+        <!-- | the following instructions build a simple set of public/private classes into an OSGi bundle -->
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+            <Bundle-Version>${project.version}</Bundle-Version>
+            <!-- | assume public classes are in the top package, and private classes are under ".internal" -->
+            <Export-Package>!${bundle.namespace}.internal.*,${bundle.namespace}.*;version="${project.version}"</Export-Package>
+            <Private-Package>${bundle.namespace}.internal.*</Private-Package>
+            <!-- | each module can override these defaults in their osgi.bnd file -->
+            <_include>-osgi.bnd</_include>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
-					<configuration>
-						<target>1.8</target>
-						<source>1.8</source>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${maven.surefire.plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.opennms.maven.plugins</groupId>
-					<artifactId>features-maven-plugin</artifactId>
-					<version>1.2.0</version>
-					<executions>
-						<execution>
-							<id>features.xml</id>
-							<phase>process-resources</phase>
-							<goals>
-								<goal>generate-features-xml</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>2.5.3</version>
-					<extensions>true</extensions>
-					<configuration>
-						<obrRepository>NONE</obrRepository>
-					</configuration>
-				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.opennms.maven.plugins</groupId>
-										<artifactId>features-maven-plugin</artifactId>
-										<versionRange>[1.0-SNAPSHOT,)</versionRange>
-										<goals>
-											<goal>generate-features-xml</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.vaadin</groupId>
-										<artifactId>vaadin-maven-plugin</artifactId>
-										<versionRange>[1.0.2,)</versionRange>
-										<goals>
-											<goal>resources</goal>
-											<goal>update-widgetset</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-										<execute />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-                                  <pluginExecutionFilter>
-                                    <groupId>org.apache.maven.plugins</groupId>
-                                    <artifactId>maven-dependency-plugin</artifactId>
-                                    <versionRange>[1.0.0,)</versionRange>
-                                    <goals>
-                                      <goal>copy</goal>
-                                      <goal>copy-dependencies</goal>
-                                      <goal>unpack</goal>
-                                    </goals>
-                                  </pluginExecutionFilter>
-                                  <action>
-                                    <ignore/>
-                                  </action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-				   <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-dependency-plugin</artifactId>
-                   <version>2.10</version>
-                </plugin>
-                <plugin>
-                   <groupId>org.codehaus.mojo</groupId>
-                   <artifactId>build-helper-maven-plugin</artifactId>
-                   <version>1.7</version>
-                </plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
+          <configuration>
+            <target>1.8</target>
+            <source>1.8</source>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.opennms.maven.plugins</groupId>
+          <artifactId>features-maven-plugin</artifactId>
+          <version>1.2.0</version>
+          <executions>
+            <execution>
+              <id>features.xml</id>
+              <phase>process-resources</phase>
+              <goals>
+                <goal>generate-features-xml</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>2.5.3</version>
+          <extensions>true</extensions>
+          <configuration>
+            <obrRepository>NONE</obrRepository>
+          </configuration>
+        </plugin>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.opennms.maven.plugins</groupId>
+                    <artifactId>features-maven-plugin</artifactId>
+                    <versionRange>[1.0-SNAPSHOT,)</versionRange>
+                    <goals>
+                      <goal>generate-features-xml</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>vaadin-maven-plugin</artifactId>
+                    <versionRange>[1.0.2,)</versionRange>
+                    <goals>
+                      <goal>resources</goal>
+                      <goal>update-widgetset</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                    <execute />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>copy</goal>
+                      <goal>copy-dependencies</goal>
+                      <goal>unpack</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.10</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.7</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.karaf.features</groupId>
-				<artifactId>org.apache.karaf.features.core</artifactId>
-				<version>2.4.0</version>
-			</dependency>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.karaf.features</groupId>
+        <artifactId>org.apache.karaf.features.core</artifactId>
+        <version>2.4.0</version>
+      </dependency>
 
-			<dependency>
-				<groupId>org.apache.karaf.shell</groupId>
-				<artifactId>org.apache.karaf.shell.console</artifactId>
-				<version>2.2.11</version>
-			</dependency>
+      <dependency>
+        <groupId>org.apache.karaf.shell</groupId>
+        <artifactId>org.apache.karaf.shell.console</artifactId>
+        <version>2.2.11</version>
+      </dependency>
 
-			<dependency>
-				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.core</artifactId>
-				<version>4.2.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.compendium</artifactId>
-				<version>4.2.0</version>
-			</dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>4.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <version>4.2.0</version>
+      </dependency>
 
 
 
 
-			<!-- opennms Jersey implementation in Lib directory -->
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-server</artifactId>
-				<version>${jerseyVersion}</version>
-			</dependency>
+      <!-- opennms Jersey implementation in Lib directory -->
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-server</artifactId>
+        <version>${jerseyVersion}</version>
+      </dependency>
 
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-servlet</artifactId>
-				<!-- <version>1.18.1</version> NOTE the version in OpenNMS 16.0.0.0 is 
-					1.18 -->
-				<version>${jerseyVersion}</version>
-			</dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-servlet</artifactId>
+        <!-- <version>1.18.1</version> NOTE the version in OpenNMS 16.0.0.0 is 1.18 -->
+        <version>${jerseyVersion}</version>
+      </dependency>
 
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-core</artifactId>
-				<version>${jerseyVersion}</version>
-			</dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-core</artifactId>
+        <version>${jerseyVersion}</version>
+      </dependency>
 
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-client</artifactId>
-				<version>${jerseyVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.ws.rs</groupId>
-				<artifactId>jsr311-api</artifactId>
-				<version>1.1.1</version>
-			</dependency>
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-client</artifactId>
+        <version>${jerseyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>jsr311-api</artifactId>
+        <version>1.1.1</version>
+      </dependency>
 
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.10</version>
-			</dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.10</version>
+      </dependency>
 
-			<!-- vaadin dependencies -->
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-server</artifactId>
-				<version>${vaadinVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-client-compiled</artifactId>
-				<version>${vaadinVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-client</artifactId>
-				<version>${vaadinVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-themes</artifactId>
-				<version>${vaadinVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-shared</artifactId>
-				<version>${vaadinVersion}</version>
-			</dependency>
+      <!-- vaadin dependencies -->
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-server</artifactId>
+        <version>${vaadinVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-client-compiled</artifactId>
+        <version>${vaadinVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-client</artifactId>
+        <version>${vaadinVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-themes</artifactId>
+        <version>${vaadinVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-shared</artifactId>
+        <version>${vaadinVersion}</version>
+      </dependency>
 
-			<dependency>
-				<groupId>com.vaadin.external.json</groupId>
-				<artifactId>json</artifactId>
-				<version>0.0.20080701</version>
-			</dependency>
+      <dependency>
+        <groupId>com.vaadin.external.json</groupId>
+        <artifactId>json</artifactId>
+        <version>0.0.20080701</version>
+      </dependency>
 
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-shared-deps</artifactId>
-				<version>1.0.2</version>
-			</dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-shared-deps</artifactId>
+        <version>1.0.2</version>
+      </dependency>
 
-			<dependency>
-				<groupId>org.jsoup</groupId>
-				<artifactId>jsoup</artifactId>
-				<version>1.7.2</version>
-			</dependency>
+      <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>1.7.2</version>
+      </dependency>
 
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guavaVersion}</version>
-			</dependency>
-
-
-			<!-- servelet dependencies -->
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-jsp</artifactId>
-				<version>${jettyVersion}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty.orbit</groupId>
-				<artifactId>javax.servlet</artifactId>
-				<version>3.0.0.v201112011016</version>
-			</dependency>
-			<dependency>
-				<groupId>org.opennms.vaadin-extender</groupId>
-				<artifactId>service</artifactId>
-				<version>${vaadinExtenderVersion}</version>
-			</dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guavaVersion}</version>
+      </dependency>
 
 
-			<!-- licence / feature manager dependencies -->
-			<dependency>
-				<groupId>org.opennms.plugins</groupId>
-				<artifactId>org.opennms.plugin.licencemanager</artifactId>
-				<version>${licencemanagerVersion}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.opennms.plugins</groupId>
-				<artifactId>org.opennms.plugin.featuremanager</artifactId>
-				<version>${featuremanagerVersion}</version>
-				<scope>provided</scope>
-			</dependency>
+      <!-- servelet dependencies -->
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-jsp</artifactId>
+        <version>${jettyVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.orbit</groupId>
+        <artifactId>javax.servlet</artifactId>
+        <version>3.0.0.v201112011016</version>
+      </dependency>
+      <dependency>
+        <groupId>org.opennms.vaadin-extender</groupId>
+        <artifactId>service</artifactId>
+        <version>${vaadinExtenderVersion}</version>
+      </dependency>
 
-		</dependencies>
 
-	</dependencyManagement>
+      <!-- licence / feature manager dependencies -->
+      <dependency>
+        <groupId>org.opennms.plugins</groupId>
+        <artifactId>org.opennms.plugin.licencemanager</artifactId>
+        <version>${licencemanagerVersion}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.opennms.plugins</groupId>
+        <artifactId>org.opennms.plugin.featuremanager</artifactId>
+        <version>${featuremanagerVersion}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- logging dependencies. Note slf4j is used in karaf. log4j is only used in tests -->
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4j2Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j2Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-1.2-api</artifactId>
+        <version>${log4j2Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>${log4j2Version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+
+    </dependencies>
+
+  </dependencyManagement>
 
 
-	<repositories>
-		<repository>
-			<id>vaadin-snapshots</id>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<url>http://maven.opennms.org/content/groups/vaadin-snapshot/</url>
-		</repository>
-		<repository>
-			<id>vaadin-addons</id>
-			<url>http://maven.opennms.org/content/groups/vaadin.com-addons/</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>opennms-repo</id>
-			<name>OpenNMS Repository</name>
-			<url>http://maven.opennms.org/content/groups/opennms.org-release</url>
-		</repository>
-		<repository>
-			<id>opennms-snapshots</id>
-			<name>OpenNMS Snapshot Maven Repository</name>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<url>http://maven.opennms.org/content/groups/opennms.org-snapshot</url>
-		</repository>
+  <repositories>
+    <repository>
+      <id>vaadin-snapshots</id>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>http://maven.opennms.org/content/groups/vaadin-snapshot/</url>
+    </repository>
+    <repository>
+      <id>vaadin-addons</id>
+      <url>http://maven.opennms.org/content/groups/vaadin.com-addons/</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>opennms-repo</id>
+      <name>OpenNMS Repository</name>
+      <url>http://maven.opennms.org/content/groups/opennms.org-release</url>
+    </repository>
+    <repository>
+      <id>opennms-snapshots</id>
+      <name>OpenNMS Snapshot Maven Repository</name>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <url>http://maven.opennms.org/content/groups/opennms.org-snapshot</url>
+    </repository>
 
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>opennms-repo</id>
-			<name>OpenNMS Repository</name>
-			<url>http://maven.opennms.org/content/groups/opennms.org-release</url>
-		</pluginRepository>
-	</pluginRepositories>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>opennms-repo</id>
+      <name>OpenNMS Repository</name>
+      <url>http://maven.opennms.org/content/groups/opennms.org-release</url>
+    </pluginRepository>
+  </pluginRepositories>
 
-	<distributionManagement>
-		<site>
-			<id>opennms-site</id>
-			<name>OpenNMS Build Website</name>
-			<url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/sites/opennms/${project.version}/</url>
-		</site>
-		<repository>
-			<id>opennms-repo</id>
-			<name>OpenNMS Maven Repository</name>
-			<url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/maven2</url>
-		</repository>
-		<snapshotRepository>
-			<id>opennms-snapshots</id>
-			<name>OpenNMS Snapshot Maven Repository</name>
-			<url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+  <distributionManagement>
+    <site>
+      <id>opennms-site</id>
+      <name>OpenNMS Build Website</name>
+      <url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/sites/opennms/${project.version}/</url>
+    </site>
+    <repository>
+      <id>opennms-repo</id>
+      <name>OpenNMS Maven Repository</name>
+      <url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/maven2</url>
+    </repository>
+    <snapshotRepository>
+      <id>opennms-snapshots</id>
+      <name>OpenNMS Snapshot Maven Repository</name>
+      <url>scpexe://repo.opennms.org/var/www/sites/opennms.org/site/repo/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
 </project>

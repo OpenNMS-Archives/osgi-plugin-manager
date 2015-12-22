@@ -28,6 +28,8 @@ import org.opennms.karaf.featuremgr.jaxb.RepositoryWrapperJaxb;
 import org.opennms.karaf.featuremgr.jaxb.Util;
 import org.opennms.karaf.featuremgr.rest.client.FeaturesServiceClient;
 import org.opennms.karaf.featuremgr.rest.client.jerseyimpl.FeaturesServiceClientRestJerseyImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test of jersey web client implementation
@@ -35,6 +37,7 @@ import org.opennms.karaf.featuremgr.rest.client.jerseyimpl.FeaturesServiceClient
  *
  */
 public class FeaturesServiceClientRestJerseyTest {
+	private static final Logger LOG = LoggerFactory.getLogger(FeaturesServiceClientRestJerseyTest.class);
 	
 	private static String TEST_PROPERTIES_FILE="/featuresServiceTest.properties";
 	
@@ -53,7 +56,7 @@ public class FeaturesServiceClientRestJerseyTest {
 	public FeaturesServiceClientRestJerseyTest(){
 		super();
 		
-		System.out.println("LOADING PROPERTIES: FeaturesServiceClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
+		LOG.debug("LOADING PROPERTIES: FeaturesServiceClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
 		
 		Properties prop = null;
         InputStream is = null;
@@ -71,16 +74,16 @@ public class FeaturesServiceClientRestJerseyTest {
     		version= prop.getProperty("version");
  
         } catch (Exception e) {
-        	System.out.println("     Using defailt values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:"+e);
+        	LOG.error("     Using defailt values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:"+e);
         }
 
-        System.out.println("     baseUrl = "+baseUrl);
-		System.out.println("     basePath = "+basePath);
-		System.out.println("     userName= "+userName);
-		System.out.println("     password= "+password);
-		System.out.println("     test feature uriStr=" +uriStr);
-		System.out.println("     test feature name=" +name);
-		System.out.println("     test feature version=" +version);
+        LOG.debug("     baseUrl = "+baseUrl);
+		LOG.debug("     basePath = "+basePath);
+		LOG.debug("     userName= "+userName);
+		LOG.debug("     password= "+password);
+		LOG.debug("     test feature uriStr=" +uriStr);
+		LOG.debug("     test feature name=" +name);
+		LOG.debug("     test feature version=" +version);
 		
 	}
 
@@ -99,7 +102,7 @@ public class FeaturesServiceClientRestJerseyTest {
 	
 	@Test
 	public void testsInOrder(){
-		System.out.println("@Test - LICENCE MANAGER TESTS.START");
+		LOG.debug("@Test - LICENCE MANAGER TESTS.START");
 		
 		this.featuresAddRepository();
 		this.getFeaturesListRepositories();
@@ -110,14 +113,14 @@ public class FeaturesServiceClientRestJerseyTest {
 		this.featuresUninstall();
 		this.featuresRemoveRepository();		
 		
-		System.out.println("@Test - LICENCE MANAGER TESTS.FINISH");
+		LOG.debug("@Test - LICENCE MANAGER TESTS.FINISH");
 	}
 
 	
 	
 	//@Test
 	public void featuresAddRepository() {
-		System.out.println("@Test - featuresAddRepository.START");
+		LOG.debug("@Test - featuresAddRepository.START");
 
 		//http://localhost:8181/featuremgr/rest/v1-0/features-addrepositoryurl?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 
@@ -129,30 +132,30 @@ public class FeaturesServiceClientRestJerseyTest {
 			fail("@Test - featuresAddRepository() failed. See stack trace in consol");
 		}
 		
-		System.out.println("@Test - featuresAddRepository.FINISH");
+		LOG.debug("@Test - featuresAddRepository.FINISH");
 		
 	}
 	
 	//@Test
 	public void getFeaturesListRepositories() {
-		System.out.println("@Test - getFeaturesListRepositories.START");
+		LOG.debug("@Test - getFeaturesListRepositories.START");
 		
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
 			RepositoryList repositoryList = featuresService.getFeaturesListRepositories();
-			System.out.println(Util.toXml(repositoryList));
+			LOG.debug(Util.toXml(repositoryList));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("problem in test getFeaturesListRepositories(). Exception:",e);
 			fail("@Test - getFeaturesListRepositories() failed. See stack trace in consol");
 		}
 
-		System.out.println("@Test - getFeaturesListRepositories.FINISH");
+		LOG.debug("@Test - getFeaturesListRepositories.FINISH");
 		
 	}
 
 	//@Test
 	public void getFeaturesRepositoryInfo() {
-		System.out.println("@Test - getFeaturesRepositoryInfo.START");
+		LOG.debug("@Test - getFeaturesRepositoryInfo.START");
 		
 		String name=null;
 
@@ -161,13 +164,14 @@ public class FeaturesServiceClientRestJerseyTest {
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
 			RepositoryWrapperJaxb repositoryWrapper = featuresService.getFeaturesRepositoryInfo(name, uriStr);
-			System.out.println(Util.toXml(repositoryWrapper));
+			LOG.debug(Util.toXml(repositoryWrapper));
 		} catch (Exception e) {
+			LOG.error("problem in test getFeaturesRepositoryInfo. Exception:",e);
 			e.printStackTrace();
 			fail("@Test - getFeaturesRepositoryInfo failed. See stack trace in consol");
 		}
 
-		System.out.println("@Test - getFeaturesRepositoryInfo.FINISH");
+		LOG.debug("@Test - getFeaturesRepositoryInfo.FINISH");
 		
 	}
 
@@ -175,75 +179,75 @@ public class FeaturesServiceClientRestJerseyTest {
 	//@Test
 	public void getFeaturesList() {
 
-		System.out.println("@Test - getFeaturesList. START");
+		LOG.debug("@Test - getFeaturesList. START");
 		
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
 			FeatureList featuresList = featuresService.getFeaturesList();
-			System.out.println(Util.toXml(featuresList));
+			LOG.debug(Util.toXml(featuresList));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("problem in test getFeaturesList(). Exception:",e);
 			fail("@Test - getFeaturesList() failed. See stack trace in consol");
 		}
 		
-		System.out.println("@Test - getFeaturesList.FINISH");
+		LOG.debug("@Test - getFeaturesList.FINISH");
 		
 	}
 
 	//@Test
 	public void featuresInstall() {
-		System.out.println("@Test - featuresInstall.START");
+		LOG.debug("@Test - featuresInstall.START");
 				
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
 			featuresService.featuresInstall(name, version);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("problem in test featuresInstall(). Exception:",e);
 			fail("@Test - featuresInstall() failed. See stack trace in consol");
 		}
 		
-		System.out.println("@Test - featuresInstall.FINISH");
+		LOG.debug("@Test - featuresInstall.FINISH");
 
 	}
 
 	//@Test
 	public void getFeaturesInfo() {
 		
-		System.out.println("@Test - getFeaturesInfo.START");
+		LOG.debug("@Test - getFeaturesInfo.START");
 		
 		//http://localhost:8181/featuremgr/rest/v1-0/features-info?name=myproject.Feature&version=1.0-SNAPSHOT
 
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
 			FeatureWrapperJaxb featureWrapper = featuresService.getFeaturesInfo(name, version);
-			System.out.println(Util.toXml(featureWrapper));
+			LOG.debug(Util.toXml(featureWrapper));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("problem in test getFeaturesInfo(). Exception:",e);
 			fail("@Test - getFeaturesInfo() failed. See stack trace in consol");
 		}
 		
-		System.out.println("@Test - getFeaturesInfo.FINISH");
+		LOG.debug("@Test - getFeaturesInfo.FINISH");
 
 	}
 
 	//@Test
 	public void featuresUninstall() {
-		System.out.println("@Test - featuresUninstall.START");
+		LOG.debug("@Test - featuresUninstall.START");
 				
 		FeaturesServiceClient featuresService = getFeaturesService(); 
 		try {
 			featuresService.featuresUninstall(name, version);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("problem in test featuresUninstall(). Exception:",e);
 			fail("@Test - featuresUninstall() failed. See stack trace in consol");
 		}
-		System.out.println("@Test - featuresUninstall.FINISH");
+		LOG.debug("@Test - featuresUninstall.FINISH");
 	}
 
 
 	//@Test
 	public void featuresRemoveRepository() {
-		System.out.println("@Test - featuresRemoveRepository.START");
+		LOG.debug("@Test - featuresRemoveRepository.START");
 		
 		//http://localhost:8181/featuremgr/rest/v1-0/features-removerepository?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
 				
@@ -251,11 +255,11 @@ public class FeaturesServiceClientRestJerseyTest {
 		try {
 			featuresService.featuresRemoveRepository(uriStr);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("problem in test featuresRemoveRepository(). Exception:",e);
 			fail("@Test - featuresRemoveRepository() failed. See stack trace in consol");
 		}
 		
-		System.out.println("@Test - featuresRemoveRepository.FINISH");
+		LOG.debug("@Test - featuresRemoveRepository.FINISH");
 	}
 
 
