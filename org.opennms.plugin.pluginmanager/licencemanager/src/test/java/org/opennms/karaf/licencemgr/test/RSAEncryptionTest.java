@@ -17,6 +17,8 @@ package org.opennms.karaf.licencemgr.test;
 
 import org.junit.*;
 import org.opennms.karaf.licencemgr.RsaAsymetricKeyCipher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
@@ -30,6 +32,7 @@ import static org.junit.Assert.*;
  */
 
 public class RSAEncryptionTest {
+	private static final Logger LOG = LoggerFactory.getLogger(RSAEncryptionTest.class);
 
 	static String publicKeyStr=null;
 	static String privateKeyStr=null;
@@ -43,13 +46,13 @@ public class RSAEncryptionTest {
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
-		System.out.println("@Before - setting up tests");
+		LOG.debug("@Before - setting up tests");
 
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		System.out.println("@After - tearDown");
+		LOG.debug("@After - tearDown");
 	}
 
 
@@ -74,8 +77,8 @@ public class RSAEncryptionTest {
 		assertNotNull(privateKeyStr);
 		assertNotNull(publicKeyStr);
 		
-		System.out.println("@Test generateKeys() privateKeyStr="+privateKeyStr);
-		System.out.println("@Test generateKeys() publicKeyStr="+publicKeyStr);
+		LOG.debug("@Test generateKeys() privateKeyStr="+privateKeyStr);
+		LOG.debug("@Test generateKeys() publicKeyStr="+publicKeyStr);
 	}
 
 
@@ -85,33 +88,33 @@ public class RSAEncryptionTest {
 		rsaAsymetricKeyCipher.setPublicKeyStr(publicKeyStr);
 		
 		encryptedStr = rsaAsymetricKeyCipher.rsaEncryptString(testString);
-		System.out.println("@Test testEncrypt testString="+testString);
-		System.out.println("@Test testEncrypt encryptedStr="+encryptedStr);
+		LOG.debug("@Test testEncrypt testString="+testString);
+		LOG.debug("@Test testEncrypt encryptedStr="+encryptedStr);
 		
 		// test string plus crc
 		encryptedStrPlusCrc=rsaAsymetricKeyCipher.rsaEncryptStringAddChecksum(testString);
-		System.out.println("@Test testEncrypt encryptedStrPlusCrc="+encryptedStrPlusCrc);
+		LOG.debug("@Test testEncrypt encryptedStrPlusCrc="+encryptedStrPlusCrc);
 		
 		
 	}
 
 
 	public void C_testDecrypt() {
-		System.out.println("@Test testDecrypt encryptedStr="+encryptedStr);
+		LOG.debug("@Test testDecrypt encryptedStr="+encryptedStr);
 		
 		RsaAsymetricKeyCipher rsaAsymetricKeyCipher = new RsaAsymetricKeyCipher();
 		rsaAsymetricKeyCipher.setPrivateKeyStr(privateKeyStr);
 		
 		String decriptedStr= rsaAsymetricKeyCipher.rsaDecryptString(encryptedStr);
 		
-		System.out.println("@Test testDecrypt decryptedStr="+decriptedStr);
+		LOG.debug("@Test testDecrypt decryptedStr="+decriptedStr);
 		
 		assertEquals(testString,decriptedStr);
 		
 		// test string plus crc
 		decriptedStr=rsaAsymetricKeyCipher.rsaDecryptStringRemoveChecksum(encryptedStrPlusCrc);
-		System.out.println("@Test testDecrypt  encryptedStrPlusCrc="+encryptedStrPlusCrc);
-		System.out.println("@Test testDecrypt  decryptedstring="+decriptedStr);
+		LOG.debug("@Test testDecrypt  encryptedStrPlusCrc="+encryptedStrPlusCrc);
+		LOG.debug("@Test testDecrypt  decryptedstring="+decriptedStr);
 		
 		assertEquals(testString,decriptedStr);
 		

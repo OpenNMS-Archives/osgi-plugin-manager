@@ -19,9 +19,12 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "licence-mgr", name = "checksumforstring", description="creates and adds a checksum to a given string")
+@Command(scope = "licence-mgr", name = "checksumforstring", description="Creates and adds a checksum to a given string")
 public class ChecksumForStringCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ChecksumForStringCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -42,8 +45,10 @@ public class ChecksumForStringCommand extends OsgiCommandSupport {
 		try{
 			String stringPlusChecksum =  getLicenceService().checksumForString(string);
 			System.out.println("string plus checksum='"+stringPlusChecksum+"'");
+			LOG.info("string plus checksum='"+stringPlusChecksum+"'");
 		} catch (Exception e) {
-			System.out.println("Error Adding Checksum. Exception="+e);
+			System.err.println("Error Adding Checksum. Exception="+e);
+			LOG.error("Error Adding Checksum. Exception=",e);
 		}
 
 		return null;

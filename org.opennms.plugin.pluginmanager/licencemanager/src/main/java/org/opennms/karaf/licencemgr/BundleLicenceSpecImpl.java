@@ -23,8 +23,11 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 import org.opennms.karaf.licencepub.LicencePublisher;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BundleLicenceSpecImpl implements BundleLicenceSpec {
+	private static final Logger LOG = LoggerFactory.getLogger(BundleLicenceSpecImpl.class);
 
 	private BundleContext bundleContext;
 
@@ -110,6 +113,7 @@ public class BundleLicenceSpecImpl implements BundleLicenceSpec {
 		LicenceSpecification licenceSpec= new LicenceSpecification(productId, licenceMetadataSpec, aesSecretKeyStr, publicKeyStr);
 		licencePublisher.addLicenceSpec(licenceSpec);;
 		System.out.println("Registered Licence Specification for productId="+licenceMetadataSpec.getProductId());
+		LOG.info("Registered Licence Specification for productId="+licenceMetadataSpec.getProductId());
 	}
 
 	/**
@@ -121,8 +125,10 @@ public class BundleLicenceSpecImpl implements BundleLicenceSpec {
 			try{
 				licencePublisher.removeLicenceSpec(licenceMetadataSpec.getProductId());
 				System.out.println("Unregistered Licence Specification for productId="+licenceMetadataSpec.getProductId());
+				LOG.info("Unregistered Licence Specification for productId="+licenceMetadataSpec.getProductId());
 			} catch (Exception e){
-				System.out.println("Problem Unregistering Licence Specification for productId="+licenceMetadataSpec.getProductId()+"  "+ e);
+				System.err.println("Problem Unregistering Licence Specification for productId="+licenceMetadataSpec.getProductId()+"  "+ e);
+				LOG.error("Problem Unregistering Licence Specification for productId="+licenceMetadataSpec.getProductId()+"  ",e);
 			}  finally {
 				licencePublisher=null; //release resources
 			}

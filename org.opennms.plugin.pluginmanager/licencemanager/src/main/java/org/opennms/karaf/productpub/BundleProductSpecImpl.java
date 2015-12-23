@@ -23,8 +23,11 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.ProductMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductSpecList;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BundleProductSpecImpl implements BundleProductSpec {
+	private static final Logger LOG = LoggerFactory.getLogger(BundleProductSpecImpl.class);
 
 	private BundleContext bundleContext;
 
@@ -33,14 +36,23 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 	private ProductPublisher productPublisher=null;
 
 	private String productMetadataUri=null;
-	
+
 	private String productSpecListUri=null;
-	
+
 	private ProductSpecList productSpecList=null;
 
-	private String readFile(InputStream is ) throws IOException {
-		java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
-		return s.hasNext() ? s.next() : "";
+	private String readFile(InputStream is )  {
+		String str=null;
+		java.util.Scanner s=null;
+		try{
+			s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
+			str=s.hasNext() ? s.next() : "";
+		} catch (Exception e){
+			throw e;
+		} finally{
+			if (s!=null) s.close();
+		}
+		return str;
 	}
 
 	/**
@@ -73,6 +85,7 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 		}
 		productPublisher.addProductDescription(productMetadata);
 		System.out.println("Registered Product Specification for productId="+productMetadata.getProductId());
+		LOG.info("Registered Product Specification for productId="+productMetadata.getProductId());
 	}
 
 	/**
@@ -84,14 +97,16 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 			try{
 				productPublisher.removeProductDescription(productMetadata.getProductId());
 				System.out.println("Unregistered Product Specification for productId="+productMetadata.getProductId());
+				LOG.info("Unregistered Product Specification for productId="+productMetadata.getProductId());
 			} catch (Exception e){
-				System.out.println("Problem Unregistering Product Specification for productId="+productMetadata.getProductId()+"  "+ e);
+				System.err.println("Problem Unregistering Product Specification for productId="+productMetadata.getProductId()+"  "+ e);
+				LOG.error("Problem Unregistering Product Specification for productId="+productMetadata.getProductId()+"  ", e);
 			}  finally {
 				productPublisher=null; //release resources
 			}
 		}
 	}
-	
+
 	/**
 	 * use as blueprint init-method for adding a specification list
 	 * This is used to register a specification for plugins in a kar file
@@ -122,14 +137,16 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 			}
 		}
 
-		System.out.println("Registering Product Specifications from productListSource="+productSpecList.getProductListSource());
+		String msg="Registering Product Specifications from productListSource="+productSpecList.getProductListSource();
 		List<ProductMetadata> prodSpecList = productSpecList.getProductSpecList();
 		for(ProductMetadata pmeta: prodSpecList){
 			productPublisher.addProductDescription(pmeta);
-			System.out.println("  Registered Product Specification for productId="+pmeta.getProductId());
+			msg=msg+"\n"+"  Registered Product Specification for productId="+pmeta.getProductId();
 		}
+		System.out.println(msg);
+		LOG.info(msg);
 	}
-	
+
 	/**
 	 * use as blueprint destroy-method for removing a specification list
 	 * This is used to un-register a specification for plugins in a kar file
@@ -139,17 +156,21 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 		if (productPublisher!=null){
 			try{
 				System.out.println("Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource());
+				LOG.info("Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource());
 				List<ProductMetadata> prodSpecList = productSpecList.getProductSpecList();
 				for(ProductMetadata pmeta: prodSpecList){
 					boolean unregistered =productPublisher.removeProductDescription(pmeta.getProductId());
 					if (unregistered){
 						System.out.println("  Unregistered Product Specification for productId="+pmeta.getProductId());
+						LOG.info("  Unregistered Product Specification for productId="+pmeta.getProductId());
 					}else {
 						System.out.println("  Already Unregistered Product Specification for productId="+pmeta.getProductId());
+						LOG.info("  Already Unregistered Product Specification for productId="+pmeta.getProductId());
 					}
 				}
 			} catch (Exception e){
-				System.out.println("Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  "+e);
+				System.err.println("Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  "+e);
+				LOG.error("Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  ",e);
 			}  finally {
 				productPublisher=null; //release resources
 			}

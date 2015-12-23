@@ -22,9 +22,12 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductMetadata;
 import org.opennms.karaf.productpub.ProductRegister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "product-reg", name = "list", description="lists product specifications installed in product registry")
+@Command(scope = "product-reg", name = "list", description="Lists product specifications installed in product registry")
 public class ListRegProductSpecsCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ListRegProductSpecsCommand.class);
 
 	private ProductRegister productRegister;
 
@@ -41,24 +44,27 @@ public class ListRegProductSpecsCommand extends OsgiCommandSupport {
 	public void setProductRegister(ProductRegister productRegister) {
 		this.productRegister = productRegister;
 	}
-	
+
 	@Override
 	protected Object doExecute() throws Exception {
 		try {
-			System.out.println("list of product specifications");
+			LOG.info("list of product specifications");
 
 			Map<String, ProductMetadata> productSpecMap = getProductRegister().getProductDescriptionMap();
 			for (Entry<String, ProductMetadata> entry : productSpecMap.entrySet()){
-				
+
 				ProductMetadata productSpecification = entry.getValue();
-				
-				System.out.println("***********\n"
+				String msg="***********\n"
 						+ "  productId='"+entry.getKey()+"'\n"
-						+ "  productMetadata='"+productSpecification.toXml()+"'\n");
-				}
-			System.out.println("***********\n");
+						+ "  productMetadata='"+productSpecification.toXml()+"'\n";
+				System.out.println(msg);
+				LOG.info(msg);
+			}
+
+			LOG.info("***********\n");
 		} catch (Exception e) {
-			System.out.println("Error getting list of installed licence specifications. Exception="+e);
+			System.err.println("Error getting list of installed licence specifications. Exception="+e);
+			LOG.error("Error getting list of installed licence specifications. Exception=",e);
 		}
 		return null;
 	}

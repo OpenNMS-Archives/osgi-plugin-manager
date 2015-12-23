@@ -20,9 +20,12 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductMetadata;
 import org.opennms.karaf.productpub.ProductPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "product-pub", name = "getproductspec", description="gets product spec from product publisher for productId")
+@Command(scope = "product-pub", name = "getproductspec", description="Gets product specification from product publisher for productId")
 public class GetProductSpecCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(GetProductSpecCommand.class);
 
 	private ProductPublisher productPublisher=null;
 
@@ -50,11 +53,14 @@ public class GetProductSpecCommand extends OsgiCommandSupport {
 			ProductMetadata pmeta = productPublisher.getProductDescription(productId);
 			if (pmeta==null) {
 				System.out.println("No product metadata installed for productId='" + productId+"'");
+				LOG.info("No product metadata installed for productId='" + productId+"'");
 			} else {
 				System.out.println("productId='" + productId+"' Product metadata XML='"+pmeta.toXml()+"'");
+				LOG.info("productId='" + productId+"' Product metadata XML='"+pmeta.toXml()+"'");
 			}
 		} catch (Exception e) {
-			System.out.println("Error getting product info. Exception="+e);
+			System.err.println("Error getting product info. Exception="+e);
+			LOG.error("Error getting product info. Exception=",e);
 		}
 		return null;
 	}

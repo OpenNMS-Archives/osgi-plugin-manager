@@ -18,8 +18,12 @@ package org.opennms.karaf.licencemgr.test;
 import org.junit.Assert;
 import org.junit.Test;
 import org.opennms.karaf.licencemgr.AesSymetricKeyCipher;
+import org.opennms.karaf.licencemgr.rest.client.test.manual.ProductRegisterClientRestJerseyTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AesSymmetricKeyCipherTest {
+	private static final Logger LOG = LoggerFactory.getLogger(AesSymmetricKeyCipherTest.class);
     
     @Test
     public void testEncryptionDecryption()
@@ -29,18 +33,18 @@ public class AesSymmetricKeyCipherTest {
         aesCipher.generateKey();
         
         String sourceStr="Craig is very tall.";
-		System.out.println("sourceStr (length="+sourceStr.length()+")="+sourceStr);
+		LOG.debug("sourceStr (length="+sourceStr.length()+")="+sourceStr);
         String encrypted = aesCipher.aesEncryptStr(sourceStr);
-		System.out.println("encrypted= (length="+encrypted.length()+")="+encrypted);
+		LOG.debug("encrypted= (length="+encrypted.length()+")="+encrypted);
         
         String secretKeyStr = aesCipher.getEncodedSecretKeyStr();
-        System.out.println("secretKeyStr="+secretKeyStr);
+        LOG.debug("secretKeyStr="+secretKeyStr);
         
         aesCipher = new AesSymetricKeyCipher();
         aesCipher.setEncodedSecretKeyStr(secretKeyStr);
         
         String decrypted = aesCipher.aesDecryptStr(encrypted);
-		System.out.println("decrypted= (length="+decrypted.length()+")="+decrypted);
+		LOG.debug("decrypted= (length="+decrypted.length()+")="+decrypted);
 		
         Assert.assertEquals(decrypted, sourceStr); 
     }

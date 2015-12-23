@@ -37,6 +37,8 @@ import org.opennms.karaf.licencemgr.RsaAsymetricKeyCipher;
 import org.opennms.karaf.licencemgr.StringCrc32Checksum;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This test goes through the complete life-cycle of the algorithms for generating and decoding a licence. 
@@ -45,6 +47,7 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
  *
  */
 public class TestEncodeDecodeLicenceComplete {
+	private static final Logger LOG = LoggerFactory.getLogger(TestEncodeDecodeLicenceComplete.class);
 
 	public static  String aesSecretKeyStr=null;
 
@@ -56,13 +59,13 @@ public class TestEncodeDecodeLicenceComplete {
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
-		System.out.println("@Before - setting up tests");
+		LOG.debug("@Before - setting up tests");
 
 	}
 
 	@AfterClass
 	public static void oneTimeTearDown() {
-		System.out.println("@After - tearDown");
+		LOG.debug("@After - tearDown");
 	}
 
 	@Test
@@ -74,7 +77,7 @@ public class TestEncodeDecodeLicenceComplete {
 
 
 	public void A_generateKeys(){
-		System.out.println("@Test AgenerateKeys() Start");
+		LOG.debug("@Test AgenerateKeys() Start");
 
 		//asemetric cipher key
 		AesSymetricKeyCipher aesCipher = new AesSymetricKeyCipher();
@@ -82,7 +85,7 @@ public class TestEncodeDecodeLicenceComplete {
 		aesCipher.generateKey();
 
 		aesSecretKeyStr = aesCipher.getEncodedSecretKeyStr();
-		System.out.println("@Test AgenerateKeys() aesSecretKeyStr="+aesSecretKeyStr);
+		LOG.debug("@Test AgenerateKeys() aesSecretKeyStr="+aesSecretKeyStr);
 
 		// generate RSA keys
 		RsaAsymetricKeyCipher rsaAsymetricKeyCipher = new RsaAsymetricKeyCipher();
@@ -94,22 +97,22 @@ public class TestEncodeDecodeLicenceComplete {
 		assertNotNull(privateKeyStr);
 		assertNotNull(publicKeyStr);
 
-		System.out.println("@Test generateKeys() privateKeyStr="+privateKeyStr);
-		System.out.println("@Test generateKeys() publicKeyStr="+publicKeyStr);
+		LOG.debug("@Test generateKeys() privateKeyStr="+privateKeyStr);
+		LOG.debug("@Test generateKeys() publicKeyStr="+publicKeyStr);
 
 		//encrypt private key
 		privateKeyEnryptedStr=null;
 
 		privateKeyEnryptedStr = aesCipher.aesEncryptStr(privateKeyStr);
 
-		System.out.println("@Test generateKeys() privateKeyEnryptedStr="+privateKeyEnryptedStr);
+		LOG.debug("@Test generateKeys() privateKeyEnryptedStr="+privateKeyEnryptedStr);
 
-		System.out.println("@Test AgenerateKeys() END");
+		LOG.debug("@Test AgenerateKeys() END");
 	}
 
 
 	public void B_encodeLicence(){
-		System.out.println("@Test BencodeLicence() Start");
+		LOG.debug("@Test BencodeLicence() Start");
 		LicenceMetadata metadata = new LicenceMetadata();
 
 		metadata.setExpiryDate(new Date());
@@ -133,27 +136,27 @@ public class TestEncodeDecodeLicenceComplete {
 		rsaAsymetricKeyCipher.setPublicKeyStr(publicKeyStr);
 
 		String encryptedHashStr = rsaAsymetricKeyCipher.rsaEncryptString(licenceMetadataHashStr);
-		System.out.println("@Test BencodeLicence licenceMetadataHashStr="+licenceMetadataHashStr);
-		System.out.println("@Test BencodeLicence encryptedHashStr="+encryptedHashStr);
+		LOG.debug("@Test BencodeLicence licenceMetadataHashStr="+licenceMetadataHashStr);
+		LOG.debug("@Test BencodeLicence encryptedHashStr="+encryptedHashStr);
 
 		String licenceStr= licenceMetadataHexStr+":"+encryptedHashStr+":"+aesSecretKeyStr;
-		System.out.println("@Test BencodeLicence licenceStr="+licenceStr);
+		LOG.debug("@Test BencodeLicence licenceStr="+licenceStr);
 
 		// add checksum
 		StringCrc32Checksum stringCrc32Checksum = new StringCrc32Checksum();
 		licenceStrPlusCrc=stringCrc32Checksum.addCRC(licenceStr);
 
-		System.out.println("@Test BencodeLicence() licenceStringPlusCrc="+licenceStrPlusCrc);
+		LOG.debug("@Test BencodeLicence() licenceStringPlusCrc="+licenceStrPlusCrc);
 
 		assertTrue(stringCrc32Checksum.checkCRC(licenceStrPlusCrc));
 
-		System.out.println("@Test BencodeLicence() END");
+		LOG.debug("@Test BencodeLicence() END");
 
 	}
 
 
 	public void C_decodeLicence(){
-		System.out.println("@Test CdecodeLicence() Start");
+		LOG.debug("@Test CdecodeLicence() Start");
 
 		// check checksum
 		StringCrc32Checksum stringCrc32Checksum = new StringCrc32Checksum();
@@ -178,7 +181,7 @@ public class TestEncodeDecodeLicenceComplete {
 
 		decryptedPrivateKeyStr = aesCipher.aesDecryptStr(privateKeyEnryptedStr);
 
-		System.out.println("CdecodeLicence() decryptedPrivateKeyStr="+decryptedPrivateKeyStr);
+		LOG.debug("CdecodeLicence() decryptedPrivateKeyStr="+decryptedPrivateKeyStr);
 
 		assertEquals(privateKeyStr, decryptedPrivateKeyStr);
 
@@ -188,19 +191,19 @@ public class TestEncodeDecodeLicenceComplete {
 
 		String decriptedHashStr= rsaAsymetricKeyCipher.rsaDecryptString(receivedEncryptedHashStr);
 
-		System.out.println("@Test testDecrypt decriptedHashStr="+decriptedHashStr);
+		LOG.debug("@Test testDecrypt decriptedHashStr="+decriptedHashStr);
 
 		LicenceMetadata licenceMetadata= new LicenceMetadata();
 		licenceMetadata.fromHexString(receivedLicenceMetadataHexStr);
 		String sha256Hash = licenceMetadata.sha256Hash();
 
 		String metadataxml= licenceMetadata.toXml();
-		System.out.println("@Test testDecrypt licenceMetadata.toxml="+metadataxml);
-		System.out.println("@Test testDecrypt licenceMetadata.sha256Hash="+sha256Hash);
+		LOG.debug("@Test testDecrypt licenceMetadata.toxml="+metadataxml);
+		LOG.debug("@Test testDecrypt licenceMetadata.sha256Hash="+sha256Hash);
 
 		assertEquals(sha256Hash,decriptedHashStr);
 
-		System.out.println("@Test CdecodeLicence() End");
+		LOG.debug("@Test CdecodeLicence() End");
 
 	}
 }

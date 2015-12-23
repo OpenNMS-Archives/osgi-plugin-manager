@@ -19,9 +19,12 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "licence-mgr", name = "isauthenticated", description="checks if licence has been authenticated when starting productId")
+@Command(scope = "licence-mgr", name = "isauthenticated", description="Checks if licence has been authenticated when starting productId")
 public class IsAuthenticatedProductIdCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(IsAuthenticatedProductIdCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -42,14 +45,18 @@ public class IsAuthenticatedProductIdCommand extends OsgiCommandSupport {
 
 			if (getLicenceService().isAuthenticatedProductId(productId)){
 				System.out.println("Licence Authenticated for ProductId='"+productId + "'");
+				LOG.info("Licence Authenticated for ProductId='"+productId + "'");
 			} else {
 				System.out.println("Licence Not Authenticated for ProductId='"+productId + "'");
+				LOG.info("Licence Not Authenticated for ProductId='"+productId + "'");
 				if (getLicenceService().getLicence(productId)==null){
 					System.out.println("No Licence installed for ProductId='"+productId + "'");
+					LOG.info("No Licence installed for ProductId='"+productId + "'");
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Error Checking Licence for productId. Exception="+e);
+			System.err.println("Error Checking Licence for productId. Exception="+e);
+			LOG.error("Error Checking Licence for productId. Exception=",e);
 		}
 		return null;
 	}

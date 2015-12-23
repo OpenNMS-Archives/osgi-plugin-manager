@@ -16,8 +16,11 @@
 package org.opennms.karaf.licencemanager.generate;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GenerateLicenceArtifactsTest {
+	private static final Logger LOG = LoggerFactory.getLogger(GenerateLicenceArtifactsTest.class);
 
 	private String basePackage="org.opennms.karaf.licencemanager.testbundle";
 	private String productId="org.opennms/org.opennms.karaf.licencemanager.testbundle/1.0-SNAPSHOT";
@@ -25,10 +28,10 @@ public class GenerateLicenceArtifactsTest {
 	
 	@Test
 	public void generateLicenceArtifacts(){
-		System.out.println("@Test LicenceArtifacts Start");
+		LOG.debug("@Test LicenceArtifacts Start");
 		
 		LicenceArtifactsGenerator licenceArtifactsGenerator = new LicenceArtifactsGenerator(productId, basePackage, outputDirectory);
 
-		System.out.println("@Test LicenceArtifacts End");
+		LOG.debug("@Test LicenceArtifacts End");
 	}
 }

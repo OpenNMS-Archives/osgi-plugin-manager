@@ -22,9 +22,13 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductMetadata;
 import org.opennms.karaf.productpub.ProductPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "product-pub", name = "list", description="lists product specifications installed in product publisher")
+@Command(scope = "product-pub", name = "list", description="Lists product specifications installed in product publisher")
 public class ListProductSpecsCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ListProductSpecsCommand.class);
+
 
 	private ProductPublisher productPublisher=null;
 
@@ -46,20 +50,25 @@ public class ListProductSpecsCommand extends OsgiCommandSupport {
 	protected Object doExecute() throws Exception {
 		try {
 			System.out.println("list of product specifications");
+			LOG.info("list of product specifications");
 
 			Map<String, ProductMetadata> productSpecMap = getProductPublisher().getProductDescriptionMap();
-			
+
 			for (Entry<String, ProductMetadata> entry : productSpecMap.entrySet()){
-				
+
 				ProductMetadata productSpecification = entry.getValue();
-				
-				System.out.println("***********\n"
+
+				String msg="***********\n"
 						+ "  productId='"+entry.getKey()+"'\n"
-						+ "  productMetadata='"+productSpecification.toXml()+"'\n");
-				}
+						+ "  productMetadata='"+productSpecification.toXml()+"'\n";
+				LOG.info(msg);
+				System.out.println(msg);
+			}
 			System.out.println("***********\n");
+			LOG.info("***********\n");
 		} catch (Exception e) {
-			System.out.println("Error getting list of installed licence specifications. Exception="+e);
+			System.err.println("Error getting list of installed licence specifications. Exception="+e);
+			LOG.error("Error getting list of installed licence specifications. Exception=",e);
 		}
 		return null;
 	}

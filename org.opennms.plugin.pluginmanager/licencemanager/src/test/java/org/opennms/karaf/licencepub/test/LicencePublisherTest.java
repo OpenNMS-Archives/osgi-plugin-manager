@@ -29,12 +29,15 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
 import org.opennms.karaf.licencepub.LicencePublisher;
 import org.opennms.karaf.licencepub.LicencePublisherImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LicencePublisherTest {
+	private static final Logger LOG = LoggerFactory.getLogger(LicencePublisherTest.class);
 
 	@Test
 	public void test1LicencePublisher(){
-		System.out.println("@test test1LicencePublisher() Start");
+		LOG.debug("@test test1LicencePublisher() Start");
 		
 		// generate keys
 		GeneratedKeys generatedKeys= new GeneratedKeys();
@@ -52,7 +55,7 @@ public class LicencePublisherTest {
 		OptionMetadata option1 = new OptionMetadata("newname", "false", "this is the description");
 		licenceMetadataSpec.getOptions().add(option1);
 		
-		System.out.println("@test test1LicencePublisher() licenceMetadataSpec().toXml()"+licenceMetadataSpec.toXml());
+		LOG.debug("@test test1LicencePublisher() licenceMetadataSpec().toXml()"+licenceMetadataSpec.toXml());
 		
 		// generate licence specification
 		LicenceSpecification licenceSpec= new LicenceSpecification(productId, 
@@ -82,11 +85,11 @@ public class LicencePublisherTest {
 		String licenceMetadataXml=licencemetadata.toXml();
 		
 		// licenceMetadataXml is sent to licence publisher to publish licence
-		System.out.println("@test test1LicencePublisher() licenceMetadataXml="+licenceMetadataXml);
+		LOG.debug("@test test1LicencePublisher() licenceMetadataXml="+licenceMetadataXml);
 		String licenceInstanceStr = licencePubService.createLicenceInstanceStr(licenceMetadataXml);
-		System.out.println("@test test1LicencePublisher() licenceInstanceStr="+licenceInstanceStr);
+		LOG.debug("@test test1LicencePublisher() licenceInstanceStr="+licenceInstanceStr);
 		
-		System.out.println("@test test1LicencePublisher() End");
+		LOG.debug("@test test1LicencePublisher() End");
 		
 		// check licenceInstanceStr
 		new Licence(licenceInstanceStr, generatedKeys.getPrivateKeyEnryptedStr());
@@ -98,7 +101,7 @@ public class LicencePublisherTest {
 	 */
 	@Test
 	public void test2LicencePublisher(){
-		System.out.println("@test test2LicencePublisher() Start");
+		LOG.debug("@test test2LicencePublisher() Start");
 		
 		// generate keys
 		GeneratedKeys generatedKeys= new GeneratedKeys();
@@ -114,7 +117,7 @@ public class LicencePublisherTest {
 		OptionMetadata option1 = new OptionMetadata("newname", "false", "this is the description");
 		licenceMetadataSpec.getOptions().add(option1);
 		
-		System.out.println("@test test2LicencePublisher() licenceMetadataSpec().toXml()"+licenceMetadataSpec.toXml());
+		LOG.debug("@test test2LicencePublisher() licenceMetadataSpec().toXml()"+licenceMetadataSpec.toXml());
 		
 		// generate licence specification
 		LicenceSpecification licenceSpec= new LicenceSpecification(productId, 
@@ -145,14 +148,14 @@ public class LicencePublisherTest {
 		String licenceMetadataXml=licencemetadata.toXml();
 		
 		// licenceMetadataXml is sent to licence publisher to publish licence
-		System.out.println("@test test2LicencePublisher() licenceMetadataXml="+licenceMetadataXml);
+		LOG.debug("@test test2LicencePublisher() licenceMetadataXml="+licenceMetadataXml);
 		String licenceInstanceStr = licencePubService.createLicenceInstanceStr(licenceMetadataXml);
-		System.out.println("@test test2LicencePublisher() licenceInstanceStr="+licenceInstanceStr);
+		LOG.debug("@test test2LicencePublisher() licenceInstanceStr="+licenceInstanceStr);
 		
 		// check licenceInstanceStr contains valid licence
 		new Licence(licenceInstanceStr, clientkeys);
 		
-		System.out.println("@test test2LicencePublisher() End");
+		LOG.debug("@test test2LicencePublisher() End");
 		
 	}
 }

@@ -74,7 +74,7 @@ public class FeaturesServiceClientRestJerseyTest {
     		version= prop.getProperty("version");
  
         } catch (Exception e) {
-        	LOG.error("     Using defailt values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:"+e);
+        	LOG.error("     Using default values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:",e);
         }
 
         LOG.debug("     baseUrl = "+baseUrl);

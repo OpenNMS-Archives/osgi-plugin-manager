@@ -24,8 +24,11 @@ import org.opennms.karaf.licencemgr.GeneratedKeys;
 import org.opennms.karaf.licencemgr.metadata.Licence;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LicenceTest {
+	private static final Logger LOG = LoggerFactory.getLogger(LicenceTest.class);
 	
 	/*
 	 * test data - (generated using TestEncodeDecodeLicenceComplete)
@@ -47,7 +50,7 @@ public class LicenceTest {
 	@Test 
 	public void testLicence(){
 
-		System.out.println("@Test testLicence Start");
+		LOG.debug("@Test testLicence Start");
 		
 		GeneratedKeys generatedKeys = new GeneratedKeys();
 		aesSecretKeyStr=generatedKeys.getAesSecretKeyStr();
@@ -55,10 +58,10 @@ public class LicenceTest {
 		privateKeyStr=generatedKeys.getPrivateKeyStr();
 		publicKeyStr=generatedKeys.getPublicKeyStr();
 		
-		System.out.println("@Test testLicence aesSecretKeyStr="+aesSecretKeyStr);
-		System.out.println("@Test testLicence privateKeyStr="+privateKeyStr);
-		System.out.println("@Test testLicence privateKeyEnryptedStr="+privateKeyEnryptedStr);
-		System.out.println("@Test testLicence publicKeyStrr="+publicKeyStr);
+		LOG.debug("@Test testLicence aesSecretKeyStr="+aesSecretKeyStr);
+		LOG.debug("@Test testLicence privateKeyStr="+privateKeyStr);
+		LOG.debug("@Test testLicence privateKeyEnryptedStr="+privateKeyEnryptedStr);
+		LOG.debug("@Test testLicence publicKeyStrr="+publicKeyStr);
 		
 		// create licence metadata
 		LicenceMetadata createLicenceMetadata = new LicenceMetadata();
@@ -80,7 +83,7 @@ public class LicenceTest {
 		// create new licence
 		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
 		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
-		System.out.println("@Test testLicence licenceStrPlusCrc="+licenceStrPlusCrc);
+		LOG.debug("@Test testLicence licenceStrPlusCrc="+licenceStrPlusCrc);
 		
 		// get metadata from licence		
 		LicenceMetadata licenceManagerLicenceMetadata;
@@ -107,17 +110,17 @@ public class LicenceTest {
 		String receivedLicenceMetadataxml=receivedLicenceMetadata.toXml();
 		assertEquals(receivedLicenceMetadataxml,metadataxml);
 		
-		System.out.println("@Test testLicence receivedLicenceMetadataxml="+receivedLicenceMetadataxml);
-		System.out.println("@Test testLicence receivedLicenceMetadata.getProductId()="+receivedLicenceMetadata.getProductId());
-		System.out.println("@Test testLicence receivedLicenceMetadata.getMaxSizeSystemIds()="+receivedLicenceMetadata.getMaxSizeSystemIds());
+		LOG.debug("@Test testLicence receivedLicenceMetadataxml="+receivedLicenceMetadataxml);
+		LOG.debug("@Test testLicence receivedLicenceMetadata.getProductId()="+receivedLicenceMetadata.getProductId());
+		LOG.debug("@Test testLicence receivedLicenceMetadata.getMaxSizeSystemIds()="+receivedLicenceMetadata.getMaxSizeSystemIds());
 		
 		String msgStr="@Test testLicence receivedLicenceMetadata.getSystemIds() contains ";
 		for (String systemId :receivedLicenceMetadata.getSystemIds() ){
 			msgStr=msgStr+"'"+systemId+"'  ";
 		}
-		System.out.println(msgStr);
+		LOG.debug(msgStr);
 		
 		
-		System.out.println("@Test testLicence End");
+		LOG.debug("@Test testLicence End");
 	}
 }

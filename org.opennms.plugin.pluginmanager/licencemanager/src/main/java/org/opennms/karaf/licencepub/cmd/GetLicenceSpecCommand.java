@@ -21,9 +21,12 @@ import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 import org.opennms.karaf.licencepub.LicencePublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Command(scope = "licence-pub", name = "getlicencespec", description="Gets the licence specification for a given product id")
 public class GetLicenceSpecCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(GetLicenceSpecCommand.class);
 
 	private LicencePublisher _licencePublisher;
 
@@ -45,16 +48,20 @@ public class GetLicenceSpecCommand extends OsgiCommandSupport {
 			LicenceSpecification licenceSpecification = getLicencePublisher().getLicenceSpec(productId);
 			if (licenceSpecification==null){
 				System.out.println("licence specification not installed for productId='"+productId+"'");
+				LOG.info("licence specification not installed for productId='"+productId+"'");
 			} else {
 				LicenceMetadata licenceMetadata = licenceSpecification.getLicenceMetadataSpec();
 				String metadatastr = (licenceMetadata==null) ? "null" : licenceMetadata.toXml();
-				System.out.println("  productId='"+productId+"'\n"
+				String msg="  productId='"+productId+"'\n"
 						+ "      licenceMetadataSpec='"+metadatastr+"'\n"
 						+ "      licenceSpecification secret key String='"+licenceSpecification.getAesSecretKeyStr()+"'\n"
-						+ "      licenceSpecification public key String='"+licenceSpecification.getPublicKeyStr()+"'\n");
+						+ "      licenceSpecification public key String='"+licenceSpecification.getPublicKeyStr()+"'\n";
+				System.out.println(msg);
+				LOG.info(msg);
 			}
 		} catch (Exception e) {
-			System.out.println("Error getting licence specification. Exception="+e);
+			System.err.println("Error getting licence specification. Exception="+e);
+			LOG.error("Error getting licence specification. Exception=",e);
 		}
 		return null;
 	}

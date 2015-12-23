@@ -19,12 +19,16 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.opennms.karaf.licencemgr.cmd.SetSystemInstanceCommand;
 import org.opennms.karaf.licencemgr.metadata.Licence;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencepub.LicencePublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "licence-pub", name = "createlicence", description="creates a new licence for given metadata xml (surround xml in 'quotes')")
+@Command(scope = "licence-pub", name = "createlicence", description="Creates a new licence for given metadata xml (surround xml in 'quotes')")
 public class CreateLicenceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(CreateLicenceCommand.class);
 
 	private LicencePublisher _licencePublisher;
 
@@ -45,8 +49,10 @@ public class CreateLicenceCommand extends OsgiCommandSupport {
 		try{
 			String licenceInstanceStr = getLicencePublisher().createLicenceInstanceStr(licenceMetadataXml);
 			System.out.println("Created licence instance. licenceInstanceStr='" + licenceInstanceStr+"'");
+			LOG.info("Created licence instance. licenceInstanceStr='" + licenceInstanceStr+"'");
 		} catch (Exception e) {
-			System.out.println("Error Creating licence. Exception="+e);
+			System.err.println("Error Creating licence. Exception="+e);
+			LOG.error("Error Creating licence. Exception=",e);
 		}
 		return null;
 	}

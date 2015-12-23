@@ -20,13 +20,15 @@ import java.util.Map.Entry;
 
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
-import org.opennms.karaf.licencemgr.LicenceService;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 import org.opennms.karaf.licencepub.LicencePublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "licence-pub", name = "list", description="lists licence metadata for installed licence specifications (i.e. not the keys)")
+@Command(scope = "licence-pub", name = "list", description="Lists licence metadata for installed licence specifications (i.e. not the keys)")
 public class ListLicenceMetadataCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ListLicenceMetadataCommand.class);
 
 	private LicencePublisher _licencePublisher;
 
@@ -42,6 +44,7 @@ public class ListLicenceMetadataCommand extends OsgiCommandSupport {
 	protected Object doExecute() throws Exception {
 		try {
 			System.out.println("List of licence metadata for installed licence specifications:");
+			LOG.info("List of licence metadata for installed licence specifications:");
 
 			Map<String, LicenceSpecification> licenceSpecMap = getLicencePublisher().getLicenceSpecMap();
 			for (Entry<String, LicenceSpecification> entry : licenceSpecMap.entrySet()){
@@ -49,13 +52,17 @@ public class ListLicenceMetadataCommand extends OsgiCommandSupport {
 				LicenceSpecification licenceSpecification = entry.getValue();
 				LicenceMetadata licenceMetadata = licenceSpecification.getLicenceMetadataSpec();
 				
-				System.out.println("***********\n"
+				String msg="***********\n"
 						+ "  productId='"+entry.getKey()+"'\n"
-						+ "  licenceMetadataSpec='"+licenceMetadata.toXml()+"'\n");
+						+ "  licenceMetadataSpec='"+licenceMetadata.toXml()+"'\n";
+				System.out.println(msg);
+				LOG.info(msg);
 			}
 			System.out.println("***********\n");
+			LOG.info("***********\n");
 		} catch (Exception e) {
-			System.out.println("Error getting list of licence metadata for installed licence specifications. Exception="+e);
+			System.err.println("Error getting list of licence metadata for installed licence specifications. Exception="+e);
+			LOG.error("Error getting list of licence metadata for installed licence specifications. Exception=",e);
 		}
 		return null;
 	}

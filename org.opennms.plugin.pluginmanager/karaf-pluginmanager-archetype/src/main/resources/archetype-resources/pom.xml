@@ -25,6 +25,7 @@
     
     <org.opennms.plugin.licencemanager.version>1.0-SNAPSHOT</org.opennms.plugin.licencemanager.version>
 
+    <slf4jVersion>1.7.7</slf4jVersion>
   </properties>
   
   <!-- REMOVE THESE MODULES AND ONLY USE THE DEFAULT PROFILE DEFINITIONS BELOW    -->

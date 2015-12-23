@@ -26,8 +26,12 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceEntry;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.rest.client.LicenceManagerClient;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.LicenceManagerClientRestJerseyImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LicenceManagerClientRestJerseyTest {
+	private static final Logger LOG = LoggerFactory.getLogger(LicenceManagerClientRestJerseyTest.class);
+	
 	// constants for tests
 	private static String test_productId="myproject/1.0-SNAPSHOT";
 
@@ -48,7 +52,7 @@ public class LicenceManagerClientRestJerseyTest {
 	public LicenceManagerClientRestJerseyTest(){
 		super();
 		
-		System.out.println("LOADING PROPERTIES: LicenceManagerClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
+		LOG.debug("LOADING PROPERTIES: LicenceManagerClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
 		
 		Properties prop = null;
         InputStream is = null;
@@ -62,14 +66,14 @@ public class LicenceManagerClientRestJerseyTest {
     		password= prop.getProperty("password");
  
         } catch (Exception e) {
-        	System.out.println("     Using defailt values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:"+e);
+        	LOG.error("     Using default values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:",e);
         }
         
-		System.out.println("     basePath = "+basePath);
+		LOG.debug("     basePath = "+basePath);
 		
-        System.out.println("     baseUrl = "+baseUrl);
-		System.out.println("     userName= "+userName);
-		System.out.println("     password= "+password);
+        LOG.debug("     baseUrl = "+baseUrl);
+		LOG.debug("     userName= "+userName);
+		LOG.debug("     password= "+password);
 		
 	}
 	
@@ -88,7 +92,7 @@ public class LicenceManagerClientRestJerseyTest {
 
 	@Test
 	public void testsInOrder(){
-		System.out.println("@Test - LICENCE MANAGER TESTS.START");
+		LOG.debug("@Test - LICENCE MANAGER TESTS.START");
 		
 		this.checksumForStringTest();
 		this.makeSystemInstanceTest();
@@ -105,7 +109,7 @@ public class LicenceManagerClientRestJerseyTest {
 		this.deleteLicencesTest(); // final clean up
 		this.getLicenceMapTest();  //  just to confirm licences gone
 		
-		System.out.println("@Test - LICENCE MANAGER TESTS.FINISH");
+		LOG.debug("@Test - LICENCE MANAGER TESTS.FINISH");
 		
 	}
 	
@@ -119,7 +123,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void addLicenceTest() {
-		System.out.println("@Test - addLicenceTest().START");
+		LOG.debug("@Test - addLicenceTest().START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 
@@ -127,11 +131,11 @@ public class LicenceManagerClientRestJerseyTest {
 			String licence=test_licence_instance;
 			licenceManagerClient.addLicence(licence);;
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - addLicenceTest() failed. See stack trace in consol");
+			LOG.error("@Test - addLicenceTest() failed. Exception:",e);
+			fail("@Test - addLicenceTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - addLicenceTest().FINISH");
+		LOG.debug("@Test - addLicenceTest().FINISH");
 	}
 
 
@@ -144,7 +148,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void removeLicenceTest() {
-		System.out.println("@Test - removeLicenceTest().START");
+		LOG.debug("@Test - removeLicenceTest().START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 
@@ -152,11 +156,11 @@ public class LicenceManagerClientRestJerseyTest {
 			String productId=test_productId;
 			licenceManagerClient.removeLicence(productId);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - removeLicenceTest() failed. See stack trace in consol");
+			LOG.error("@Test - removeLicenceTest() failed. Exception:",e);
+			fail("@Test - removeLicenceTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - removeLicenceTest().FINISH");
+		LOG.debug("@Test - removeLicenceTest().FINISH");
 
 	}
 	
@@ -172,20 +176,20 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void isAuthenticatedTest() {
-		System.out.println("@Test - isAuthenticatedTest().START");
+		LOG.debug("@Test - isAuthenticatedTest().START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 
 		try {
 			String productId=test_productId;
 			boolean isAuthenticated = licenceManagerClient.isAuthenticated(productId);
-			System.out.println("    productId="+productId+" isAuthenticated="+isAuthenticated );
+			LOG.debug("    productId="+productId+" isAuthenticated="+isAuthenticated );
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - removeLicenceTest() failed. See stack trace in consol");
+			LOG.error("@Test - removeLicenceTest() failed. Exception:",e);
+			fail("@Test - removeLicenceTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - isAuthenticatedTest().FINISH");
+		LOG.debug("@Test - isAuthenticatedTest().FINISH");
 
 	}
 
@@ -199,7 +203,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void getLicenceTest() {
-		System.out.println("@Test - getLicenceTest().START");
+		LOG.debug("@Test - getLicenceTest().START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 		String licence=null;
@@ -207,12 +211,12 @@ public class LicenceManagerClientRestJerseyTest {
 		try {
 			licence = licenceManagerClient.getLicence(productId);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getLicenceTest() failed. See stack trace in consol");
+			LOG.error("@Test - getLicenceTest() failed. Exception:",e);
+			fail("@Test - getLicenceTest() failed. See stack trace in error log");
 		}
-		System.out.println("licence for productId='"+productId+"' ='"+licence+"'");
+		LOG.debug("licence for productId='"+productId+"' ='"+licence+"'");
 
-		System.out.println("@Test - getLicenceTest().FINISH");
+		LOG.debug("@Test - getLicenceTest().FINISH");
 	}
 
 
@@ -225,7 +229,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void getLicenceMapTest() {
-		System.out.println("@Test - getLicenceMapTest().START");
+		LOG.debug("@Test - getLicenceMapTest().START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 		
@@ -233,17 +237,17 @@ public class LicenceManagerClientRestJerseyTest {
 		try {
 			licenceList = licenceManagerClient.getLicenceMap();
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getLicenceMapTest() failed. See stack trace in consol");
+			LOG.error("@Test - getLicenceMapTest() failed. Exception:",e);
+			fail("@Test - getLicenceMapTest() failed. See stack trace in error log");
 		}
 		List<LicenceEntry> licenceEntries = licenceList.getLicenceList();
 		
-		System.out.println("Licence List:");
+		LOG.debug("Licence List:");
 		for (LicenceEntry licenceEntry : licenceEntries) {
-			System.out.println("    productId='"+licenceEntry.getProductId()+"' licence='"+licenceEntry.getLicenceStr()+"'");
+			LOG.debug("    productId='"+licenceEntry.getProductId()+"' licence='"+licenceEntry.getLicenceStr()+"'");
 		}
 
-		System.out.println("@Test - getLicenceMapTest().FINISH");
+		LOG.debug("@Test - getLicenceMapTest().FINISH");
 	}
 	
 	
@@ -256,7 +260,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void getLicenceMapForSystemIdTest() {
-		System.out.println("@Test - getLicenceMapForSystemIdTest().START");
+		LOG.debug("@Test - getLicenceMapForSystemIdTest().START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 		
@@ -264,17 +268,17 @@ public class LicenceManagerClientRestJerseyTest {
 		try {
 			licenceList = licenceManagerClient.getLicenceMapForSystemId(test_system_id);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getLicenceLicenceMapForSystemIdTest() failed. See stack trace in consol");
+			LOG.error("@Test - getLicenceLicenceMapForSystemIdTest() failed. Exception:",e);
+			fail("@Test - getLicenceLicenceMapForSystemIdTest() failed. See stack trace in error log");
 		}
 		List<LicenceEntry> licenceEntries = licenceList.getLicenceList();
 		
-		System.out.println("Licence List:");
+		LOG.debug("Licence List:");
 		for (LicenceEntry licenceEntry : licenceEntries) {
-			System.out.println("    productId='"+licenceEntry.getProductId()+"' licence='"+licenceEntry.getLicenceStr()+"'");
+			LOG.debug("    productId='"+licenceEntry.getProductId()+"' licence='"+licenceEntry.getLicenceStr()+"'");
 		}
 
-		System.out.println("@Test - LicenceMapForSystemIdTest().FINISH");
+		LOG.debug("@Test - LicenceMapForSystemIdTest().FINISH");
 	}
 
 
@@ -287,19 +291,19 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void deleteLicencesTest() {
-		System.out.println("@Test - deleteLicencesTest().START");
+		LOG.debug("@Test - deleteLicencesTest().START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 		Boolean confirm=true;
 		try {
 			licenceManagerClient.deleteLicences(confirm);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - deleteLicencesTest() failed. See stack trace in consol");
+			LOG.error("@Test - deleteLicencesTest() failed. Exception:",e);
+			fail("@Test - deleteLicencesTest() failed. See stack trace in error log");
 		}
         // success !
 
-		System.out.println("@Test - deleteLicencesTest().FINISH");
+		LOG.debug("@Test - deleteLicencesTest().FINISH");
 	}
 
 
@@ -312,19 +316,19 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void getSystemIdTest() {
-		System.out.println("@Test - getSystemIdTest.START");
+		LOG.debug("@Test - getSystemIdTest.START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 		String systemId=null;
 		try {
 			systemId = licenceManagerClient.getSystemId();
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getSystemIdTest failed. See stack trace in consol");
+			LOG.error("@Test - getSystemIdTest failed. Exception:",e);
+			fail("@Test - getSystemIdTest failed. See stack trace in error log");
 		}
-		System.out.println("systemId="+systemId);
+		LOG.debug("systemId="+systemId);
 
-		System.out.println("@Test - getSystemIdTest.FINISH");
+		LOG.debug("@Test - getSystemIdTest.FINISH");
 	}
 
 
@@ -338,7 +342,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void setSystemIdTest() {
-		System.out.println("@Test - setSystemIdTest.START");
+		LOG.debug("@Test - setSystemIdTest.START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 
@@ -346,12 +350,12 @@ public class LicenceManagerClientRestJerseyTest {
 		try {
 			licenceManagerClient.setSystemId(systemId);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - setSystemIdTest failed. See stack trace in consol");
+			LOG.error("@Test - setSystemIdTest failed. Exception:",e);
+			fail("@Test - setSystemIdTest failed. See stack trace in error log");
 		}
-		System.out.println("systemId set to "+systemId);
+		LOG.debug("systemId set to "+systemId);
 
-		System.out.println("@Test - setSystemIdTest.FINISH");
+		LOG.debug("@Test - setSystemIdTest.FINISH");
 	}
 
 
@@ -365,7 +369,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void makeSystemInstanceTest() {
-		System.out.println("@Test - makeSystemInstanceTest.START");
+		LOG.debug("@Test - makeSystemInstanceTest.START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 
@@ -374,12 +378,12 @@ public class LicenceManagerClientRestJerseyTest {
 		try {
 			systemId = licenceManagerClient.makeSystemInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - makeSystemInstanceTest failed. See stack trace in consol");
+			LOG.error("@Test - makeSystemInstanceTest failed. Exception:",e);
+			fail("@Test - makeSystemInstanceTest failed. See stack trace in error log");
 		}
-		System.out.println("new systemId set to "+systemId);
+		LOG.debug("new systemId set to "+systemId);
 
-		System.out.println("@Test - makeSystemInstanceTest.FINISH");
+		LOG.debug("@Test - makeSystemInstanceTest.FINISH");
 	}
 
 
@@ -396,7 +400,7 @@ public class LicenceManagerClientRestJerseyTest {
 	 */
 	//@Test
 	public void  checksumForStringTest() {
-		System.out.println("@Test - checksumForStringTest.START");
+		LOG.debug("@Test - checksumForStringTest.START");
 
 		LicenceManagerClient licenceManagerClient = getLicenceManagerClient();
 
@@ -407,15 +411,15 @@ public class LicenceManagerClientRestJerseyTest {
 			// should return test_system_id
 			testWithChecksumString = licenceManagerClient.checksumForString(testString);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - checksumForStringTest failed. See stack trace in consol");
+			LOG.error("@Test - checksumForStringTest failed. Exception:",e);
+			fail("@Test - checksumForStringTest failed. See stack trace in error log");
 		}
-		System.out.println("testString="+testString+" testString with checksum="+testWithChecksumString);
+		LOG.debug("testString="+testString+" testString with checksum="+testWithChecksumString);
 		
 		// checksum should be same as on test_system_id
 		assertEquals(testWithChecksumString, test_system_id);
 
-		System.out.println("@Test - checksumForStringTest.FINISH");
+		LOG.debug("@Test - checksumForStringTest.FINISH");
 	}
 
 }

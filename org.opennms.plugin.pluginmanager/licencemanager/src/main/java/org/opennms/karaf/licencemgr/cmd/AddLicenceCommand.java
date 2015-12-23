@@ -15,15 +15,20 @@
 
 package org.opennms.karaf.licencemgr.cmd;
 
+import jline.internal.Log;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
 import org.opennms.karaf.licencemgr.metadata.Licence;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "licence-mgr", name = "addlicence", description="adds licence for productId")
+@Command(scope = "licence-mgr", name = "addlicence", description="Adds licence for productId")
 public class AddLicenceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(AddLicenceCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -44,11 +49,14 @@ public class AddLicenceCommand extends OsgiCommandSupport {
 			String productId = Licence.getUnverifiedMetadata(licence).getProductId();
 			LicenceMetadata licenceMetadata = getLicenceService().addLicence(licence);
 			String metadatastr = (licenceMetadata==null) ? "null" : licenceMetadata.toXml();
-			System.out.println("Added licence ProductId='"+productId + "'");
-			System.out.println("              licence=  '" + licence+"'");
-			System.out.println("              licenceMetadata='"+metadatastr+"'\n");
+			String msg="Added licence ProductId='"+productId + "'"
+			+"\n              licence=  '" + licence+"'"
+			+"\n              licenceMetadata='"+metadatastr+"'\n";
+			LOG.info(msg);
+			System.out.println(msg);
 		} catch (Exception e) {
-			System.out.println("Error Adding licence. Exception="+e);
+			System.err.println("Error Adding licence. Exception="+e);
+			LOG.error("Error Adding licence. Exception=",e);
 		}
 		return null;
 	}

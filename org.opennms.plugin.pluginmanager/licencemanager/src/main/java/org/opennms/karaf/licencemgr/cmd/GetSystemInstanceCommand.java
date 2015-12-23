@@ -18,10 +18,13 @@ package org.opennms.karaf.licencemgr.cmd;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Command(scope = "licence-mgr", name = "getsystemid", description="Get System Instance ID installed for licence manager")
 public class GetSystemInstanceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(GetSystemInstanceCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -37,8 +40,10 @@ public class GetSystemInstanceCommand extends OsgiCommandSupport {
 	protected Object doExecute() throws Exception {
 		try{
 			System.out.println("Licence System Instance ID='"+getLicenceService().getSystemId()+"'");
+			LOG.info("Licence System Instance ID='"+getLicenceService().getSystemId()+"'");
 		} catch (Exception e) {
-			System.out.println("Error getting System Instance ID. Exception="+e);
+			System.err.println("Error getting System Instance ID. Exception="+e);
+			LOG.error("Error getting System Instance ID. Exception=",e);
 		}
 
 		return null;

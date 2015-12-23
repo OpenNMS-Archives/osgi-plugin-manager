@@ -19,9 +19,12 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Command(scope = "licence-mgr", name = "removelicence", description="Removes licence for selected productId")
 public class RemoveLicenceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(RemoveLicenceCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -41,11 +44,14 @@ public class RemoveLicenceCommand extends OsgiCommandSupport {
 		try{
 			if (getLicenceService().removeLicence(productId)){
 				System.out.println("Removed licence for productId=" + productId);
+				LOG.info("Removed licence for productId=" + productId);
 			}else {
 				System.out.println("No licence installed for productId='" + productId+"'");
+				LOG.info("No licence installed for productId='" + productId+"'");
 			}
 		} catch (Exception e) {
-			System.out.println("error removing licence for productId. Exception="+e);
+			System.err.println("error removing licence for productId. Exception="+e);
+			LOG.error("error removing licence for productId. Exception=",e);
 		}
 
 		return null;

@@ -20,9 +20,12 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductMetadata;
 import org.opennms.karaf.productpub.ProductPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Command(scope = "product-pub", name = "addproductspec", description="Adds product spec to product publisher for productId")
 public class AddProductSpecCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(AddProductSpecCommand.class);
 
 	private ProductPublisher productPublisher;
 
@@ -51,8 +54,10 @@ public class AddProductSpecCommand extends OsgiCommandSupport {
 			
 			getProductPublisher().addProductDescription(pmeta);
 			System.out.println("Added Product Metadata for productId='"+pmeta.getProductId()+ "' productMetadata='" + pmeta.toXml()+"'");
+			LOG.error("Added Product Metadata for productId='"+pmeta.getProductId()+ "' productMetadata='" + pmeta.toXml()+"'");
 		} catch (Exception e) {
-			System.out.println("Error adding product spec for productId. Exception="+e);
+			System.err.println("Error adding product spec for productId. Exception="+e);
+			LOG.error("Error adding product spec for productId. Exception=",e);
 		}
 		return null;
 	}

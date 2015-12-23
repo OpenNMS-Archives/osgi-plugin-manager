@@ -19,12 +19,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProductMetadataTest {
+	private static final Logger LOG = LoggerFactory.getLogger(ProductMetadataTest.class);
 
 	@Test
 	public void testProductMetadata() {
-		System.out.println("@Test - testProductMetadata. START");
+		LOG.debug("@Test - testProductMetadata. START");
 		ProductMetadata pmeta= new ProductMetadata();
 		pmeta.setOrganization("OpenNMS Project");
 		pmeta.setProductDescription("Test product description");
@@ -38,12 +41,12 @@ public class ProductMetadataTest {
 		String productMetadataXml=pmeta.toXml();
 		String productMetadataHex=pmeta.toHexString();
 		
-		System.out.println("@Test - testProductMetadata. productMetadataXml="+productMetadataXml);
-		System.out.println("@Test - testProductMetadata. productMetadataHex="+productMetadataHex);
+		LOG.debug("@Test - testProductMetadata. productMetadataXml="+productMetadataXml);
+		LOG.debug("@Test - testProductMetadata. productMetadataHex="+productMetadataHex);
 		
 		ProductMetadata pmeta2= new ProductMetadata();
 		pmeta2.fromXml(productMetadataXml);
-		System.out.println("@Test - testProductMetadata. pmeta2.toXml()="+pmeta2.toXml());
+		LOG.debug("@Test - testProductMetadata. pmeta2.toXml()="+pmeta2.toXml());
 		
 		//assertEquals(pmeta,pmeta2);
 		assertEquals(pmeta.toXml(),pmeta2.toXml());
@@ -53,7 +56,7 @@ public class ProductMetadataTest {
 		assertEquals(pmeta,pmeta3);
 		assertEquals(pmeta.toXml(),pmeta3.toXml());
 		
-		System.out.println("@Test - testProductMetadata. END");
+		LOG.debug("@Test - testProductMetadata. END");
 	}
 
 }

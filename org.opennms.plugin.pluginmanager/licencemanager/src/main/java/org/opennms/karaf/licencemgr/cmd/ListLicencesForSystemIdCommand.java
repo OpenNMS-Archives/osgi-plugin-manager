@@ -22,9 +22,12 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Command(scope = "licence-mgr", name = "listforsystemid", description="Lists installed licences which will authenticate for a given systemId")
 public class ListLicencesForSystemIdCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ListLicencesForSystemIdCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -42,14 +45,17 @@ public class ListLicencesForSystemIdCommand extends OsgiCommandSupport {
 	@Override
 	protected Object doExecute() throws Exception {
 		try {
-			System.out.println("list of licences which will authenticate systemId='"+systemId+"'");
+			System.out.println("List of licences which will authenticate systemId='"+systemId+"'");
+			LOG.info("List of licences which will authenticate systemId='"+systemId+"'");
 
 			Map<String, String> licenceMap = getLicenceService().getLicenceMapForSystemId(systemId);
 			for (Entry<String, String> entry : licenceMap.entrySet()){
 				System.out.println("   productId='"+entry.getKey()+"' licence='"+entry.getValue()+"'");
+				LOG.info("   productId='"+entry.getKey()+"' licence='"+entry.getValue()+"'");
 			}
 		} catch (Exception e) {
-			System.out.println("Error getting list of installed licences. Exception="+e);
+			System.err.println("Error getting list of installed licences. Exception="+e);
+			LOG.error("Error getting list of installed licences. Exception=",e);
 		}
 		return null;
 	}

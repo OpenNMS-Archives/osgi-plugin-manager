@@ -19,10 +19,13 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Command(scope = "licence-mgr", name = "setSystemInstance", description="Set Instance ID of Karaf licence manager")
 public class SetSystemInstanceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(SetSystemInstanceCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -43,8 +46,10 @@ public class SetSystemInstanceCommand extends OsgiCommandSupport {
 		try{
 			getLicenceService().setSystemId(systemInstance);
 			System.out.println("Local systemId set to='"+getLicenceService().getSystemId()+"'");
+			LOG.info("Local systemId set to='"+getLicenceService().getSystemId()+"'");
 		} catch (Exception e) {
-			System.out.println("Error setting systemId. Exception="+e);
+			System.err.println("Error setting systemId. Exception="+e);
+			LOG.error("Error setting systemId. Exception=",e);
 		}
 		return null;
 	}

@@ -46,11 +46,13 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.LicenceManagerClientRestJerseyImpl;
 import org.osgi.framework.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement(name="LicenceServiceData")
 @XmlAccessorType(XmlAccessType.NONE)
 public class LicenceServiceImpl implements LicenceService {
-
+	private static final Logger LOG = LoggerFactory.getLogger(LicenceServiceImpl.class);
 
 	// used to store location of persistence file
 	private String fileUri=null;
@@ -130,10 +132,12 @@ public class LicenceServiceImpl implements LicenceService {
 				}
 			}
 			remoteLicenceMgrs = licenceMgrs;
-			System.out.println("Licence manager remote licence managers set to:");
+			String msg="Licence manager remote licence managers set to:";
 			for (String lmUrl: remoteLicenceMgrs){
-				System.out.println("'"+lmUrl+"' ");
+				msg=msg+"'"+lmUrl+"' ";
 			}
+			LOG.info(msg);
+			System.out.println(msg);
 		}
 	}
 
@@ -304,15 +308,21 @@ public class LicenceServiceImpl implements LicenceService {
 			try {
 				successRemoteLicenceManagerUrl =installRemoteLicences(remoteLicenceManagerUrl, systemIdStr );
 			} catch (Exception e){
-				System.out.println("   Licence Manager could not load licences from from licence manager at "+remoteLicenceManagerUrl
+				System.err.println("   Licence Manager could not load licences from from licence manager at "+remoteLicenceManagerUrl
 						+" for systemIdStr='"+systemIdStr+"' Exception:"+e);
+				LOG.error("   Licence Manager could not load licences from from licence manager at "+remoteLicenceManagerUrl
+						+" for systemIdStr='"+systemIdStr+"' Exception:",e);
 			}
 			if (null != successRemoteLicenceManagerUrl) {
 				System.out.println("Licence Manager succeeded in loading licences from licence manager at "+successRemoteLicenceManagerUrl);
+				LOG.info("Licence Manager succeeded in loading licences from licence manager at "+successRemoteLicenceManagerUrl);
 				break;
 			}
 		}
-		if (null == successRemoteLicenceManagerUrl) System.out.println("Licence Manager Could not load licences from any remote licence manager.");
+		if (null == successRemoteLicenceManagerUrl) {
+			System.err.println("Licence Manager Could not load licences from any remote licence manager.");
+			LOG.error("Licence Manager Could not load licences from any remote licence manager.");
+		}
 
 		return successRemoteLicenceManagerUrl;
 	}
@@ -345,6 +355,7 @@ public class LicenceServiceImpl implements LicenceService {
 				String licenceStrPlusCrc = le.getLicenceStr();
 				localAddLicence(licenceStrPlusCrc);
 				System.out.println("    Licence Manager Added remote licence from "+remoteLicenceManagerUrl+" for productId="+le.getProductId());
+				LOG.info("    Licence Manager Added remote licence from "+remoteLicenceManagerUrl+" for productId="+le.getProductId());
 			}
 			persist();
 			return remoteLicenceManagerUrl;
@@ -394,12 +405,14 @@ public class LicenceServiceImpl implements LicenceService {
 				this.licenceMap.putAll(licenceServiceImpl.getLicenceMap());
 				this.systemId= licenceServiceImpl.getSystemId();
 				System.out.println("Licence Manager successfully loaded licences from file="+licenceManagerFile.getAbsolutePath());
+				LOG.info("Licence Manager successfully loaded licences from file="+licenceManagerFile.getAbsolutePath());
 			} else {
 				System.out.println("Licence Manager licence file="+licenceManagerFile.getAbsolutePath()+" does not exist. A new one will be created.");
+				LOG.info("Licence Manager licence file="+licenceManagerFile.getAbsolutePath()+" does not exist. A new one will be created.");
 			}
 
 		} catch (JAXBException e) {
-			System.out.println("Licence Manager Problem Starting: "+ e.getMessage());
+			LOG.error("Licence Manager Problem Starting: "+ e.getMessage());
 			throw new RuntimeException("Problem loading Licence Manager Data",e);
 		}
 	}
@@ -409,6 +422,7 @@ public class LicenceServiceImpl implements LicenceService {
 	 */
 	public synchronized void close() {
 		System.out.println("Licence Manager Shutting Down ");
+		LOG.info("Licence Manager Shutting Down ");
 	}
 
 	/**
@@ -417,23 +431,33 @@ public class LicenceServiceImpl implements LicenceService {
 	public synchronized void init(){
 
 		System.out.println("Licence Manager Starting");
+		LOG.info("Licence Manager Starting");
 
 		load(); // first load the existing persistence file
 
 		String installedFromLicenceMgr=null;
 		if (useRemoteLicenceManagers!=null && useRemoteLicenceManagers==true){
 			System.out.println("Licence Manager system attempting to load remote licences");
+			LOG.info("Licence Manager system attempting to load remote licences");
 			if(remoteLicenceMgrs !=null && ! remoteLicenceMgrs.isEmpty()){
 				installedFromLicenceMgr=installRemoteLicencesFromUrlList(systemId);
 			} else {
 				System.out.println("WARNING: list of remote licence managers is empty");
+				LOG.info("WARNING: list of remote licence managers is empty");
 			}
 			if (installedFromLicenceMgr!=null) {
 				System.out.println("Licence Manager loaded remote licences from url="+installedFromLicenceMgr);
-			} else System.out.println("WARNING Licence Manager unabled to load remote licences from any supplied url");
-		} else System.out.println("Licence Manager system set to not load remote licences");
+				LOG.info("Licence Manager loaded remote licences from url="+installedFromLicenceMgr);
+			} else {
+				System.out.println("WARNING Licence Manager unabled to load remote licences from any supplied url");
+				LOG.info("WARNING Licence Manager unabled to load remote licences from any supplied url");
+			}
+		} else {
+			System.out.println("Licence Manager system set to not load remote licences");
+			LOG.info("Licence Manager system set to not load remote licences");
+		}
 		System.out.println("Licence Manager Started");
-
+		LOG.info("Licence Manager Started");
 	}
 
 }

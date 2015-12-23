@@ -20,9 +20,12 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
 import org.opennms.karaf.licencemgr.metadata.Licence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "licence-mgr", name = "getlicence", description="returns licence string installed for productId")
+@Command(scope = "licence-mgr", name = "getlicence", description="Returns licence string installed for productId")
 public class GetProductLicenceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(GetProductLicenceCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -42,15 +45,19 @@ public class GetProductLicenceCommand extends OsgiCommandSupport {
 		try{
 			String licence = getLicenceService().getLicence(productId);
 			if(licence==null){
-				System.out.println("no licence installed for productId='" + productId+"'");
+				System.err.println("no licence installed for productId='" + productId+"'");
+				LOG.error("no licence installed for productId='" + productId+"'");
 			} else {
 				String metadatastr = Licence.getUnverifiedMetadata(licence).toXml();
-				System.out.println("Found licence ProductId='"+productId + "'");
-				System.out.println("              licence=  '" + licence+"'");
-				System.out.println("              licenceMetadata='"+metadatastr+"'");
+				String msg="Found licence ProductId='"+productId +"'"
+						+ "\n              licence=  '" + licence+"'"
+						+ "\n              licenceMetadata='"+metadatastr+"'";
+				LOG.error(msg);
+				System.out.println(msg);
 			}
 		} catch (Exception e) {
-			System.out.println("Error getting licence for productId. Exception="+e);
+			System.err.println("Error getting licence for productId. Exception="+e);
+			LOG.error("Error getting licence for productId. Exception=",e);
 		}
 		return null;
 	}

@@ -21,9 +21,12 @@ import java.util.Map.Entry;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Command(scope = "licence-mgr", name = "list", description="Lists installed licences")
 public class ListLicencesCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(ListLicencesCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -38,14 +41,17 @@ public class ListLicencesCommand extends OsgiCommandSupport {
 	@Override
 	protected Object doExecute() throws Exception {
 		try {
-			System.out.println("list of licences");
+			System.out.println("List of licences:");
+			LOG.info("List of licences:");
 
 			Map<String, String> licenceMap = getLicenceService().getLicenceMap();
 			for (Entry<String, String> entry : licenceMap.entrySet()){
 				System.out.println("   productId='"+entry.getKey()+"' licence='"+entry.getValue()+"'");
+				LOG.info("   productId='"+entry.getKey()+"' licence='"+entry.getValue()+"'");
 			}
 		} catch (Exception e) {
-			System.out.println("Error getting list of installed licences. Exception="+e);
+			System.err.println("Error getting list of installed licences. Exception="+e);
+			LOG.error("Error getting list of installed licences. Exception=",e);
 		}
 		return null;
 	}

@@ -20,8 +20,11 @@ import java.util.Set;
 import org.opennms.karaf.licencemgr.LicenceAuthenticator;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.osgi.framework.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
+	private static final Logger LOG = LoggerFactory.getLogger(LicenceAuthenticatorImpl.class);
 
 	private String productId;
 	private String privateKeyEnryptedStr;
@@ -68,7 +71,7 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 		this.licencewithCRC = licenceService.getLicence(productId);
 
 		if (licencewithCRC==null) {
-			System.out.println("No licence installed for productId:'"+productId+"'");
+			LOG.error("No licence installed for productId:'"+productId+"'");
 			throw new ServiceException("No licence installed for productId:'"+productId+"'");
 		}
 
@@ -110,7 +113,8 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 
 			System.out.println("BundleLicenceAuthenticator authenticated licence for productId="+productId);
 			System.out.println("Licence Metadata xml="+licenceMetadata.toXml());
-
+			LOG.info("BundleLicenceAuthenticator authenticated licence for productId="+productId);
+			LOG.info("Licence Metadata xml="+licenceMetadata.toXml());
 		} catch (Exception e){
 			// if licence not authenticated then remove the productId from the authenticatedProductId list
 			licenceService.removeAuthenticatedProductId(productId);
@@ -134,14 +138,14 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 		StringCrc32Checksum stringCrc32Checksum = new StringCrc32Checksum();
 		String licenceStr= stringCrc32Checksum.removeCRC(licencewithCRC);
 		if (licenceStr==null) {
-			System.out.println("licence checksum incorrect for productId:'"+productId+"'");
+			LOG.error("licence checksum incorrect for productId:'"+productId+"'");
 			throw new ServiceException("licence checksum incorrect for productId:'"+productId+"'");
 		}
 
 		// split components of licence string
 		String[] components = licenceStr.split(":");
 		if (components.length!=3) {
-			System.out.println("incorrectly formatted licence string for productId:'"+productId+"'");
+			LOG.error("incorrectly formatted licence string for productId:'"+productId+"'");
 			throw new ServiceException("incorrectly formatted licence string for productId:'"+productId+"'");
 		}
 
@@ -167,13 +171,13 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 		String sha256Hash = licenceMetadata.sha256Hash();
 
 		if (! sha256Hash.equals(decriptedHashStr)) {
-			System.out.println("licence hash not verified  for productId:'"+productId+"'");
+			LOG.error("licence hash not verified  for productId:'"+productId+"'");
 			throw new ServiceException("licence hash not verified  for productId:'"+productId+"'");
 		}
 
 		// check metadata matches expected values
 		if (! productId.equals(licenceMetadata.getProductId())){
-			System.out.println("licence productId='"+licenceMetadata.getProductId()+"' does not match expected productId:'"+productId+"'");
+			LOG.error("licence productId='"+licenceMetadata.getProductId()+"' does not match expected productId:'"+productId+"'");
 			throw new ServiceException("licence productId='"+licenceMetadata.getProductId()+"' does not match expected productId:'"+productId+"'");
 		}
 
@@ -188,11 +192,12 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 			try {
 				licenceService.removeAuthenticatedProductId(productId);
 			}catch ( Exception e){
-				System.out.println("BundleLicenceAuthenticator cannot remove authenticatedProductId="+productId);
+				System.err.println("BundleLicenceAuthenticator cannot remove authenticatedProductId="+productId);
+			    LOG.error("BundleLicenceAuthenticator cannot remove authenticatedProductId="+productId);
 			}
 		}
 		System.out.println("BundleLicenceAuthenticator shutdown for productId="+productId);
-
+		LOG.info("BundleLicenceAuthenticator shutdown for productId="+productId);
 	}
 
 

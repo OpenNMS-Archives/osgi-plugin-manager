@@ -22,8 +22,11 @@ import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Sha256HashTest {
+	private static final Logger LOG = LoggerFactory.getLogger(Sha256HashTest.class);
 
     @Test
     public void testHash() throws NoSuchAlgorithmException, UnsupportedEncodingException{
@@ -34,7 +37,7 @@ public class Sha256HashTest {
     	byte[] digest = md.digest();
     	    	
 		String digestStr = DatatypeConverter.printHexBinary(digest);
-		System.out.println("digestStr="+digestStr);
+		LOG.debug("digestStr="+digestStr);
 
     }
 

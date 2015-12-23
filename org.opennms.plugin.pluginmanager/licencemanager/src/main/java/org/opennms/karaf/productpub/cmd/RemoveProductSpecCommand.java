@@ -19,9 +19,12 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.productpub.ProductPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Command(scope = "product-pub", name = "removeproductspec", description="removes product specification from product publisher")
+@Command(scope = "product-pub", name = "removeproductspec", description="Removes product specification from product publisher")
 public class RemoveProductSpecCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(RemoveProductSpecCommand.class);
 
 	private ProductPublisher productPublisher=null;
 
@@ -47,11 +50,14 @@ public class RemoveProductSpecCommand extends OsgiCommandSupport {
 		try{
 			if (getProductPublisher().removeProductDescription(productId)){
 				System.out.println("Removed description for productId=" + productId);
+				LOG.info("Removed description for productId=" + productId);
 			}else {
 				System.out.println("No product description installed for productId='" + productId+"'");
+				LOG.info("No product description installed for productId='" + productId+"'");
 			}
 		} catch (Exception e) {
-			System.out.println("error removing product description for productId. Exception="+e);
+			System.err.println("Error removing product description for productId. Exception="+e);
+			LOG.error("Error removing product description for productId. Exception=",e);
 		}
 
 		return null;

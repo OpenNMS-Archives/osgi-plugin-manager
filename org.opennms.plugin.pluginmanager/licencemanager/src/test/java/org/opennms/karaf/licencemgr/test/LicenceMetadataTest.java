@@ -22,8 +22,11 @@ import java.util.Date;
 import org.junit.Test;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LicenceMetadataTest {
+	private static final Logger LOG = LoggerFactory.getLogger(LicenceMetadataTest.class);
 
 	public static LicenceMetadata metadata=null;
 	public static String licenceMetadataHexStr=null;
@@ -37,15 +40,15 @@ public class LicenceMetadataTest {
     }
     
     public void AmetadataTest(){
-    	System.out.println("@Test AmetadataTest() Start");
+    	LOG.debug("@Test AmetadataTest() Start");
     	metadata=new LicenceMetadata();
     	printMetadata(metadata);
-    	System.out.println("@Test AmetadataTest() End");
+    	LOG.debug("@Test AmetadataTest() End");
     }
     
 
     public void BmetadataTest(){
-    	System.out.println("@Test BmetadataTest() Start");
+    	LOG.debug("@Test BmetadataTest() Start");
     	metadata=new LicenceMetadata();
     	
     	metadata.setExpiryDate(new Date());
@@ -73,39 +76,39 @@ public class LicenceMetadataTest {
     	licenceMetadataHexStr=metadata.toHexString();
     	licenceMetadataHashStr=metadata.sha256Hash();
     	
-    	System.out.println("@Test BmetadataTest() Original Metadata Object");
+    	LOG.debug("@Test BmetadataTest() Original Metadata Object");
     	printMetadata(metadata);
-    	System.out.println("@Test BmetadataTest() End");
+    	LOG.debug("@Test BmetadataTest() End");
     }
     
 
     public void CmetadataTest(){
-    	System.out.println("@Test CmetadataTest() Start");
+    	LOG.debug("@Test CmetadataTest() Start");
     	
     	LicenceMetadata newMetadata = new LicenceMetadata();
     	newMetadata.fromHexString(licenceMetadataHexStr);
     	String newHash=newMetadata.sha256Hash();
     	
-    	System.out.println("@Test CmetadataTest() Original Metadata Object");
+    	LOG.debug("@Test CmetadataTest() Original Metadata Object");
     	printMetadata(metadata);
-    	System.out.println("@Test CmetadataTest() New Metadata Object");
+    	LOG.debug("@Test CmetadataTest() New Metadata Object");
     	printMetadata(newMetadata);
     	
     	assertEquals(licenceMetadataHashStr,newHash);
     	
     	
-    	System.out.println("@Test CmetadataTest() End");
+    	LOG.debug("@Test CmetadataTest() End");
     }
     
     
     public void printMetadata(LicenceMetadata metadata){
     	
     	String xml = metadata.toXml();
-    	System.out.println("@Test metadataTest1() MetadataXML="+xml);
+    	LOG.debug("@Test metadataTest1() MetadataXML="+xml);
     	String MetadataHex = metadata.toHexString();
-    	System.out.println("@Test metadataTest1() MetadataHex="+MetadataHex);
+    	LOG.debug("@Test metadataTest1() MetadataHex="+MetadataHex);
     	String hash = metadata.sha256Hash();
-    	System.out.println("@Test metadataTest1() Metadatasha256Hash="+hash);
+    	LOG.debug("@Test metadataTest1() Metadatasha256Hash="+hash);
     	
     }
     

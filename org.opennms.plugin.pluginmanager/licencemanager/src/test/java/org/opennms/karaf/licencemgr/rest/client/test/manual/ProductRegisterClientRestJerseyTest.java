@@ -26,9 +26,12 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.Util;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductSpecList;
 import org.opennms.karaf.licencemgr.rest.client.ProductRegisterClient;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.ProductRegisterClientRestJerseyImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ProductRegisterClientRestJerseyTest {
+	private static final Logger LOG = LoggerFactory.getLogger(ProductRegisterClientRestJerseyTest.class);
 	
 	private static String test_productId="myproject/1.0-SNAPSHOT";
 	
@@ -58,7 +61,7 @@ public class ProductRegisterClientRestJerseyTest {
 	public ProductRegisterClientRestJerseyTest(){
 		super();
 		
-		System.out.println("LOADING PROPERTIES: LicenceManagerClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
+		LOG.debug("LOADING PROPERTIES: LicenceManagerClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
 		
 		Properties prop = null;
         InputStream is = null;
@@ -72,14 +75,14 @@ public class ProductRegisterClientRestJerseyTest {
     		password= prop.getProperty("password");
  
         } catch (Exception e) {
-        	System.out.println("     Using defailt values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:"+e);
+        	LOG.error("     Using default values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:",e);
         }
         
-		System.out.println("     basePath = "+basePath);
+		LOG.debug("     basePath = "+basePath);
 		
-        System.out.println("     baseUrl = "+baseUrl);
-		System.out.println("     userName= "+userName);
-		System.out.println("     password= "+password);
+        LOG.debug("     baseUrl = "+baseUrl);
+		LOG.debug("     userName= "+userName);
+		LOG.debug("     password= "+password);
 		
 	}
 	
@@ -98,19 +101,19 @@ public class ProductRegisterClientRestJerseyTest {
 
 	@Test
 	public void testsInOrder(){
-		System.out.println("@Test - PRODUCT REGISTER TESTS.START");
+		LOG.debug("@Test - PRODUCT REGISTER TESTS.START");
 		addProductSpecTest();
 		getListTest();
 		getProductSpecTest();
 		removeProductSpecTest();
 		clearProductSpecsTest();
 		getListTest(); //  just to confirm product gone
-		System.out.println("@Test - PRODUCT REGISTER TESTS.FINISH");
+		LOG.debug("@Test - PRODUCT REGISTER TESTS.FINISH");
 	}
 	
 	//@Test
 	public void addProductSpecTest() {
-		System.out.println("@Test - addProductSpecTest.START");
+		LOG.debug("@Test - addProductSpecTest.START");
 
 		ProductRegisterClient productRegisterClient = getProductRegisterClient();
 
@@ -121,35 +124,35 @@ public class ProductRegisterClientRestJerseyTest {
 			productRegisterClient.addProductSpec(productMetadata);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - addProductSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - addProductSpecTest() failed. Exception:",e);
+			fail("@Test - addProductSpecTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - addProductSpecTest.FINISH");
+		LOG.debug("@Test - addProductSpecTest.FINISH");
 	}
 	
 
 	//@Test
 	public void getListTest() {
-		System.out.println("@Test - getListTest.START");
+		LOG.debug("@Test - getListTest.START");
 
 		ProductRegisterClient productRegisterClient = getProductRegisterClient();
 
 		try {
 			ProductSpecList repositoryList = productRegisterClient.getList();
-			System.out.println(Util.toXml(repositoryList));
+			LOG.debug(Util.toXml(repositoryList));
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getListTest() failed. See stack trace in consol");
+			LOG.error("@Test - getListTest() failed. Exception:",e);
+			fail("@Test - getListTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - getListTest.FINISH");
+		LOG.debug("@Test - getListTest.FINISH");
 	}
 	
 	
 	//@Test
 	public void getProductSpecTest() {
-		System.out.println("@Test - getProductSpecTest.START");
+		LOG.debug("@Test - getProductSpecTest.START");
 		
 		String productId=test_productId;
 
@@ -157,21 +160,21 @@ public class ProductRegisterClientRestJerseyTest {
 
 		try {
 			ProductMetadata productMetadata = productRegisterClient.getProductSpec(productId);
-			System.out.println(Util.toXml(productMetadata));
+			LOG.debug(Util.toXml(productMetadata));
 
 			// productRegisterClient
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getProductSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - getProductSpecTest() failed. Exception:",e);
+			fail("@Test - getProductSpecTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - getProductSpecTest.FINISH");
+		LOG.debug("@Test - getProductSpecTest.FINISH");
 	}
 
 	
 	//@Test
 	public void removeProductSpecTest() {
-		System.out.println("@Test - removeProductSpecTest.START");
+		LOG.debug("@Test - removeProductSpecTest.START");
 
 		ProductRegisterClient productRegisterClient = getProductRegisterClient();
 
@@ -179,28 +182,28 @@ public class ProductRegisterClientRestJerseyTest {
 			String productId=test_productId;
 			productRegisterClient.removeProductSpec(productId);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - removeProductSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - removeProductSpecTest() failed. Exception:",e);
+			fail("@Test - removeProductSpecTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - removeProductSpecTest.FINISH");
+		LOG.debug("@Test - removeProductSpecTest.FINISH");
 	}
 	
 
 	//@Test
 	public void clearProductSpecsTest() {
-		System.out.println("@Test - clearProductSpecTest.START");
+		LOG.debug("@Test - clearProductSpecTest.START");
 
 		ProductRegisterClient productRegisterClient = getProductRegisterClient();
 
 		try {
 			 productRegisterClient.clearProductSpecs(true);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - clearProductSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - clearProductSpecTest() failed. Exception:",e);
+			fail("@Test - clearProductSpecTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - clearProductSpecTest.FINISH");
+		LOG.debug("@Test - clearProductSpecTest.FINISH");
 	}
 
 }

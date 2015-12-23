@@ -24,6 +24,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.opennms.karaf.licencemgr.GeneratedKeys;
+import org.opennms.karaf.productpub.cmd.GetProductSpecCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LicenceArtifactsGenerator {
 
@@ -105,12 +108,15 @@ public class LicenceArtifactsGenerator {
 				+"import org.opennms.karaf.licencemgr.BundleLicenceSpecImpl;\n"
 				+"import org.opennms.karaf.licencepub.LicencePublisher;\n"
 				+"import org.osgi.framework.BundleContext;\n"
+				+"import org.slf4j.Logger;\n"
+				+"import org.slf4j.LoggerFactory;\n"
 				+"\n"
 				+"/**\n"
 				+" *  Generated Licence Specification Class\n"
 				+" *  for productId="+productId+"\n"
 				+" */\n"
 				+"public class "+licenceSpecClassName+" {\n"
+				+"    private static final Logger LOG = LoggerFactory.getLogger("+licenceSpecClassName+".class);\n"
 				+"\n"
 				+"    private static final String productId=\""+productId+"\";\n"
 				+"\n"
@@ -130,8 +136,10 @@ public class LicenceArtifactsGenerator {
 				+"            try{\n"
 				+"                bundleLicenceSpec.unregisterSpec();\n"
 				+"                System.out.println(BundleLocalLicenceSpecImpl.class +\": Unregistered Licence Specification for productId=\"+productId);\n"
+				+"                LOG.info(BundleLocalLicenceSpecImpl.class +\": Unregistered Licence Specification for productId=\"+productId);\n"
 				+"            } catch (Exception e){\n"
-				+"                System.out.println(BundleLocalLicenceSpecImpl.class +\": Problem Unregistering Licence Specification for productId=\"+productId+\"  \"+ e);\n"
+				+"                System.err.println(BundleLocalLicenceSpecImpl.class +\": Problem Unregistering Licence Specification for productId=\"+productId+\"  \"+ e);\n"
+				+"                LOG.error(BundleLocalLicenceSpecImpl.class +\": Problem Unregistering Licence Specification for productId=\"+productId+\"  \", e);\n"
 				+"            }  finally {\n"
 				+"                bundleLicenceSpec=null; //release resources\n"
 				+"            }\n"

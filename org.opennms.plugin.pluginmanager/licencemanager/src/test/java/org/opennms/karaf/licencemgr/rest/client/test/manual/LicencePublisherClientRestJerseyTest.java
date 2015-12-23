@@ -28,9 +28,12 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 import org.opennms.karaf.licencemgr.metadata.jaxb.Util;
 import org.opennms.karaf.licencemgr.rest.client.LicencePublisherClient;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.LicencePublisherClientRestJerseyImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class LicencePublisherClientRestJerseyTest {
+	private static final Logger LOG = LoggerFactory.getLogger(LicencePublisherClientRestJerseyTest.class);
 	
 	// constants for tests
 	private static String test_productId="myproject/1.0-SNAPSHOT";
@@ -93,7 +96,7 @@ public class LicencePublisherClientRestJerseyTest {
 	public LicencePublisherClientRestJerseyTest(){
 		super();
 		
-		System.out.println("LOADING PROPERTIES: LicenceManagerClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
+		LOG.debug("LOADING PROPERTIES: LicenceManagerClientRestJerseyTest() from "+TEST_PROPERTIES_FILE);
 		
 		Properties prop = null;
         InputStream is = null;
@@ -107,14 +110,14 @@ public class LicencePublisherClientRestJerseyTest {
     		password= prop.getProperty("password");
  
         } catch (Exception e) {
-        	System.out.println("     Using defailt values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:"+e);
+        	LOG.error("     Using default values. Problem loading TEST_PROPERTIES_FILE:"+TEST_PROPERTIES_FILE+" Exception:",e);
         }
         
-		System.out.println("     basePath = "+basePath);
+		LOG.debug("     basePath = "+basePath);
 		
-        System.out.println("     baseUrl = "+baseUrl);
-		System.out.println("     userName= "+userName);
-		System.out.println("     password= "+password);
+        LOG.debug("     baseUrl = "+baseUrl);
+		LOG.debug("     userName= "+userName);
+		LOG.debug("     password= "+password);
 		
 	}
 
@@ -133,7 +136,7 @@ public class LicencePublisherClientRestJerseyTest {
 
 	@Test
 	public void testsInOrder(){
-		System.out.println("@Test - LICENCE PUBLISHER TESTS.START");
+		LOG.debug("@Test - LICENCE PUBLISHER TESTS.START");
 		
 		deleteLicenceSpecificationsTest();
         addLicenceSpecTest();
@@ -145,13 +148,13 @@ public class LicencePublisherClientRestJerseyTest {
 		deleteLicenceSpecificationsTest(); // final clean up
 		getLicenceMetadataListTest(); //  just to confirm licences gone
 		
-		System.out.println("@Test - LICENCE PUBLISHER TESTS.FINISH");
+		LOG.debug("@Test - LICENCE PUBLISHER TESTS.FINISH");
 		
 	}
 
 	//@Test
 	public void addLicenceSpecTest(){
-		System.out.println("@Test - addLicenceSpecTest().START");
+		LOG.debug("@Test - addLicenceSpecTest().START");
 
 		LicencePublisherClient productPublisherClient = getLicencePublisherClient();
 
@@ -162,17 +165,17 @@ public class LicencePublisherClientRestJerseyTest {
 			productPublisherClient.addLicenceSpec(licenceSpec);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - addLicenceSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - addLicenceSpecTest() failed. Exception:",e);
+			fail("@Test - addLicenceSpecTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - addLicenceSpecTest().FINISH");
+		LOG.debug("@Test - addLicenceSpecTest().FINISH");
 
 	}
 
 	//@Test
 	public void removeLicenceSpecTest(){
-		System.out.println("@Test - removeLicenceSpecTest().START");
+		LOG.debug("@Test - removeLicenceSpecTest().START");
 
 		LicencePublisherClient licencePublisherClient = getLicencePublisherClient();
 
@@ -180,17 +183,17 @@ public class LicencePublisherClientRestJerseyTest {
 			String productId=test_productId;
 			licencePublisherClient.removeLicenceSpec(productId);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - removeLicenceSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - removeLicenceSpecTest() failed. Exception:",e);
+			fail("@Test - removeLicenceSpecTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - removeLicenceSpecTest().FINISH");
+		LOG.debug("@Test - removeLicenceSpecTest().FINISH");
 
 	}
 
 	//@Test
 	public void getLicenceSpecTest(){
-		System.out.println("@Test - getLicenceSpecTest().START");
+		LOG.debug("@Test - getLicenceSpecTest().START");
 		
 		String productId=test_productId;
 
@@ -198,21 +201,21 @@ public class LicencePublisherClientRestJerseyTest {
 
 		try {
 			LicenceSpecification licenceSpecification = licencePublisherClient.getLicenceSpec(productId);
-			System.out.println(Util.toXml(licenceSpecification));
+			LOG.debug(Util.toXml(licenceSpecification));
 
 			// productPublisherClient
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getLicenceSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - getLicenceSpecTest() failed. Exception:",e);
+			fail("@Test - getLicenceSpecTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - getLicenceSpecTest().FINISH");
+		LOG.debug("@Test - getLicenceSpecTest().FINISH");
 
 	}
 
 	//@Test
 	public void getLicenceMetadataTest(){
-		System.out.println("@Test - getLicenceMetadataTest().START");
+		LOG.debug("@Test - getLicenceMetadataTest().START");
 		
 		String productId=test_productId;
 
@@ -220,72 +223,72 @@ public class LicencePublisherClientRestJerseyTest {
 
 		try {
 			LicenceMetadata licenceMetadata = licencePublisherClient.getLicenceMetadata(productId);
-			System.out.println(Util.toXml(licenceMetadata));
+			LOG.debug(Util.toXml(licenceMetadata));
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getLicenceMetadataTest() failed. See stack trace in consol");
+			LOG.error("@Test - getLicenceMetadataTest() failed. Exception:",e);
+			fail("@Test - getLicenceMetadataTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - getLicenceMetadataTest().FINISH");
+		LOG.debug("@Test - getLicenceMetadataTest().FINISH");
 
 	}
 
 	//@Test
 	public void getLicenceSpecListTest(){
-		System.out.println("@Test - getLicenceSpecListTest().START");
+		LOG.debug("@Test - getLicenceSpecListTest().START");
 
 		LicencePublisherClient licencePublisherClient = getLicencePublisherClient();
 
 		try {
 			LicenceSpecList licenceSpecList = licencePublisherClient.getLicenceSpecList();
-			System.out.println(Util.toXml(licenceSpecList));
+			LOG.debug(Util.toXml(licenceSpecList));
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getListTest() failed. See stack trace in consol");
+			LOG.error("@Test - getListTest() failed. Exception:",e);
+			fail("@Test - getListTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - getLicenceSpecListTest().FINISH");
+		LOG.debug("@Test - getLicenceSpecListTest().FINISH");
 
 	}
 
 	//@Test
 	public void getLicenceMetadataListTest(){
-		System.out.println("@Test - getLicenceMetadataListTest().START");
+		LOG.debug("@Test - getLicenceMetadataListTest().START");
 
 		LicencePublisherClient licencePublisherClient = getLicencePublisherClient();
 
 		try {
 			LicenceMetadataList licenceMetadataList = licencePublisherClient.getLicenceMetadataList();
-			System.out.println(Util.toXml(licenceMetadataList));
+			LOG.debug(Util.toXml(licenceMetadataList));
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - getListTest() failed. See stack trace in consol");
+			LOG.error("@Test - getListTest() failed. Exception:",e);
+			fail("@Test - getListTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - getLicenceMetadataListTest().FINISH");
+		LOG.debug("@Test - getLicenceMetadataListTest().FINISH");
 
 	}
 
 	//@Test
 	public void deleteLicenceSpecificationsTest(){
-		System.out.println("@Test - deleteLicenceSpecificationsTest().START");
+		LOG.debug("@Test - deleteLicenceSpecificationsTest().START");
 
 		LicencePublisherClient licencePublisherClient = getLicencePublisherClient();
 
 		try {
 			licencePublisherClient.deleteLicenceSpecifications(true);
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - deleteLicenceSpecificationsTest() failed. See stack trace in consol");
+			LOG.error("@Test - deleteLicenceSpecificationsTest() failed. Exception:",e);
+			fail("@Test - deleteLicenceSpecificationsTest() failed. See stack trace in error log");
 		}
 
-		System.out.println("@Test - cdeleteLicenceSpecificationsTest().FINISH");
+		LOG.debug("@Test - cdeleteLicenceSpecificationsTest().FINISH");
 	}
 
 
 	//@Test
 	public void createLicenceInstanceStrTest(){
-		System.out.println("@Test - createLicenceInstanceStrTest().START");
+		LOG.debug("@Test - createLicenceInstanceStrTest().START");
 
 		LicencePublisherClient licencePublisherClient = getLicencePublisherClient();
 		try {
@@ -294,14 +297,14 @@ public class LicencePublisherClientRestJerseyTest {
 			
 			String licenceInstanceStr = licencePublisherClient.createLicenceInstanceStr(licenceMetadataSpec);
 			
-			System.out.println("Licence instance="+licenceInstanceStr);
+			LOG.debug("Licence instance="+licenceInstanceStr);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			fail("@Test - addLicenceSpecTest() failed. See stack trace in consol");
+			LOG.error("@Test - addLicenceSpecTest() failed. Exception:",e);
+			fail("@Test - addLicenceSpecTest() failed. See stack trace in error log");
 		}
 		
-		System.out.println("@Test - createLicenceInstanceStrTest().FINISH");
+		LOG.debug("@Test - createLicenceInstanceStrTest().FINISH");
 
 	}
 

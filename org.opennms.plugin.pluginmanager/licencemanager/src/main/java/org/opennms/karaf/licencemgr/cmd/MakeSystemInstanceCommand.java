@@ -19,10 +19,13 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Command(scope = "licence-mgr", name = "makesysteminstance", description="Make and install a new System Instance (systemId) for licence manager")
 public class MakeSystemInstanceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(MakeSystemInstanceCommand.class);
 
 	private LicenceService _licenceService;
 
@@ -40,8 +43,10 @@ public class MakeSystemInstanceCommand extends OsgiCommandSupport {
 		try{
 			String systemId = getLicenceService().makeSystemInstance();
 			System.out.println("New local systemId created and set to='"+systemId+"'");
+			LOG.info("New local systemId created and set to='"+systemId+"'");
 		} catch (Exception e) {
-			System.out.println("Error making new systemId. Exception="+e);
+			System.err.println("Error making new systemId. Exception="+e);
+			LOG.error("Error making new systemId. Exception=",e);
 		}
 		return null;
 	}
