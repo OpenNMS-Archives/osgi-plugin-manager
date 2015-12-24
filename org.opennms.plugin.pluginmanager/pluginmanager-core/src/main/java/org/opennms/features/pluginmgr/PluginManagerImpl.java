@@ -41,11 +41,12 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.ProductMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.ProductSpecList;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.LicenceManagerClientRestJerseyImpl;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.ProductRegisterClientRestJerseyImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class PluginManagerImpl implements PluginManager {
-
-
+	private static final Logger LOG = LoggerFactory.getLogger(PluginManagerImpl.class);
 
 	private static String PRODUCT_PUB_BASE_PATH = "/licencemgr/rest/v1-0/product-pub";
 	private static String PRODUCT_REG_BASE_PATH = "/licencemgr/rest/v1-0/product-reg";
@@ -1052,6 +1053,7 @@ public class PluginManagerImpl implements PluginManager {
 	public synchronized void load(){
 		if (fileUri==null) throw new RuntimeException("load failed - fileUri must be set for plugin manager");
 		System.out.println("Plugin Manager Starting");
+		LOG.info("Plugin Manager Starting");
 
 		//TODO CREATE ROLLING FILE TO AVOID CORRUPTED FILE
 		try {
@@ -1067,13 +1069,17 @@ public class PluginManagerImpl implements PluginManager {
 				pluginModelJaxb = loadedPluginModelJaxb;
 
 				System.out.println("Plugin Manager Successfully loaded historic data from file="+pluginManagerFile.getAbsolutePath());
+				LOG.info("Plugin Manager Successfully loaded historic data from file="+pluginManagerFile.getAbsolutePath());
 			} else {
 				System.out.println("Plugin Manager data file="+pluginManagerFile.getAbsolutePath()+" does not exist. A new one will be created.");
+				LOG.info("Plugin Manager data file="+pluginManagerFile.getAbsolutePath()+" does not exist. A new one will be created.");
 				persist(); // persists first version of plugin model
 			}
 			System.out.println("Plugin Manager Started");
+			LOG.info("Plugin Manager Started");
 		} catch (JAXBException e) {
 			System.out.println("Plugin Manager Problem Starting: "+ SimpleStackTrace.errorToString(e));
+			LOG.error("Plugin Manager Problem Starting: ",e);
 			throw new RuntimeException("Problem loading Plugin Manager Data",e);
 		}
 	}
@@ -1083,6 +1089,7 @@ public class PluginManagerImpl implements PluginManager {
 	 */
 	public synchronized void close() {
 		System.out.println("Plugin Manager Shutting Down ");
+		LOG.info("Plugin Manager Shutting Down ");
 	}
 
 

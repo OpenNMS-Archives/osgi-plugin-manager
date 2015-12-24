@@ -15,6 +15,9 @@
 
 package org.opennms.features.pluginmgr.vaadin.pluginmanager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -23,6 +26,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class ErrorMessageWindow  extends Window {
+	private static final Logger LOG = LoggerFactory.getLogger(ErrorMessageWindow.class);
 	
 	private static final long serialVersionUID = 1L;
 
@@ -45,9 +49,10 @@ public class ErrorMessageWindow  extends Window {
 			content.setExpandRatio(ta, 1.0f);
 	        
 	        if (systemMessages!=null) {
-	        	ta.setValue(systemMessages.getMessage());
+	        	ta.setValue(systemMessages.getLongMessage());
 	        } else {
 	        	ta.setValue("Error: systemMessages should not be null");
+	        	LOG.error("Error: systemMessages should not be null");
 	        }
 	        ta.setReadOnly(false);
 	        

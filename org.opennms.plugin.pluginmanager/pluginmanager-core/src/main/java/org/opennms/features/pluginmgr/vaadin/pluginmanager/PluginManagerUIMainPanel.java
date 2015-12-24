@@ -310,8 +310,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			openShoppingCartLink.setResource(resource);
 
 		} catch (Exception e){
-			systemMessages.setValue("\nproblem refreshing display values for "
-					+sessionPluginManager.getKarafInstance()+" :\n"+SimpleStackTrace.errorToString(e));
+			systemMessages.error("Problem refreshing display values for "+sessionPluginManager.getKarafInstance(), e);
 		}
 
 		mainLayout.markAsDirty();
@@ -351,7 +350,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				InstanceListEditorWindow instanceListEditorWindow = new InstanceListEditorWindow(sessionPluginManager);
 
 				instanceListEditorWindow.addCloseListener(new Window.CloseListener() {
@@ -372,7 +371,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				String message="";
 				// update systemId
 				try{
@@ -385,12 +384,12 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 					message = message+"\nsystemId for Karaf Instance "+sessionPluginManager.getKarafInstance()
 							+" updated to "+newManifestSystemId;
 
-					systemMessages.setValue(message);
+					systemMessages.info(message);
 					sessionPluginManager.refreshKarafEntry(); // update the values if we can
 					updateDisplayValues();
 				} catch (Exception e){
-					systemMessages.setValue(message +"\nproblem updating systemId for Karaf Instance "
-							+sessionPluginManager.getKarafInstance()+" :\n"+SimpleStackTrace.errorToString(e));
+					systemMessages.error(message +"\nproblem updating systemId for Karaf Instance "
+							+sessionPluginManager.getKarafInstance(),e);
 				}
 			}
 		});
@@ -399,14 +398,14 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				// generate random systemId
 				try{
 					String randomManifestSystemId = sessionPluginManager.generateRandomManifestSystemId();
-					systemMessages.setValue("random manifestSystemId generated "+randomManifestSystemId);
+					systemMessages.info("random manifestSystemId generated "+randomManifestSystemId);
 					updateDisplayValues();
 				} catch (Exception e){
-					systemMessages.setValue("problem generating random systemId : "+SimpleStackTrace.errorToString(e));
+					systemMessages.error("problem generating random systemId.",e);
 				}
 
 			}
@@ -426,7 +425,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 				availablePluginsControlsPanel.setRemoteUpdateControlsEnabled(remoteIsAccessible);
 				installedPluginsControlsPanel.setRemoteUpdateControlsEnabled(remoteIsAccessible);
 
-				systemMessages.setValue("remote is accessible set to "+remoteIsAccessible+ " for Karaf Instance "
+				systemMessages.info("Remote is accessible set to "+remoteIsAccessible+ " for Karaf Instance "
 						+sessionPluginManager.getKarafInstance());
 			}
 		});
@@ -437,7 +436,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			public void valueChange(ValueChangeEvent event) {
 				boolean allowUpdateMessages = (Boolean) event.getProperty().getValue();
 				sessionPluginManager.setAllowUpdateMessages(allowUpdateMessages);
-				systemMessages.setValue("allow update messages set to "+allowUpdateMessages+ " for Karaf Instance "
+				systemMessages.info("Allow update messages set to "+allowUpdateMessages+ " for Karaf Instance "
 						+sessionPluginManager.getKarafInstance());
 			}
 		});
@@ -447,7 +446,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				// update plugin server
 				try{
 
@@ -458,7 +457,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 
 					sessionPluginManager.setPluginManagerBasicData(pluginServerUsername, pluginServerPassword, pluginServerUrl, licenceShoppingCartUrl);	
 
-					systemMessages.setValue("plugin server password updated to "+pluginServerPasswordTxtField.getValue()
+					systemMessages.info("plugin server password updated to "+pluginServerPasswordTxtField.getValue()
 							+"\nplugin server username updated to "+pluginServerUsernameTxtField.getValue()
 							+ "\nplugin server URL updated to "+pluginServerUrlTxtField.getValue()
 							+ "\nlicence Shopping Cart URL updated to "+licenceShoppingCartUrlTxtField.getValue()
@@ -466,7 +465,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 
 					updateDisplayValues();
 				} catch (Exception e){
-					systemMessages.setValue("problem updating plugin server data : "+SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem updating plugin server data",e);
 				}
 
 			}
@@ -485,16 +484,16 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 
-				systemMessages.setValue("");
+				systemMessages.clear();
 				String karafInstanceSelected=null;
 				try {
 					if (karafListSelect.getValue()!=null) {
 						karafInstanceSelected = karafListSelect.getValue().toString();
 						sessionPluginManager.setKarafInstance(karafInstanceSelected);
 					}
-					systemMessages.setValue("karaf instance changed to "+sessionPluginManager.getKarafInstance());
+					systemMessages.info("Karaf instance changed to "+sessionPluginManager.getKarafInstance());
 				} catch (Exception e){
-					systemMessages.setValue("problem changing karaf instance : "+SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem changing karaf instance",e);
 				}
 				updateDisplayValues();
 			}
@@ -505,13 +504,13 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				//reload data from plugin model
 				try{
 					sessionPluginManager.refreshKarafEntry(); // update the values if we can
-					systemMessages.setValue("karaf data for karaf instance "+ sessionPluginManager.getKarafInstance()+" successfully reloaded");
+					systemMessages.info("karaf data for karaf instance "+ sessionPluginManager.getKarafInstance()+" successfully reloaded");
 				} catch (Exception e){
-					systemMessages.setValue("problem reloading data for karaf instance "+ sessionPluginManager.getKarafInstance()+" : "+SimpleStackTrace.errorToString(e));
+					systemMessages.error("problem reloading data for karaf instance "+ sessionPluginManager.getKarafInstance(), e);
 				}
 				updateDisplayValues();
 			}
@@ -522,13 +521,13 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				//reload data from plugin model
 				try{
 					sessionPluginManager.refreshAvailablePlugins();
-					systemMessages.setValue("available plugin data successfully reloaded");
+					systemMessages.info("Available plugin data successfully reloaded from plugin server: "+sessionPluginManager.getPluginServerUrl());
 				} catch (Exception e){
-					systemMessages.setValue("problem retrieving available plugin data : "+SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem retrieving available plugin data.",e);
 				}
 				updateDisplayValues();
 			}
@@ -542,7 +541,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void selectedTabChange(SelectedTabChangeEvent event){
-				systemMessages.setValue("");
+				systemMessages.clear();
 				updateDisplayValues();
 			}
 		});

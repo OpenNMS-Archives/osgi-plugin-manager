@@ -77,13 +77,14 @@ public class AddLicencePanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					String licenceStr = licenceDescriptorPanel.getLicenceString();
 					if (!licenceDescriptorPanel.setLicenceString(licenceStr)) throw new RuntimeException("invalid licence string");
-					systemMessages.setValue("licence string verified");
+					systemMessages.setMessage("licence string verified");
 				} catch (Exception e){
-					systemMessages.setValue("Problem verifying licence string. Exception:\n"+SimpleStackTrace.errorToString(e));
+					// do not log as this is a local test of the licence
+					systemMessages.setLongMessage("Problem verifying licence string. Exception:\n"+SimpleStackTrace.errorToString(e));
 				}
 				licenceDescriptorPanel.markAsDirty();
 			}
@@ -93,12 +94,12 @@ public class AddLicencePanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					licenceDescriptorPanel.setLicenceString("");
-					systemMessages.setValue("licence string cleared");
+					systemMessages.setMessage("licence string cleared");
 				} catch (Exception e){
-					systemMessages.setValue("Problem clearing licence string. Exception:\n"+SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem clearing licence string.",e);
 				}
 				licenceDescriptorPanel.markAsDirty();
 			}
@@ -109,14 +110,14 @@ public class AddLicencePanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					String licenceStr = licenceDescriptorPanel.getLicenceString();
 					if (!licenceDescriptorPanel.setLicenceString(licenceStr)) throw new RuntimeException("cannot install licence - invalid licence string");
 					sessionPluginManager.addLicence(licenceStr);
-					systemMessages.setValue("licence added to installed licence list");
+					systemMessages.info("licence added to installed licence list");
 				} catch (Exception e){
-					systemMessages.setValue("Problem adding licence to installed licence list. Exception:\n"+SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem adding licence to installed licence list.",e);
 				}
 				licenceDescriptorPanel.markAsDirty();
 			}

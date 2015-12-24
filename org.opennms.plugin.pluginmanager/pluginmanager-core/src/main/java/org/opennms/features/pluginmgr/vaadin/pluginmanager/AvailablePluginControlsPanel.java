@@ -83,13 +83,13 @@ public class AvailablePluginControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
 					sessionPluginManager.installPlugin(selectedProductId);
-					systemMessages.setValue("installed product Id "+selectedProductId);
+					systemMessages.info("installed product Id "+selectedProductId);
 				} catch (Exception e){
-					systemMessages.setValue(SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem installing plugin.",e );
 				}
 			}
 		});
@@ -99,13 +99,13 @@ public class AvailablePluginControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
 					sessionPluginManager.addPluginToManifest(selectedProductId);
-					systemMessages.setValue("added product Id "+selectedProductId+" to karaf Manifest for karaf instance "+ sessionPluginManager.getKarafInstance());
+					systemMessages.info("added product Id "+selectedProductId+" to karaf Manifest for karaf instance "+ sessionPluginManager.getKarafInstance());
 				} catch (Exception e){
-					systemMessages.setValue(SimpleStackTrace.errorToString(e));
+					systemMessages.error("problem adding plugin to manifest",e);
 				}
 			}
 		});

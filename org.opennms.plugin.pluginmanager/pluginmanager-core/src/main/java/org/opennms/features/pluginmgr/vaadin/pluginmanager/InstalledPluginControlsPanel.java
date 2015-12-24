@@ -85,15 +85,15 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
                     sessionPluginManager.unInstallPlugin(selectedProductId);
-					systemMessages.setValue("uninstalled product Id "+selectedProductId);
+					systemMessages.info("uninstalled product Id "+selectedProductId);
 				    ProductSpecList productSpeclist = sessionPluginManager.getInstalledPlugins();
 					if (productSpeclist!=null) productDescriptorTablePanel.addProductList(productSpeclist);
 				} catch (Exception e){
-					systemMessages.setValue(SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem uninstalling plugin.",e);
 				}
 			}
 		});
@@ -103,23 +103,23 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				String message="";
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
 					message = "Re-installing product Id "+selectedProductId;
-					systemMessages.setValue(message);
+					systemMessages.info(message);
 					sessionPluginManager.unInstallPlugin(selectedProductId);
 					message = message +"\nUn-installed product Id "+selectedProductId;
-					systemMessages.setValue(message);
+					systemMessages.info(message);
 					productDescriptorTablePanel.markAsDirty();
 					sessionPluginManager.installPlugin(selectedProductId);
 					message = message +"\nRe-installed product Id "+selectedProductId;
-					systemMessages.setValue(message);
+					systemMessages.info(message);
 				    ProductSpecList productSpeclist = sessionPluginManager.getInstalledPlugins();
 					if (productSpeclist!=null) productDescriptorTablePanel.addProductList(productSpeclist);
 				} catch (Exception e){
-					systemMessages.setValue(message +"\n"+SimpleStackTrace.errorToString(e));
+					systemMessages.error(message,e);
 				}
 			}
 		});

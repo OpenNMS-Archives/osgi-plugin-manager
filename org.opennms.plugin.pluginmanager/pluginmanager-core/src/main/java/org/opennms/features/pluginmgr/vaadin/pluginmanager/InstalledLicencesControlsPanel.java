@@ -80,15 +80,15 @@ public class InstalledLicencesControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					String selectedLicenceId = licenceDescriptorTablePanel.getSelectedLicenceId();
 					sessionPluginManager.removeLicence(selectedLicenceId);
-					systemMessages.setValue("uninstalled product Id "+selectedLicenceId);
+					systemMessages.info("uninstalled product Id "+selectedLicenceId);
 					LicenceList licencelist = sessionPluginManager.getInstalledLicenceList();
 					if (licencelist!=null) licenceDescriptorTablePanel.addLicenceList(licencelist);
 				} catch (Exception e){
-					systemMessages.setValue(SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem uninstalling licence.",e);
 				}
 				licenceDescriptorTablePanel.markAsDirty();
 			}

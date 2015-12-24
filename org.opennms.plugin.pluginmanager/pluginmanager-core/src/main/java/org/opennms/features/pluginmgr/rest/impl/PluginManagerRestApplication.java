@@ -20,11 +20,16 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PluginManagerRestApplication extends Application {
+	private static final Logger LOG = LoggerFactory.getLogger(PluginManagerRestApplication.class);
 	
 	public PluginManagerRestApplication(){
 		super();
 		System.out.println("Plugin Manager Rest App starting.");
+		LOG.info("Plugin Manager Rest App starting.");
 	}
 
 	// doing this because the com.sun.ws.rest.api.core.PackagesResourceConfig 
@@ -44,6 +49,7 @@ public class PluginManagerRestApplication extends Application {
 	
 	public void destroyMethod(){
 		System.out.println("Plugin Manager Rest App  shutting down.");
+		LOG.info("Plugin Manager Rest App  shutting down.");
 	}
 
 }

@@ -17,14 +17,15 @@ package org.opennms.features.pluginmgr.vaadin.pluginmanager;
 
 import org.opennms.features.pluginmgr.SessionPluginManager;
 import org.osgi.service.blueprint.container.BlueprintContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class InstanceListEditorWindow extends Window {
+	private static final Logger LOG = LoggerFactory.getLogger(InstanceListEditorWindow.class);
 	
-
-
 	private static final long serialVersionUID = 1L;
 	
 	private SessionPluginManager sessionPluginManager=null;
@@ -47,10 +48,10 @@ public class InstanceListEditorWindow extends Window {
         	if (factoryInstanceListEditor!=null ) {
         		instanceListEditor = factoryInstanceListEditor;
         	} else {
-        		//TODO LOG MESSAGE
-        		System.out.println("instanceListEditor not defined in blueprintContainer. Using SimpleInstanceListEditor");
+        		LOG.debug("instanceListEditor not defined in blueprintContainer. Using SimpleInstanceListEditor");
         	}
         } catch (Exception e) {
+        	LOG.error("problem loading InstanceListEditor from blueprintContainer: ", e);
             throw new RuntimeException("problem loading InstanceListEditor from blueprintContainer: ", e);
         }
         

@@ -91,15 +91,15 @@ public class PluginManifestControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
 					sessionPluginManager.removePluginFromManifest(selectedProductId);
-					systemMessages.setValue("removed product Id "+selectedProductId+" from manifest");
+					systemMessages.info("Removed product Id "+selectedProductId+" from manifest for karaf instance: "+sessionPluginManager.getKarafInstance());
 				    ProductSpecList productManifestList = sessionPluginManager.getPluginsManifest();
 					if (productManifestList!=null) productDescriptorTablePanel.addProductList(productManifestList);
 				} catch (Exception e){
-					systemMessages.setValue(SimpleStackTrace.errorToString(e));
+					systemMessages.error("Problem removing manifest for karaf instance: "+sessionPluginManager.getKarafInstance(),e);
 				}
 			}
 		});
@@ -109,19 +109,19 @@ public class PluginManifestControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				String message="";
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
-					message = "Installing product Id "+selectedProductId+ " from Manifest";
-					systemMessages.setValue(message);
+					message = "Installing product Id "+selectedProductId+ " from Manifest for karaf instance: "+sessionPluginManager.getKarafInstance();
+					systemMessages.info(message);
 					sessionPluginManager.installPlugin(selectedProductId);
 					message = message +"\nInstalled product Id "+selectedProductId;
-					systemMessages.setValue(message);
+					systemMessages.info(message);
 					// forces update after manifest plugin is installed
 					if (pluginManagerUIMainPanel!=null) pluginManagerUIMainPanel.updateDisplayValues();
 				} catch (Exception e){
-					systemMessages.setValue(message +"\n"+SimpleStackTrace.errorToString(e));
+					systemMessages.error(message +"\n Problem installing manifest ",e);
 				}
 			}
 		});
@@ -131,7 +131,7 @@ public class PluginManifestControlsPanel extends CustomComponent {
 			private static final long serialVersionUID = 1L;
 
 			public void buttonClick(ClickEvent event) {
-				systemMessages.setValue("");
+				systemMessages.clear();
 				
 				ManualManifestEditorWindow manualManifestEditorWindow = new ManualManifestEditorWindow(sessionPluginManager);
 
