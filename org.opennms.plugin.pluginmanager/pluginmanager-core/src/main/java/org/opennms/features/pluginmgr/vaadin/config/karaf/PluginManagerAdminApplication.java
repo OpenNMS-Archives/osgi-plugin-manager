@@ -111,7 +111,7 @@ public class PluginManagerAdminApplication extends UI {
 		setContent(m_rootLayout);
 		
 		
-		//dynamically inject style for non write borders - avoids changing themes css
+		// dynamically inject style for non write borders - avoids changing themes css
 		// Get the stylesheet of the page
 		Styles styles = Page.getCurrent().getStyles();
         // inject the new font size as a style. We need .v-app to override Vaadin's default styles here
