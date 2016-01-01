@@ -10,8 +10,8 @@
 
   <!-- LicenceSpec -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${symbol_dollar}{productName}.licence-spec</artifactId>
-  <name>${symbol_dollar}{productName}.licence-spec</name>
+  <artifactId>${rootArtifactId}.licence-spec</artifactId>
+  <name>${rootArtifactId}.licence-spec</name>
   <description>LicenceSpec for ${symbol_dollar}{productName}}</description>
   <packaging>bundle</packaging>
 

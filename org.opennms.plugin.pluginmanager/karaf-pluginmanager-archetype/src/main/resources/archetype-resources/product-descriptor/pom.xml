@@ -11,8 +11,8 @@
 
   <!-- ProductDescriptor -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${symbol_dollar}{productName}.product-descriptor</artifactId>
-  <name>${symbol_dollar}{productName}.product-descriptor</name>
+  <artifactId>${rootArtifactId}.product-descriptor</artifactId>
+  <name>${rootArtifactId}.product-descriptor</name>
   <description>ProductDescriptor for ${symbol_dollar}{productName}</description>
   <packaging>bundle</packaging>
 

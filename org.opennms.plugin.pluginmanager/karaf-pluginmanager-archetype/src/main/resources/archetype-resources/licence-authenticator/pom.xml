@@ -11,9 +11,9 @@
 
   <!-- LicenceAuthenticator -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${symbol_dollar}{productName}.licence-authenticator</artifactId>
-  <name>${symbol_dollar}{productName}.licence-authenticator</name>
-  <description>Licence Authenticator for ${symbol_dollar}{productName}</description>
+  <artifactId>${rootArtifactId}.licence-authenticator</artifactId>
+  <name>${rootArtifactId}.licence-authenticator</name>
+  <description>Licence Authenticator for ${rootArtifactId}</description>
   <packaging>bundle</packaging>
 
   <build>

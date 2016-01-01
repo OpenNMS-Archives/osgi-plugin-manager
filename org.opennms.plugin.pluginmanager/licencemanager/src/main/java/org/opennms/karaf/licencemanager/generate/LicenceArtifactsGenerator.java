@@ -321,7 +321,7 @@ public class LicenceArtifactsGenerator {
 
 	public static void main(String [] args) {
 
-		System.out.println(LicenceArtifactsGenerator.class.getName()+ " Starting to geneate Licence Artifacts");
+		System.out.println(LicenceArtifactsGenerator.class.getName()+ " Starting to generate Licence Artifacts");
 
 		if (args.length !=3) throw new IllegalArgumentException(LicenceArtifactsGenerator.class.getName()+" Has wrong number of arguments");
 

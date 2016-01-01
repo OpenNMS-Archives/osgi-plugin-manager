@@ -58,7 +58,7 @@ public class LicenceMetadata {
 	 * feature which implements the product.
 	 */
 	String productId=null;
-	
+
 	/**
 	 * featureRepository is expected to contain the url of the features repository 
 	 * which describes the Karaf feature using the concatenated form
@@ -67,14 +67,14 @@ public class LicenceMetadata {
 	 * e.g. features:addurl mvn:org.apache.camel/camel-example-osgi/2.10.0/xml/features
 	 */
 	String featureRepository=null;
-	
+
 	/**
 	 * systemIds is a list of unique systemId's for which this licence is valid.
 	 * a systemId is expected to contain the unique identifier of the system on which which the licensed artifact 
 	 * will be installed. The systemId is terminated with a CRC32 checksum seperated by a - symbol <systemId>-<CRC32>
 	 */
 	Set<String> systemIds=new TreeSet<String>();
-	
+
 	/**
 	 * maxSizeSystemIds is the maximum number of systemId's which can be included in the systemIds list.
 	 * This is used by the shopping cart to limit the number of systems to which licences can be applied.
@@ -85,17 +85,17 @@ public class LicenceMetadata {
 	 * authenticate with any and all systemIds,
 	 */
 	String maxSizeSystemIds=null;
-	
+
 	/**
 	 * startDate - the date from which the licence will be valid
 	 */
 	Date startDate=new Date();
-	
+
 	/**
 	 * expiryDate - the date on which the licence will expire. If Null (and duration is null) there is no expiry date.
 	 */
 	Date expiryDate=null;
-	
+
 	/**
 	 * duration - alternative to expiry date. Duration of licence in days. If null (and expiryDate is null) there is no expiry date.
 	 * If duration =0, there is no expiry date. If both defined, duration has precedence over expiryDate.
@@ -109,7 +109,7 @@ public class LicenceMetadata {
 	 * the name / address of the person / organisation who is granted the licence
 	 */
 	String licensee=null;
-	
+
 	/**
 	 * (Definition: licensor n. a person who gives another a license, particularly 
 	 *  a private party doing so, such as a business giving someone a license to sell its product)
@@ -117,13 +117,13 @@ public class LicenceMetadata {
 	 * the name / address of the person / organisation granting the licence
 	 */
 	String licensor=null;
-	
+
 	/**
 	 * licence options. Each option contains a name/value pair and a description field.
 	 * This is intended to grant/restrict access to particular features
 	 */
 	Set<OptionMetadata> options=new HashSet<OptionMetadata>();
-	
+
 	/**
 	 * sets LicenceMetadata values of this object from another licenceMetadata object
 	 * @param licenceMetadata
@@ -157,7 +157,7 @@ public class LicenceMetadata {
 	public void setProductId(String productId) {
 		this.productId = productId;
 	}
-	
+
 	/**
 	 * @return the featureRepository
 	 */
@@ -206,7 +206,7 @@ public class LicenceMetadata {
 	public void setMaxSizeSystemIds(String maxSizeSystemIds) {
 		this.maxSizeSystemIds = maxSizeSystemIds;
 	}
-	
+
 
 	/**
 	 * @return the startDate
@@ -301,20 +301,27 @@ public class LicenceMetadata {
 		this.options = options;
 	}
 
-	
+
 	/**
 	 * @return XML encoded version of LicenceMetadata
 	 */
 	public String toXml(){
+		return toXml(false);
+	}
 
+	/**
+	 * @param prettyPrint if true returns formatted xml output
+	 * @return XML encoded version of LicenceMetadata
+	 */
+	public String toXml(boolean prettyPrint){
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(org.opennms.karaf.licencemgr.metadata.jaxb.ObjectFactory.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, prettyPrint);
 			StringWriter stringWriter = new StringWriter();
 			jaxbMarshaller.marshal(this,stringWriter);
 			return stringWriter.toString();
-
 		} catch (JAXBException e) {
 			throw new RuntimeException("Problem marshalling LicenceMetadata:",e);
 		}

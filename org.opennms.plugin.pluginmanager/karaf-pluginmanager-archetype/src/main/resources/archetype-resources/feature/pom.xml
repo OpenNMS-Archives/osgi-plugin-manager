@@ -11,9 +11,9 @@
   
   <!-- Feature Definition -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${symbol_dollar}{productName}</artifactId>
-  <name>${symbol_dollar}{productName}</name>
-  <description>Feature definition for ${symbol_dollar}{productName}</description>
+  <artifactId>${rootArtifactId}</artifactId>
+  <name>${rootArtifactId}</name>
+  <description>Feature definition for ${rootArtifactId}</description>
   <packaging>pom</packaging>
 
   <build>

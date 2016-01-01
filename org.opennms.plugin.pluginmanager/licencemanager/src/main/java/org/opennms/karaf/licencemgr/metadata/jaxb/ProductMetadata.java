@@ -284,11 +284,19 @@ public class ProductMetadata {
 	 * @return XML encoded version of ProductMetadata
 	 */
 	public String toXml(){
-
+		return toXml(false);
+	}
+	
+	/**
+	 * @param prettyPrint if true returns formatted xml output
+	 * @return XML encoded version of ProductMetadata
+	 */
+	public String toXml(boolean prettyPrint){
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(org.opennms.karaf.licencemgr.metadata.jaxb.ObjectFactory.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, prettyPrint);
 			StringWriter stringWriter = new StringWriter();
 			jaxbMarshaller.marshal(this,stringWriter);
 			return stringWriter.toString();

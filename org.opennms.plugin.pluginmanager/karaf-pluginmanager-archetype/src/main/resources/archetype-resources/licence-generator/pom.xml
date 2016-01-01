@@ -10,8 +10,8 @@
 
   <!-- Licence Generator -->
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>${symbol_dollar}{productName}.licence-generator</artifactId>
-  <name>${symbol_dollar}{productName}.licence-generator</name>
+  <artifactId>${rootArtifactId}.licence-generator</artifactId>
+  <name>${rootArtifactId}.licence-generator</name>
   <description>Licence Generator for ${symbol_dollar}{productName}</description>
   <packaging>jar</packaging>
 
