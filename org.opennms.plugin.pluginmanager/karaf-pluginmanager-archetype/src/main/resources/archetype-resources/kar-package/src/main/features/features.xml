@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features name="${productName}.kar-descriptor" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
+    <feature name="${productName}.kar-descriptor" version="1.0-SNAPSHOT" description="${productName}.kar-descriptor">
+        <details>Kar Descriptor for ${productName}</details>
+        <bundle start='false' >mvn:${groupId}/${productName}.licence-authenticator/${project.version}</bundle>
+        <bundle>mvn:o${groupId}/${productName}-kar-descriptor/${project.version}</bundle>
+    </feature>
+</features>

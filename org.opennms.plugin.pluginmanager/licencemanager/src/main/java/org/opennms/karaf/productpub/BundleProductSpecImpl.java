@@ -141,7 +141,7 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 		List<ProductMetadata> prodSpecList = productSpecList.getProductSpecList();
 		for(ProductMetadata pmeta: prodSpecList){
 			productPublisher.addProductDescription(pmeta);
-			msg=msg+"\n"+"  Registered Product Specification for productId="+pmeta.getProductId();
+			msg=msg+"\n"+"Specification List Registered Product Specification for productId="+pmeta.getProductId();
 		}
 		System.out.println(msg);
 		LOG.info(msg);
@@ -156,21 +156,21 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 		if (productPublisher!=null){
 			try{
 				System.out.println("Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource());
-				LOG.info("Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource());
+				LOG.info("Specification List Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource());
 				List<ProductMetadata> prodSpecList = productSpecList.getProductSpecList();
 				for(ProductMetadata pmeta: prodSpecList){
 					boolean unregistered =productPublisher.removeProductDescription(pmeta.getProductId());
 					if (unregistered){
-						System.out.println("  Unregistered Product Specification for productId="+pmeta.getProductId());
-						LOG.info("  Unregistered Product Specification for productId="+pmeta.getProductId());
+						System.out.println("Specification List Unregistered Product Specification for productId="+pmeta.getProductId());
+						LOG.info("Specification List Unregistered Product Specification for productId="+pmeta.getProductId());
 					}else {
-						System.out.println("  Already Unregistered Product Specification for productId="+pmeta.getProductId());
-						LOG.info("  Already Unregistered Product Specification for productId="+pmeta.getProductId());
+						System.out.println("Specification List Already Unregistered Product Specification for productId="+pmeta.getProductId());
+						LOG.info("Specification List Already Unregistered Product Specification for productId="+pmeta.getProductId());
 					}
 				}
 			} catch (Exception e){
-				System.err.println("Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  "+e);
-				LOG.error("Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  ",e);
+				System.err.println("Specification List Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  "+e);
+				LOG.error("Specification List Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  ",e);
 			}  finally {
 				productPublisher=null; //release resources
 			}

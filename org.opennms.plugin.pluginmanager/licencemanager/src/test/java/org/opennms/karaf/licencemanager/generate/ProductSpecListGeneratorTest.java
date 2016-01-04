@@ -13,9 +13,11 @@ public class ProductSpecListGeneratorTest {
 		
 		String searchDirectory = "target";
 		
-		String outputFile="target/testProductSpecList.xml";
+		String outputFile="target/test-gen-resources/testProductSpecList.xml";
 		
-		ProductSpecListGenerator test=new ProductSpecListGenerator( searchDirectory, outputFile);
+		String packagingDescriptor="testPackageDescriptor/1.0.0";
+		
+		ProductSpecListGenerator test=new ProductSpecListGenerator( searchDirectory, outputFile, packagingDescriptor );
 		
 		System.out.println("@ProductSpecListGeneratorTest - test1. END");
 		

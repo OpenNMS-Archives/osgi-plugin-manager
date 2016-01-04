@@ -40,11 +40,14 @@ public class ProductSpecListGenerator {
 	private String outputFile=null;
 
 	private String searchDirectory=null;
+	
+	private String packagingDescriptor=null;
 
-	public ProductSpecListGenerator(String searchDirectory, String outputFile){
+	public ProductSpecListGenerator(String searchDirectory, String outputFile, String packagingDescriptor){
 		super();
 		this.outputFile=outputFile;
 		this.searchDirectory=searchDirectory;
+		this.packagingDescriptor=packagingDescriptor;
 		generateProductSpecList();
 	}
 
@@ -74,14 +77,19 @@ public class ProductSpecListGenerator {
 					is = jarFile.getInputStream(arg);
 					String productMetadataXml =  readFile(is);
 					ProductMetadata productMetadata = new ProductMetadata();
+					// supplied packaging descriptor will replace pre-existing one in product descriptor
+					if (packagingDescriptor!=null) productMetadata.setPackageingDescriptor(packagingDescriptor);
 					productMetadata.fromXml(productMetadataXml);
 					System.out.println("       productName="+productMetadata.getProductName());
 					System.out.println("       productId="+productMetadata.getProductId());
 					System.out.println("       featureRepository="+productMetadata.getFeatureRepository());
+					System.out.println("       packagingDescriptor="+productMetadata.getPackageingDescriptor());
 					productSpecList.getProductSpecList().add(productMetadata);
 				} else {
 					System.out.println("   no "+PRODUCT_SPEC_FILENAME+ " in:"+f.getAbsolutePath());
 				}
+				if (packagingDescriptor!=null) productSpecList.setProductListSource(packagingDescriptor);
+				System.out.println("   productListSource="+productSpecList.getProductListSource());
 
 			} catch (Exception e) {
 				throw new RuntimeException("   problem reading "+PRODUCT_SPEC_FILENAME+" in:"+f.getAbsolutePath(),e);
@@ -101,7 +109,7 @@ public class ProductSpecListGenerator {
 			File outfile = new File(outputFile);
 			File absoutfile = outfile.getAbsoluteFile();
 			System.out.println("writing product specification to file :\n"+absoutfile.getAbsolutePath());
-			
+			absoutfile.getParentFile().mkdirs();
 			out = new PrintWriter(absoutfile);
 			out.println(productSpecStr);
 		} catch(Exception e){
@@ -186,17 +194,18 @@ public class ProductSpecListGenerator {
 		System.out.println(ProductSpecListGenerator.class.getName()+ " Starting to generate Available Plugins List for Kar ");
 
 		try{
-			if (args.length !=2) throw new IllegalArgumentException(ProductSpecListGenerator.class.getName()+" Has wrong number of arguments");
+			if (args.length !=3 && args.length!=2) throw new IllegalArgumentException(ProductSpecListGenerator.class.getName()+" Has wrong number of arguments");
 
 			String searchDirectory=args[0];
 			String outputFile=args[1];
+			String packagingDescriptor=args[2];
 
-			ProductSpecListGenerator test=new ProductSpecListGenerator(searchDirectory, outputFile);
+			ProductSpecListGenerator test=new ProductSpecListGenerator(searchDirectory, outputFile, packagingDescriptor);
 
 			System.out.println(LicenceArtifactsGenerator.class.getName()+ " Available Plugins List Generated");
 		} catch (Exception e){
 			System.err.println(LicenceArtifactsGenerator.class.getName()+ " Problem Generating Available Plugins List: ");
-			System.err.println("Correct usage: java args[0] = searchDirectory; args[1]=outputFile Error: "+e.getMessage());
+			System.err.println("Correct usage: java args[0] = searchDirectory; args[1]=outputFile; args[3]=packagingDescriptor (optional)\nError: "+e.getMessage());
 			e.printStackTrace();
 		}
 
