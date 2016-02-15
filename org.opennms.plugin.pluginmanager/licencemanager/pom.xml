@@ -22,36 +22,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
         <configuration>
           <target>1.8</target>
           <source>1.8</source>
         </configuration>
       </plugin>
-
-      <!-- <plugin> -->
-      <!-- <groupId>org.apache.felix</groupId> -->
-      <!-- <artifactId>maven-bundle-plugin</artifactId> -->
-      <!-- <version>2.5.3</version> -->
-      <!-- <extensions>true</extensions> -->
-      <!-- <configuration> -->
-      <!-- <instructions> -->
-      <!-- <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName> -->
-      <!-- <Bundle-Version>${project.version}</Bundle-Version> -->
-      <!-- <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency> -->
-      <!-- <Export-Package> -->
-      <!-- org.opennms.karaf*;version=${project.version} -->
-      <!-- </Export-Package> -->
-      <!-- <Import-Package> -->
-      <!-- com.sun.ws.rs.ext, -->
-      <!-- org.apache.felix.service.command, -->
-      <!-- org.apache.felix.gogo.commands, -->
-      <!-- org.apache.karaf.shell.console, -->
-      <!-- * -->
-      <!-- </Import-Package> -->
-      <!-- </instructions> -->
-      <!-- </configuration> -->
-      <!-- </plugin> -->
 
       <plugin>
         <groupId>org.opennms.maven.plugins</groupId>
@@ -66,6 +41,11 @@
             </goals>
             <configuration>
               <bundles>
+                <bundle>mvn:com.sun.jersey/jersey-server/${jerseyVersion}</bundle>
+                <bundle>mvn:com.sun.jersey/jersey-servlet/${jerseyVersion}</bundle>
+                <bundle>mvn:com.sun.jersey/jersey-core/${jerseyVersion}</bundle>
+                <bundle>mvn:com.sun.jersey/jersey-client/${jerseyVersion}</bundle>
+                <bundle>mvn:javax.ws.rs/jsr311-api/1.1.1</bundle>
                 <bundle>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}</bundle>
               </bundles>
               <features>
@@ -104,19 +84,16 @@
       <groupId>org.apache.karaf.shell</groupId>
       <artifactId>org.apache.karaf.shell.console</artifactId>
       <scope>provided</scope>
-      <version>2.2.11</version>
     </dependency>
 
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
       <scope>provided</scope>
-      <version>4.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.compendium</artifactId>
-      <version>4.2.0</version>
       <scope>provided</scope>
     </dependency>
 
@@ -124,30 +101,30 @@
     <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-server</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-servlet</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-core</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-client</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
