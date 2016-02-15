@@ -26,6 +26,7 @@
     <org.opennms.plugin.licencemanager.version>1.0-SNAPSHOT</org.opennms.plugin.licencemanager.version>
 
     <slf4jVersion>1.7.7</slf4jVersion>
+    <karafVersion>2.4.0</karafVersion>
   </properties>
   
   <!-- REMOVE THESE MODULES AND ONLY USE THE DEFAULT PROFILE DEFINITIONS BELOW    -->
@@ -92,6 +93,19 @@
                   </pluginExecutionFilter>
                   <action>
                     <!-- <execute/> -->
+                    <ignore />
+                  </action>
+                </pluginExecution>
+               <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.opennms.maven.plugins</groupId>
+                    <artifactId>features-maven-plugin</artifactId>
+                    <versionRange>[1.0-SNAPSHOT,)</versionRange>
+                    <goals>
+                      <goal>generate-features-xml</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
                     <ignore />
                   </action>
                 </pluginExecution>

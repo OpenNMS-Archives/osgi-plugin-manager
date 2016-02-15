@@ -35,7 +35,7 @@
               <bundles>
                 <!-- <bundle>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}</bundle> -->
                 <bundle>mvn:${groupId}/${symbol_dollar}{productName}.licence-authenticator/${project.version}</bundle>
-                <bundle>mvn:o${groupId}/${symbol_dollar}{productName}.kar-descriptor/${project.version}</bundle>
+                <bundle>mvn:${groupId}/${symbol_dollar}{productName}.kar-descriptor/${project.version}</bundle>
               </bundles>
               <!-- <features> -->
               <!-- <feature>http</feature> -->
