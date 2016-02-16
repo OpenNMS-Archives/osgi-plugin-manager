@@ -78,7 +78,7 @@
         </fileSet>
       </fileSets>
     </module>
-    
+
     <module name="${rootArtifactId}.product-descriptor" id="${rootArtifactId}.product-descriptor" dir="product-descriptor">
       <fileSets>
         <!-- filtered files -->
@@ -97,7 +97,7 @@
         </fileSet>
       </fileSets>
     </module>
-    
+
     <module name="${rootArtifactId}" id="${rootArtifactId}" dir="feature">
       <fileSets>
         <!-- filtered files -->
@@ -116,16 +116,16 @@
         </fileSet>
       </fileSets>
     </module>
-    
+
     <module name="${rootArtifactId}.kar-descriptor" id="${rootArtifactId}.kar-descriptor" dir="kar-descriptor">
       <fileSets>
         <!-- filtered files -->
-        <!-- <fileSet filtered="true" encoding="UTF-8"> -->
-        <!-- <directory></directory> -->
-        <!-- <includes> -->
-        <!-- <include>**/*.xml</include> -->
-        <!-- </includes> -->
-        <!-- </fileSet> -->
+        <fileSet filtered="true" encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.xml</include>
+          </includes>
+        </fileSet>
         <!-- un-filtered files -->
         <fileSet encoding="UTF-8">
           <directory></directory>
@@ -135,16 +135,16 @@
         </fileSet>
       </fileSets>
     </module>
-    
+
     <module name="${rootArtifactId}.kar-package" id="${rootArtifactId}.kar-package" dir="kar-package">
       <fileSets>
         <!-- filtered files -->
-        <!-- <fileSet filtered="true" encoding="UTF-8"> -->
-        <!-- <directory></directory> -->
-        <!-- <includes> -->
-        <!-- <include>**/*.xml</include> -->
-        <!-- </includes> -->
-        <!-- </fileSet> -->
+        <fileSet filtered="true" encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.xml</include>
+          </includes>
+        </fileSet>
         <!-- un-filtered files -->
         <fileSet encoding="UTF-8">
           <directory></directory>

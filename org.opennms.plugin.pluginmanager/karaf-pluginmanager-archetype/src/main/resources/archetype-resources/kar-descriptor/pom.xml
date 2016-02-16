@@ -45,6 +45,32 @@
           </execution>
         </executions>
       </plugin>
+      
+      
+      <!-- copy and process the productSpec and licenceMetadataSpec for this project -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>filter-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${symbol_dollar}{project.build.directory}/filtered-resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/filtered-resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
 
       <!-- used to package kar -->
       <plugin>
@@ -154,6 +180,9 @@
               <resources>
                 <resource>
                   <directory>${symbol_dollar}{project.build.directory}/generated-code/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${symbol_dollar}{project.build.directory}/filtered-resources</directory>
                 </resource>
               </resources>
             </configuration>
