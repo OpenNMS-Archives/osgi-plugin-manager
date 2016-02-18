@@ -148,6 +148,7 @@ public class ProductDescriptorTablePanel extends CustomComponent {
 			productDescriptorPanel.setVisible(false);
 			
 			productDescriptorPanel.setReadOnly(true);
+			productDescriptorPanel.setNoUpdate(true);
 
 			panelIds.put(productId, productDescriptorPanel);
 			productPanels.addComponent(productDescriptorPanel);
@@ -165,6 +166,7 @@ public class ProductDescriptorTablePanel extends CustomComponent {
 			selectedProductId=null;
 			ProductDescriptorPanel productDescriptorPanel= new ProductDescriptorPanel();
 			productDescriptorPanel.setReadOnly(true);
+			productDescriptorPanel.setNoUpdate(true);
 			productDescriptorPanel.setVisible(true);
 			productPanels.addComponent(productDescriptorPanel);
 		} else{

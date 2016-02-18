@@ -23,7 +23,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 
 public class AddLicencePanel extends CustomComponent {
@@ -71,6 +70,8 @@ public class AddLicencePanel extends CustomComponent {
 		setCompositionRoot(mainLayout);
 
 		// manually add user code here
+		licenceDescriptorPanel.setNoUpdate(false);
+		licenceDescriptorPanel.setLicenceString("");
 
 		// Handle the verifyLicenceButton events with an anonymous class
 		verifyLicenceButton.addClickListener(new Button.ClickListener() {

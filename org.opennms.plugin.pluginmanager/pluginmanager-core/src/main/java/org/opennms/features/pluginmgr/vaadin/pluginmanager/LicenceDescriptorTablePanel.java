@@ -144,6 +144,7 @@ public class LicenceDescriptorTablePanel extends CustomComponent {
 			licenceDescriptorPanel.setVisible(false);
 
 			licenceDescriptorPanel.setReadOnly(true);
+			licenceDescriptorPanel.setNoUpdate(true);
 
 			panelIds.put(productId, licenceDescriptorPanel);
 			licencePanels.addComponent(licenceDescriptorPanel);
@@ -160,6 +161,7 @@ public class LicenceDescriptorTablePanel extends CustomComponent {
 			//if there are no panels to display display an empty panel
 			LicenceDescriptorPanel licenceDescriptorPanel= new LicenceDescriptorPanel();
 			licenceDescriptorPanel.setReadOnly(true);
+			licenceDescriptorPanel.setNoUpdate(true);
 			licenceDescriptorPanel.setVisible(true);
 			licencePanels.addComponent(licenceDescriptorPanel);
 		} else {

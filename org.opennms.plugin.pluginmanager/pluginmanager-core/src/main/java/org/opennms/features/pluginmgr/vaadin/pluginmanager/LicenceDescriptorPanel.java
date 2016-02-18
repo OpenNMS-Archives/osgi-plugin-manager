@@ -107,6 +107,18 @@ public class LicenceDescriptorPanel extends CustomComponent {
 		setCompositionRoot(mainLayout);
 
 		// manually add user code here
+		
+		// set all fields default no update
+		maxSizeSystemIdsTextField.setReadOnly(true);
+        startDateTextField.setReadOnly(true);
+		expiryDateTextField.setReadOnly(true);
+		durationTextField.setReadOnly(true);
+		licensorTextField.setReadOnly(true);
+		licenseeTextField.setReadOnly(true);
+		featureRepositoryTextField.setReadOnly(true);
+		productIdTextField.setReadOnly(true);
+		licenceTextArea.setReadOnly(true);
+
 	}
 
 	/**
@@ -239,9 +251,13 @@ public class LicenceDescriptorPanel extends CustomComponent {
 
 	public boolean setLicenceString(String licenceStr){
 		if (licenceStr==null) {
+			licenceTextArea.setReadOnly(false);
 			licenceTextArea.setValue("");
+			licenceTextArea.setReadOnly(noUpdate);
 		} else {
+			licenceTextArea.setReadOnly(false);
 			licenceTextArea.setValue(licenceStr);
+			licenceTextArea.setReadOnly(noUpdate);
 		}
 		return updateMetadata(licenceStr);
 	}

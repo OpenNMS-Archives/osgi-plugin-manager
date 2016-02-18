@@ -94,6 +94,18 @@ public class ProductDescriptorPanel extends CustomComponent {
 		
 		licenceAuthenticatedLabel.setContentMode(ContentMode.HTML);
 		licenceAuthenticatedLabel.setValue("");
+		
+		// set first instance readonly
+		productIdTextField.setReadOnly(true);
+		productNameTextField.setReadOnly(true);
+		featureRepositoryTextField.setReadOnly(true);
+		packageingDescriptorTextField.setReadOnly(true);
+		licenceTypeTextField.setReadOnly(true);
+		organizationTextField.setReadOnly(true);
+		productDescriptionTextArea.setReadOnly(true);
+		productUrlTextField.setReadOnly(true);
+		systemPluginCheckBox.setReadOnly(true);
+		licenceRequiredCheckBox.setReadOnly(true);
 
 	}
 	
@@ -186,13 +198,13 @@ public class ProductDescriptorPanel extends CustomComponent {
 		// common part: create layout
 		mainLayout = new VerticalLayout();
 		mainLayout.setImmediate(true);
-		mainLayout.setWidth("100%");
+		mainLayout.setWidth("15.0cm");
 		mainLayout.setHeight("100%");
 		mainLayout.setMargin(true);
 		mainLayout.setSpacing(true);
 		
 		// top-level component properties
-		setWidth("100.0%");
+		setWidth("10.0cm");
 		setHeight("100.0%");
 		
 		// horizontalLayout_2
@@ -336,6 +348,7 @@ public class ProductDescriptorPanel extends CustomComponent {
 		// licenceRequiredCheckBox
 		licenceRequiredCheckBox = new CheckBox();
 		licenceRequiredCheckBox.setCaption("Licence Key Required");
+		licenceRequiredCheckBox.setDescription("If a Licence Key is required the module will not start without a valid licence installed");
 		licenceRequiredCheckBox.setImmediate(true);
 		licenceRequiredCheckBox.setWidth("-1px");
 		licenceRequiredCheckBox.setHeight("-1px");
