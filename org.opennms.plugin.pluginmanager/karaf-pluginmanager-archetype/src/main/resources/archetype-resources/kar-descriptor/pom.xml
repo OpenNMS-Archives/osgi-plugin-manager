@@ -17,7 +17,6 @@
 
   <build>
 
-
     <plugins>
       <!-- used to generate opennms style features.xml -->
       <plugin>
@@ -33,21 +32,14 @@
             </goals>
             <configuration>
               <bundles>
-                <!-- <bundle>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}</bundle> -->
-                <bundle>mvn:${groupId}/${symbol_dollar}{productName}.licence-authenticator/${project.version}</bundle>
-                <bundle>mvn:${groupId}/${symbol_dollar}{productName}.kar-descriptor/${project.version}</bundle>
+                <bundle>mvn:${symbol_dollar}{project.groupId}/${symbol_dollar}{productName}.kar-descriptor/${symbol_dollar}{project.version}</bundle>
               </bundles>
-              <!-- <features> -->
-              <!-- <feature>http</feature> -->
-              <!-- <feature>http-whiteboard</feature> -->
-              <!-- </features> -->
             </configuration>
           </execution>
         </executions>
       </plugin>
-      
-      
-      <!-- copy and process the productSpec and licenceMetadataSpec for this project -->
+           
+      <!-- copy and process the productSpec for this project -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -72,23 +64,12 @@
       </plugin>
       
 
-      <!-- used to package kar -->
+      <!-- used to generate kar discriptor -->
       <plugin>
         <groupId>org.apache.karaf.tooling</groupId>
         <artifactId>features-maven-plugin</artifactId>
         <version>${symbol_dollar}{karafVersion}</version>
         <executions>
-
-          <!-- <execution> -->
-          <!-- <id>features.xml</id> -->
-          <!-- <phase>process-resources</phase> -->
-          <!-- <goals> -->
-          <!-- <goal>generate-features-xml</goal> -->
-          <!-- </goals> -->
-          <!-- <configuration> -->
-          <!-- <outputFile>target/features/features.xml</outputFile> -->
-          <!-- </configuration> -->
-          <!-- </execution> -->
 
           <!-- generates repo which we can traverse to find product descriptor files -->
           <execution>
@@ -98,26 +79,17 @@
               <goal>add-features-to-repo</goal>
             </goals>
             <configuration>
+              <!-- this unknown karaf version prevents copying any karaf descriptors into kar - which we do not want -->
+              <karafVersion>99999</karafVersion>
               <descriptors>
-                <descriptor>mvn:${groupId}/${symbol_dollar}{productName}/${version}/xml/features</descriptor>
+                <descriptor>mvn:${symbol_dollar}{project.groupId}/${symbol_dollar}{productName}/${symbol_dollar}{project.version}/xml/features</descriptor>
               </descriptors>
               <features>
-                <feature>${symbol_dollar}{productName}/${version}</feature>
+                <feature>${symbol_dollar}{productName}/${symbol_dollar}{project.version}</feature>
               </features>
               <repository>target/temp-features-repo</repository>
             </configuration>
           </execution>
-
-          <!-- <execution> -->
-          <!-- <id>create-kar</id> -->
-          <!-- <phase>prepare-package</phase> -->
-          <!-- <goals> -->
-          <!-- <goal>create-kar</goal> -->
-          <!-- </goals> -->
-          <!-- <configuration> -->
-          <!-- <featuresFile>target/features/features.xml</featuresFile> -->
-          <!-- </configuration> -->
-          <!-- </execution> -->
         </executions>
       </plugin>
 
@@ -221,49 +193,11 @@
       </plugin>
     </plugins>
 
-    <!-- <resources> -->
-    <!-- <resource> -->
-    <!-- <directory>src/main/resources</directory> -->
-    <!-- </resource> -->
-    <!-- <resource> -->
-    <!-- <directory>${symbol_dollar}{project.build.directory}/generated-code/resources</directory> -->
-    <!-- </resource> -->
-    <!-- </resources> -->
-
-
   </build>
 
   <dependencies>
-    <!-- <dependency> -->
-    <!-- <groupId>org.opennms.plugins</groupId> -->
-    <!-- <artifactId>${symbol_dollar}{productName}.licence-authenticator</artifactId> -->
-    <!-- <version>${project.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.opennms.plugins</groupId> -->
-    <!-- <artifactId>${symbol_dollar}{productName}.product-descriptor</artifactId> -->
-    <!-- <version>${project.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>junit</groupId> -->
-    <!-- <artifactId>junit</artifactId> -->
-    <!-- <version>4.10</version> -->
-    <!-- <scope>test</scope> -->
-    <!-- </dependency> -->
 
   </dependencies>
-  <pluginRepositories>
-    <pluginRepository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <id>opennms-repo</id>
-      <name>OpenNMS Repository</name>
-      <url>http://maven.opennms.org/content/groups/opennms.org-release</url>
-    </pluginRepository>
-  </pluginRepositories>
+
 
 </project>

@@ -15,7 +15,7 @@
   <!-- mvn:<groupId>/<artifactId>/<version>/xml/features -->
   <!-- such that the repository can be installed using features:addurl (Karaf 2.4.0) -->
   <!-- e.g. features:addurl mvn:org.apache.camel/camel-example-osgi/2.10.0/xml/features -->
-  <featureRepository>mvn:${groupId}/${productName}-kar-package/${project.version}/xml/features</featureRepository>
+  <featureRepository>mvn:${symbol_dollar}{project.groupId}/${productName}-kar-package/${project.version}/xml/features</featureRepository>
   
     
   <!-- packageingDescriptor describes the packaging of this feature. This gives an locator for the Karaf kar or rpm -->
@@ -23,7 +23,8 @@
   <packageingDescriptor>${productName}-kar-package/${project.version}</packageingDescriptor>
 	
   <organization>OpenNMS Project</organization>
-  <productDescription>TODO complete product description for ${productName}-kar-package/${project.version}</productDescription>
+  <productDescription>This module is installed from a kar deploy of ${productName}-kar-package/${project.version}.kar 
+  It describes a list of features available in the kar for the plugin manager</productDescription>
   <productName>${productName}-kar-package/${project.version}</productName>
   <productUrl>http:\\opennms.co.uk</productUrl>
   <licenceKeyRequired>false</licenceKeyRequired>

@@ -20,21 +20,119 @@
 
     <plugins>
   
-      <!-- used to package kar -->
+      <!-- create maven repo to package in kar -->
       <plugin>
         <groupId>org.apache.karaf.tooling</groupId>
         <artifactId>features-maven-plugin</artifactId>
         <version>${symbol_dollar}{karafVersion}</version>
         <executions>
-
+          <!-- place features files in unprocessed-features-repo -->
           <execution>
-            <id>create-kar</id>
-            <phase>prepare-package</phase>
+            <id>add-features-to-repo</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>create-kar</goal>
+              <goal>add-features-to-repo</goal>
             </goals>
             <configuration>
-              <featuresFile>src/main/features/features.xml</featuresFile>
+              <!-- this unknown karaf version prevents copying any karaf descriptors into kar - which we do not want -->
+              <karafVersion>99999</karafVersion>
+              <descriptors>
+                <descriptor>mvn:${symbol_dollar}{project.groupId}/${symbol_dollar}{productName}.kar-descriptor/${symbol_dollar}{project.version}/xml/features</descriptor>
+              </descriptors>
+              <features>
+                <feature>${symbol_dollar}{productName}.kar-descriptor/${symbol_dollar}{project.version}</feature>
+              </features>
+              <repository>${project.build.directory}/unprocessed-features-repo/repository</repository>
+            </configuration>
+          </execution>
+          <!-- place kar descriptor in kar-features-repo -->
+          <execution>
+            <id>add-kar-descriptor-to-repo</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-features-to-repo</goal>
+            </goals>
+            <configuration>
+              <!-- this unknown karaf version prevents copying any karaf descriptors into kar - which we do not want -->
+              <karafVersion>99999</karafVersion>
+              <descriptors>
+                <descriptor>mvn:${project.groupId}/${productName}.kar-descriptor/1.0-SNAPSHOT/xml/features</descriptor>
+              </descriptors>
+              <features>
+                <feature>${productName}.kar-descriptor/${project.version}</feature>
+              </features>
+              <repository>${project.build.directory}/kar-features-repo/repository</repository>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin>
+
+
+      <!-- used to package kar -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>process_features.xml</id>
+            <phase>package</phase>
+            <configuration>
+              <target>
+                <echo>ant task processing *features.xml files</echo>
+                
+                <!-- copy non features files to repository -->
+                <copy todir="target/kar-features-repo">
+                  <fileset dir="target/unprocessed-features-repo">
+                    <exclude name="**/*features.xml" />
+                  </fileset>
+                </copy>
+
+                <!-- add install="manual" to features files in kar-->
+                <!-- might be better to use xmltask http://www.oopsconsultancy.com/software/xmltask/ -->
+                <replace dir="target/unprocessed-features-repo" value="&lt;feature install=&quot;manual&quot; name=">
+                  <include name="**/*features.xml" />
+                  <replacetoken><![CDATA[<feature name=]]></replacetoken>
+                </replace>
+
+                <!-- copy processed features files to kar repo -->
+                <copy todir="target/kar-features-repo">
+                  <fileset dir="target/unprocessed-features-repo">
+                    <include name="**/*features.xml" />
+                  </fileset>
+                </copy>
+
+                <echo>ant task building kar file ${symbol_dollar}{productName}.kar-package.kar</echo>
+                <zip destfile="target/${symbol_dollar}{productName}.kar-package.kar">
+                  <fileset dir="target/kar-features-repo" />
+                  <fileset dir="src/main/resources" /> <!-- provides manifest -->
+                </zip>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.5.2</version>
+        <executions>
+          <execution>
+            <id>install generated kar</id>
+            <phase>install</phase>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <file>target/${productName}.kar-package.kar</file>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <version>${project.version}</version>
+              <packaging>kar</packaging>
+              <generatePom>true</generatePom>
             </configuration>
           </execution>
         </executions>
@@ -44,41 +142,7 @@
   </build>
 
   <dependencies>
-    <dependency>
-      <groupId>${groupId}</groupId>
-      <artifactId>${symbol_dollar}{productName}.licence-authenticator</artifactId>
-      <version>${symbol_dollar}{project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${groupId}</groupId>
-      <artifactId>${symbol_dollar}{productName}.product-descriptor</artifactId>
-      <version>${symbol_dollar}{project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${groupId}</groupId>
-      <artifactId>${symbol_dollar}{productName}.kar-descriptor</artifactId>
-      <version>${symbol_dollar}{project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.10</version>
-      <scope>test</scope>
-    </dependency>
 
   </dependencies>
-  <pluginRepositories>
-    <pluginRepository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <id>opennms-repo</id>
-      <name>OpenNMS Repository</name>
-      <url>http://maven.opennms.org/content/groups/opennms.org-release</url>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>

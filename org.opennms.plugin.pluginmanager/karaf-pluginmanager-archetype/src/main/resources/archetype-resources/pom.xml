@@ -120,6 +120,12 @@
           <version>2.8.2</version>
         </plugin>
 
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
@@ -141,7 +147,7 @@
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <tasks>
+                  <target>
                     <echo>*****************************************************</echo>
                     <echo>PROFILE GENERATING LICENCE (-P generateLicence )     </echo>
                     <echo>Note: This build will generate new licence modules   </echo>
@@ -149,7 +155,7 @@
                     <echo>Ideally you should only do this once so that you     </echo>
                     <echo>dont need to install a new licence during testing    </echo>
                     <echo>*****************************************************</echo>
-                  </tasks>
+                  </target>
                 </configuration>
               </execution>
             </executions>
@@ -180,7 +186,7 @@
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <tasks>
+                  <target>
                     <echo>*****************************************************</echo>
                     <echo>DEFAULT BUILD - NOT GENERATING LICENCE               </echo>
                     <echo>Note: this build will fail if licence modules have   </echo>
@@ -188,7 +194,7 @@
                     <echo>To generate the licence modules run with profile:    </echo>
                     <echo>mvn clean install -P generateLicence                 </echo>
                     <echo>*****************************************************</echo>
-                  </tasks>
+                  </target>
                 </configuration>
               </execution>
             </executions>
@@ -201,6 +207,19 @@
     </profile>
   </profiles>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>opennms-repo</id>
+      <name>OpenNMS Repository</name>
+      <url>http://maven.opennms.org/content/groups/opennms.org-release</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <!-- Change this to match your repo for the licenced product modules (i.e. containing the authenticator) -->
   <distributionManagement>

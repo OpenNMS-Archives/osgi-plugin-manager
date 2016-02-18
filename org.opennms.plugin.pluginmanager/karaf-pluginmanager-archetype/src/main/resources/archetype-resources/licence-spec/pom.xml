@@ -123,6 +123,27 @@
         </configuration>
       </plugin>
 
+      <!-- generates feature definition for the licence specification -->
+      <plugin>
+        <groupId>org.opennms.maven.plugins</groupId>
+        <artifactId>features-maven-plugin</artifactId>
+        <version>1.2.0</version>
+        <executions>
+          <execution>
+            <id>features.xml</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>generate-features-xml</goal>
+            </goals>
+            <configuration>
+              <bundles>
+                <bundle>mvn:${symbol_dollar}{project.groupId}/${symbol_dollar}{productName}.licence-spec/${symbol_dollar}{project.version}</bundle>
+              </bundles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
 
   </build>
@@ -157,6 +178,7 @@
     </dependency>
   </dependencies>
   
+  <!-- NOTE this overrides the normal maven repository as licence specs should be separated     -->
   <!-- Change this to match your repo for the licence specifications (i.e. containing the spec) -->
   <distributionManagement>
     <repository>

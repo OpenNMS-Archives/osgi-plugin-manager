@@ -1,0 +1,69 @@
+
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>${groupId}</groupId>
+    <artifactId>${rootArtifactId}.parent</artifactId>
+    <version>${version}</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>${rootArtifactId}.rpm-package</artifactId>
+  <name>${rootArtifactId}.rpm-package</name>
+  <description>Generate OpenNMS rpm for ${symbol_dollar}{productName}</description>
+  <packaging>pom</packaging>
+
+  <properties>
+    <app.home>/opt/opennms/</app.home>
+  </properties>
+
+  <build>
+
+    <plugins>
+
+      <!-- see example https://rombertw.wordpress.com/2010/05/20/maven-recipe-delivering-applications-as-rpms/ -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rpm-maven-plugin</artifactId>
+        <version>2.1.4</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <goals>
+              <goal>rpm</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <copyright>2016 OpenNMS</copyright>
+          <group>Development</group>
+          <description>${project.description}</description>
+          <license>${project.licence}</license>
+          <distribution></distribution>
+          <group>Application/Collectors</group>
+          <packager>OpenNMS</packager>
+
+          <mappings>
+            <mapping>
+              <directory>${app.home}/deploy/</directory>
+              <dependency />
+            </mapping>
+          </mappings>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${productName}.kar-package</artifactId>
+      <version>${project.version}</version>
+      <type>kar</type>
+    </dependency>
+  </dependencies>
+
+</project>

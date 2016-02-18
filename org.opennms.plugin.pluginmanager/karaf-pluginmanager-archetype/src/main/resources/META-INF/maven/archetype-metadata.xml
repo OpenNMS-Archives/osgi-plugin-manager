@@ -143,6 +143,26 @@
           <directory></directory>
           <includes>
             <include>**/*.xml</include>
+            <include>**/*.MF</include>
+          </includes>
+        </fileSet>
+        <!-- un-filtered files -->
+        <fileSet encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.gitignore</include>
+          </includes>
+        </fileSet>
+      </fileSets>
+    </module>
+    
+    <module name="${rootArtifactId}.rpm-package" id="${rootArtifactId}.rpm-package" dir="rpm-package">
+      <fileSets>
+        <!-- filtered files -->
+        <fileSet filtered="true" encoding="UTF-8">
+          <directory></directory>
+          <includes>
+            <include>**/*.xml</include>
           </includes>
         </fileSet>
         <!-- un-filtered files -->
