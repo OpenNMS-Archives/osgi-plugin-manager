@@ -23,7 +23,7 @@
     <!-- <licenceClassPath>org.opennms.co.uk.newfeature</licenceClassPath> -->
     <licenceClassPath>${package}</licenceClassPath>
     
-    <org.opennms.plugin.licencemanager.version>1.0-SNAPSHOT</org.opennms.plugin.licencemanager.version>
+    <org.opennms.plugin.licencemanager.version>1.0</org.opennms.plugin.licencemanager.version>
 
     <slf4jVersion>1.7.7</slf4jVersion>
     <karafVersion>2.4.0</karafVersion>

@@ -56,7 +56,7 @@
               <!-- this unknown karaf version prevents copying any karaf descriptors into kar - which we do not want -->
               <karafVersion>99999</karafVersion>
               <descriptors>
-                <descriptor>mvn:${project.groupId}/${productName}.kar-descriptor/1.0-SNAPSHOT/xml/features</descriptor>
+                <descriptor>mvn:${project.groupId}/${productName}.kar-descriptor/${project.version}/xml/features</descriptor>
               </descriptors>
               <features>
                 <feature>${productName}.kar-descriptor/${project.version}</feature>
