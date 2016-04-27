@@ -50,8 +50,13 @@
             <Export-Package>
               org.opennms.features.pluginmgr*;version=${project.version}
             </Export-Package>
+            <!-- Note org.opennms.vaadin.extender is now also a library in opennms -->
+            <!-- OpenNMS library org.opennms.features.vaadin-component\extender-service\*opennmsversion* -->
+            <!-- External library org.opennms.vaadin-extender\service\1.0 -->
+            <!-- Setting version=1 allows OpenNMS version to be referenced even though this changes each release -->
             <Import-Package>
               org.apache.karaf.features*;version="[2,4)",
+              org.opennms.vaadin.extender*;version=1,
               *
             </Import-Package>
           </instructions>
