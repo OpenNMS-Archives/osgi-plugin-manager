@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.opennms.plugins</groupId>
     <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
   </parent>
 
   <groupId>org.opennms.plugins</groupId>
@@ -35,9 +35,38 @@
           <artifactId>maven-archetype-plugin</artifactId>
           <version>2.2</version>
         </plugin>
+
+        <!-- this allows substitution of the archetype version (i.e. parent project version) -->
+        <!-- see http://stackoverflow.com/questions/7223031/how-to-embed-archetype-project-version-in-maven-archetype -->
+        <!-- within the archetypes generated pom -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <escapeString>\</escapeString>
+          </configuration>
+        </plugin>
+
       </plugins>
     </pluginManagement>
-  </build>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>archetype-resources/pom.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>archetype-resources/pom.xml</exclude>
+        </excludes>
+      </resource>
+    </resources>
+  </build>
 
 </project>

@@ -1,15 +1,17 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
+## note \ included in this pom because it is filtered by the initial archetype build
+## see http://stackoverflow.com/questions/7223031/how-to-embed-archetype-project-version-in-maven-archetype
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>${groupId}</groupId>
-  <artifactId>${rootArtifactId}.parent</artifactId>
-  <version>${version}</version>
+  <groupId>\${groupId}</groupId>
+  <artifactId>\${rootArtifactId}.parent</artifactId>
+  <version>\${version}</version>
   <packaging>pom</packaging>
-  <name>${rootArtifactId}.parent</name>
-  <description>${rootArtifactId} Parent Project</description>
+  <name>\${rootArtifactId}.parent</name>
+  <description>\${rootArtifactId} Parent Project</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,12 +20,13 @@
     <!-- Note must set project.artifactId explicitly as ${project.artifactId}expression is re-evaluated in each sub module !! -->
     <!-- <productId>${project.groupId}/${project.artifactId}/${project.version}</productId> -->
     <!-- <productId>${project.groupId}/org.opennms.co.uk.newfeature/${project.version}</productId> -->
-    <productId>${rootArtifactId}/${symbol_dollar}{project.version}</productId>
-    <productName>${rootArtifactId}</productName>
+    <productId>\${rootArtifactId}/${symbol_dollar}{project.version}</productId>
+    <productName>\${rootArtifactId}</productName>
     <!-- <licenceClassPath>org.opennms.co.uk.newfeature</licenceClassPath> -->
-    <licenceClassPath>${package}</licenceClassPath>
+    <licenceClassPath>\${package}</licenceClassPath>
     
-    <org.opennms.plugin.licencemanager.version>1.0</org.opennms.plugin.licencemanager.version>
+    <!-- If this pom is generated from the karaf-pluginmanager-archetype, this value initially matches the archetype's version -->
+    <org.opennms.plugin.licencemanager.version>${project.version}</org.opennms.plugin.licencemanager.version>
 
     <slf4jVersion>1.7.7</slf4jVersion>
     <karafVersion>2.4.0</karafVersion>
