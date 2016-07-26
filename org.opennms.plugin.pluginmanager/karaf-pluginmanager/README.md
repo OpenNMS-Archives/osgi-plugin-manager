@@ -8,7 +8,7 @@ To install the plugin manager stand alone in a karaf instance use hte following 
 2. add the opennms repository line to the org.ops4j.pax.url.mvn.repositories property as below
  (http://maven.opennms.org/content/groups/opennms.org-release)
 
-'''
+~~~~
 org.ops4j.pax.url.mvn.repositories= \
     http://repo1.maven.org/maven2@id=central, \
     https://maven.java.net/content/groups/public/, \
@@ -17,11 +17,11 @@ org.ops4j.pax.url.mvn.repositories= \
     http://repository.springsource.com/maven/bundles/external@id=springsource.external, \
     https://oss.sonatype.org/content/repositories/releases/@id=sonatype, \
     http://maven.opennms.org/content/groups/opennms.org-release
-'''
+~~~~
 
 3. From the karaf consol (konsol is opened by default if you start karaf using '<karaf home>/bin/karaf')
 
-'''
+~~~~
 karaf@root>features:addurl mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/1.0.1/xml/features
 karaf@root> features:install org.opennms.plugin.pluginmanager.karaf-pluginmanager
 Licence Manager Starting
@@ -34,7 +34,7 @@ Plugin Manager Starting
 Plugin Manager Successfully loaded historic data from file=/home/admin/devel/karaf/apache-karaf-2.4.0/./etc/pluginManifestData.xml
 Plugin Manager Started
 karaf@root> 
-'''
+~~~~
 
 4. browse to http://localhost:port/admin/plugin-manager
 note that port is set in <karaf home>/etc/org.ops4j.pax.web.cfg
