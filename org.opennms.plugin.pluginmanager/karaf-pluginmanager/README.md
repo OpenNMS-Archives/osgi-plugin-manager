@@ -1,10 +1,12 @@
 # The OSGi Karaf Plugin Manager  
 org.opennms.plugin.pluginmanager.karaf-pluginmanager
 
-To install the plugin manager stand alone in a karaf instance use hte following steps. 
+To install the plugin manager stand alone in a karaf instance use the following steps.
+
 (This works based upon apache-karaf-2.4.0 - the version used in OpenNMS)
 
 a) edit <karaf home>/etc/org.ops4j.pax.mvn.cfg
+
 b)  add the opennms repository line
 ~~~~
 (http://maven.opennms.org/content/groups/opennms.org-release)
