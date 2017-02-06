@@ -29,6 +29,17 @@
       </plugin>
 
       <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <!-- Extend the Karaf compatibility to include Karaf 4.X -->
+            <Import-Package>org.apache.karaf.features;version="[2.4,5)",*</Import-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>org.opennms.maven.plugins</groupId>
         <artifactId>features-maven-plugin</artifactId>
         <executions>
