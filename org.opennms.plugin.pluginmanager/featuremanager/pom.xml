@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.opennms.plugins</groupId>
     <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
   </parent>
 
   <artifactId>org.opennms.plugin.featuremanager</artifactId>
@@ -25,6 +25,17 @@
         <configuration>
           <target>1.8</target>
           <source>1.8</source>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <!-- Extend the Karaf compatibility to include Karaf 4.X -->
+            <Import-Package>org.apache.karaf.features;version="[2.4,5)",*</Import-Package>
+          </instructions>
         </configuration>
       </plugin>
 
