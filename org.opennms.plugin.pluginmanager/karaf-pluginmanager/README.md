@@ -32,14 +32,14 @@ c) From the karaf consol type the following commands
 (konsol is opened by default if you start karaf using '<karaf home>/bin/karaf')
 
 ~~~~
-karaf@root>features:addurl mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/1.0.2/xml/features
+karaf@root>features:addurl mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/1.0.3/xml/features
 karaf@root> features:install org.opennms.plugin.pluginmanager.karaf-pluginmanager
 Licence Manager Starting
 Licence Manager successfully loaded licences from file=/home/admin/devel/karaf/apache-karaf-2.4.0/./etc/pluginLicenceData.xml
 Licence Manager system set to not load remote licences
 Licence Manager Started
 Plugin Manager Rest App starting.
-Registered Product Specification for productId=org.opennms.plugin.pluginmanager.karaf-pluginmanager/1.0.2
+Registered Product Specification for productId=org.opennms.plugin.pluginmanager.karaf-pluginmanager/1.0.3
 Plugin Manager Starting
 Plugin Manager Successfully loaded historic data from file=/home/admin/devel/karaf/apache-karaf-2.4.0/./etc/pluginManifestData.xml
 Plugin Manager Started
