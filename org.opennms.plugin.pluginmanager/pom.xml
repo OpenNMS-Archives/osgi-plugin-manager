@@ -14,7 +14,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.surefire.plugin.version>2.15</maven.surefire.plugin.version>
-    <jerseyVersion>1.19</jerseyVersion>
+    <jerseyVersion>1.19.3</jerseyVersion>
     <vaadinVersion>7.2.7</vaadinVersion>
     <vaadin.plugin.version>7.2.7</vaadin.plugin.version>
     <vaadinExtenderVersion>1.0.0</vaadinExtenderVersion>
