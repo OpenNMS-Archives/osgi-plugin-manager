@@ -4,7 +4,7 @@
 
   <groupId>org.opennms.plugins</groupId>
   <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <packaging>pom</packaging>
 
   <name>org.opennms.plugin.pluginmanager.parent</name>
