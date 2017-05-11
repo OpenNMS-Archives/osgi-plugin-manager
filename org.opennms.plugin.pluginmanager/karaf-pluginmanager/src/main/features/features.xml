@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features name="org.opennms.plugin.pluginmanager.karaf-pluginmanager" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
+    <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository>
+    <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository>
+    <feature name="org.opennms.plugin.pluginmanager.karaf-pluginmanager" version="${project.version}" description="org.opennms.plugin.pluginmanager.karaf-pluginmanager">
+        <details>Feature for running the OSGi plugin manager in a standalone Karaf instance.</details>
+        <feature>org.opennms.plugin.licencemanager</feature>
+        <feature>org.opennms.plugin.featuremanager</feature>
+        <bundle dependency="true" start-level="50">mvn:com.sun.jersey/jersey-server/${jerseyVersion}</bundle>
+        <bundle dependency="true" start-level="50">mvn:com.sun.jersey/jersey-servlet/${jerseyVersion}</bundle>
+        <bundle dependency="true" start-level="50">mvn:com.sun.jersey/jersey-core/${jerseyVersion}</bundle>
+        <bundle dependency="true" start-level="50">mvn:com.sun.jersey/jersey-client/${jerseyVersion}</bundle>
+        <bundle dependency="true" start-level="50">mvn:javax.ws.rs/jsr311-api/1.1.1</bundle>
+        <bundle dependency="true">mvn:com.google.guava/guava/${guavaVersion}</bundle>
+        <bundle dependency="true">mvn:com.vaadin/vaadin-client/${vaadinVersion}</bundle>
+        <bundle dependency="true">mvn:com.vaadin/vaadin-client-compiled/${vaadinVersion}</bundle>
+        <bundle dependency="true">mvn:com.vaadin/vaadin-server/${vaadinVersion}</bundle>
+        <bundle dependency="true">mvn:com.vaadin/vaadin-shared/${vaadinVersion}</bundle>
+        <bundle dependency="true">mvn:com.vaadin/vaadin-shared-deps/1.0.2</bundle>
+        <bundle dependency="true">mvn:com.vaadin/vaadin-themes/${vaadinVersion}</bundle>
+        <bundle dependency="true">mvn:com.vaadin.external.json/json/0.0.20080701</bundle>
+        <bundle dependency="true">mvn:org.eclipse.jetty.orbit/javax.servlet/3.0.0.v201112011016</bundle>
+        <bundle dependency="true">mvn:org.jsoup/jsoup/1.7.2</bundle>
+        <bundle dependency="true">mvn:org.opennms.vaadin-extender/service/${vaadinExtenderVersion}</bundle>
+        <bundle>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/${project.version}</bundle>
+        <bundle>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.pluginmanager-core/${project.version}</bundle>
+    </feature>
+</features>

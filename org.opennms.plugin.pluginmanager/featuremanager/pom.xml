@@ -40,28 +40,45 @@
       </plugin>
 
       <plugin>
-        <groupId>org.opennms.maven.plugins</groupId>
-        <artifactId>features-maven-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
-            <id>features.xml</id>
-            <phase>process-resources</phase>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>generate-features-xml</goal>
+              <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <bundles>
-                <bundle>mvn:com.sun.jersey/jersey-server/${jerseyVersion}</bundle>
-                <bundle>mvn:com.sun.jersey/jersey-servlet/${jerseyVersion}</bundle>
-                <bundle>mvn:com.sun.jersey/jersey-core/${jerseyVersion}</bundle>
-                <bundle>mvn:com.sun.jersey/jersey-client/${jerseyVersion}</bundle>
-                <bundle>mvn:javax.ws.rs/jsr311-api/1.1.1</bundle>
-                <bundle>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}</bundle>
-              </bundles>
-              <features>
-                <feature>http</feature>
-                <feature>http-whiteboard</feature>
-              </features>
+              <outputDirectory>${project.build.outputDirectory}/features</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/features</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${project.build.outputDirectory}/features/features.xml</file>
+                  <type>xml</type>
+                  <classifier>features</classifier>
+                </artifact>
+              </artifacts>
             </configuration>
           </execution>
         </executions>
