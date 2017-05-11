@@ -28,7 +28,7 @@ public class FeatureManagerRestApplication extends Application {
 	
 	public FeatureManagerRestApplication(){
 		super();
-		LOG.info("Feature Manager starting.");
+		LOG.info("Feature Manager starting");
 	}
 
 	// doing this because the com.sun.ws.rest.api.core.PackagesResourceConfig 
@@ -47,7 +47,7 @@ public class FeatureManagerRestApplication extends Application {
 	//	}
 	
 	public void destroyMethod(){
-		LOG.info("Feature Manager shutting down.");
+		LOG.info("Feature Manager shutting down");
 	}
 
 }

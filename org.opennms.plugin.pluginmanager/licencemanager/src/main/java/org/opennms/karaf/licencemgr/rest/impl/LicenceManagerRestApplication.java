@@ -20,12 +20,17 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import org.opennms.karaf.licencemgr.rest.LicencePublisherRest;
-import org.opennms.karaf.licencemgr.rest.LicenceServiceRest;
-import org.opennms.karaf.licencemgr.rest.ProductPublisherRest;
-import org.opennms.karaf.licencemgr.rest.ProductRegisterRest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LicenceManagerRestApplication extends Application {
+
+	private static final Logger LOG = LoggerFactory.getLogger(LicenceManagerRestApplication.class);
+	
+	public LicenceManagerRestApplication() {
+		super();
+		LOG.info("Licence Manager starting");
+	}
 
 	// doing this because the com.sun.ws.rest.api.core.PackagesResourceConfig 
 	// class contains OSGi unfriendly classloader code
@@ -45,4 +50,7 @@ public class LicenceManagerRestApplication extends Application {
 	// registerInstances(new LoggingFilter(Logger.getLogger(EventGatewayApplication.class.getName()), true));
 	//	}
 
+	public void destroyMethod(){
+		LOG.info("Licence Manager shutting down");
+	}
 }
