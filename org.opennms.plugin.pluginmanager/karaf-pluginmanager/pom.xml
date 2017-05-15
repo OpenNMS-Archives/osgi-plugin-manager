@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.opennms.plugins</groupId>
     <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
   </parent>
 
   <artifactId>org.opennms.plugin.pluginmanager.karaf-pluginmanager</artifactId>
@@ -88,27 +88,50 @@
       </plugin>
 
       <plugin>
-        <groupId>org.opennms.maven.plugins</groupId>
-        <artifactId>features-maven-plugin</artifactId>
-        <configuration>
-          <bundles>
-            <bundle>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/${project.version}</bundle>
-            <bundle>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.pluginmanager-core/${project.version}</bundle>
-          </bundles>
-
-          <!-- repos for licence manager and feature manager -->
-          <repositories>
-            <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${licencemanagerVersion}/xml/features</repository>
-            <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${featuremanagerVersion}/xml/features</repository>
-          </repositories>
-
-          <features>
-            <feature>org.opennms.plugin.licencemanager</feature>
-            <feature>org.opennms.plugin.featuremanager</feature>
-          </features>
-
-        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/features</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/features</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${project.build.outputDirectory}/features/features.xml</file>
+                  <type>xml</type>
+                  <classifier>features</classifier>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

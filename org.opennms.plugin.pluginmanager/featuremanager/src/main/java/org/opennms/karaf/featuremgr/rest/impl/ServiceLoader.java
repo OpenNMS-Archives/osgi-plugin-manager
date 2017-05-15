@@ -16,17 +16,19 @@
 package org.opennms.karaf.featuremgr.rest.impl;
 
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.karaf.features.FeaturesService;
 
 
-/** used to statically pass service references to Jersey ReST classes
+/** 
+ * Used to statically pass service references to Jersey ReST classes.
  * 
  * @author cgallen
- *
  */
 public class ServiceLoader {
 
-	private static FeaturesService featuresService= null;
+	private static AtomicReference<FeaturesService> featuresService = new AtomicReference<>();
 
 	public ServiceLoader(){
 		super();
@@ -35,21 +37,20 @@ public class ServiceLoader {
 	public ServiceLoader(FeaturesService featuresService ){
 		super();
 		setFeaturesService(featuresService);
-
 	}
 
 	/**
 	 * @return the featuresService
 	 */
-	public static synchronized FeaturesService getFeaturesService() {
-		return featuresService;
+	public static FeaturesService getFeaturesService() {
+		return featuresService.get();
 	}
 
 	/**
 	 * @param featuresService the featuresService to set
 	 */
-	public static synchronized void setFeaturesService(FeaturesService featuresService) {
-		ServiceLoader.featuresService = featuresService;
+	public static void setFeaturesService(FeaturesService featuresService) {
+		ServiceLoader.featuresService.set(featuresService);
 	}
 
 }

@@ -15,6 +15,8 @@
 
 package org.opennms.karaf.licencemgr.rest.impl;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.opennms.karaf.licencemgr.LicenceService;
 import org.opennms.karaf.licencepub.LicencePublisher;
 import org.opennms.karaf.productpub.ProductPublisher;
@@ -27,13 +29,13 @@ import org.opennms.karaf.productpub.ProductRegister;
  */
 public class ServiceLoader {
 
-	private static LicenceService licenceService= null;
+	private static AtomicReference<LicenceService> licenceService = new AtomicReference<>();
 
-	private static LicencePublisher licencePublisher= null;
+	private static AtomicReference<LicencePublisher> licencePublisher= new AtomicReference<>();
 
-	private static ProductPublisher productPublisher= null;
+	private static AtomicReference<ProductPublisher> productPublisher= new AtomicReference<>();
 
-	private static ProductRegister productRegister= null;
+	private static AtomicReference<ProductRegister> productRegister= new AtomicReference<>();
 
 
 	public ServiceLoader(){
@@ -55,57 +57,57 @@ public class ServiceLoader {
 	/**
 	 * @return the licenceService
 	 */
-	public static synchronized LicenceService getLicenceService() {
-		return licenceService;
+	public static LicenceService getLicenceService() {
+		return licenceService.get();
 	}
 
 	/**
 	 * @param licenceService the licenceService to set
 	 */
-	public static synchronized void setLicenceService(LicenceService licenceService) {
-		ServiceLoader.licenceService = licenceService;
+	public static void setLicenceService(LicenceService licenceService) {
+		ServiceLoader.licenceService.set(licenceService);
 	}
 
 	/**
 	 * @return the licencePublisher
 	 */
-	public static synchronized LicencePublisher getLicencePublisher() {
-		return licencePublisher;
+	public static LicencePublisher getLicencePublisher() {
+		return licencePublisher.get();
 	}
 
 	/**
 	 * @param licencePublisher the licencePublisher to set
 	 */
-	public static synchronized void setLicencePublisher(LicencePublisher licencePublisher) {
-		ServiceLoader.licencePublisher = licencePublisher;
+	public static void setLicencePublisher(LicencePublisher licencePublisher) {
+		ServiceLoader.licencePublisher.set(licencePublisher);
 	}
 
 	/**
 	 * @return the productPublisher
 	 */
-	public static synchronized ProductPublisher getProductPublisher() {
-		return productPublisher;
+	public static ProductPublisher getProductPublisher() {
+		return productPublisher.get();
 	}
 
 	/**
 	 * @param productPublisher the productPublisher to set
 	 */
-	public static synchronized void setProductPublisher(ProductPublisher productPublisher) {
-		ServiceLoader.productPublisher = productPublisher;
+	public static void setProductPublisher(ProductPublisher productPublisher) {
+		ServiceLoader.productPublisher.set(productPublisher);
 	}
 
 	/**
 	 * @return the productRegister
 	 */
-	public static synchronized ProductRegister getProductRegister() {
-		return productRegister;
+	public static ProductRegister getProductRegister() {
+		return productRegister.get();
 	}
 
 	/**
 	 * @param productRegister the productRegister to set
 	 */
-	public static synchronized void setProductRegister(ProductRegister productRegister) {
-		ServiceLoader.productRegister = productRegister;
+	public static void setProductRegister(ProductRegister productRegister) {
+		ServiceLoader.productRegister.set(productRegister);
 	}
 
 }

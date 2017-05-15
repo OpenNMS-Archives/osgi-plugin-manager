@@ -1,10 +1,15 @@
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
-  xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 
-					http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
-					http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 
-					https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-cm/src/main/resources/org/apache/aries/blueprint/compendium/cm/blueprint-cm-1.1.0.xsd
-					http://www.osgi.org/xmlns/blueprint-ext/v1.1.0 
-					https://svn.apache.org/repos/asf/aries/tags/blueprint-0.3.1/blueprint-core/src/main/resources/org/apache/aries/blueprint/ext/blueprint-ext.xsd">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0"
+    xsi:schemaLocation="
+                http://www.osgi.org/xmlns/blueprint/v1.0.0
+                http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
+                http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0
+                http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.1.xsd
+">
 
   <!-- register product information with product registry in licence manager-->
   <reference id="productRegister" interface="org.opennms.karaf.productpub.ProductRegister" timeout="10000" />
@@ -14,16 +19,17 @@
     <property name="productPublisher" ref="productRegister"></property>
     <property name="productMetadataUri" value="/productSpec.xml"></property>
   </bean>
-  
+
   <!-- configure the rest service for plugin manager -->
-  <!-- ReST Servelet configuration for jersey -->
-  <service interface="javax.servlet.http.HttpServlet">
+  <!-- ReST Servlet configuration for jersey -->
+  <bean id="pluginManagerRestServlet" class="com.sun.jersey.spi.container.servlet.ServletContainer">
+    <argument ref="pluginManagerRestApplication" />
+  </bean>
+
+  <service interface="javax.servlet.Servlet" ref="pluginManagerRestServlet">
     <service-properties>
       <entry key="alias" value="/pluginmgr/rest/v1-0" />
     </service-properties>
-    <bean class="com.sun.jersey.spi.container.servlet.ServletContainer">
-      <argument ref="pluginManagerRestApplication" />
-    </bean>
   </service>
 
   <bean id="pluginManagerRestApplication" class="org.opennms.features.pluginmgr.rest.impl.PluginManagerRestApplication" destroy-method="destroyMethod"/>

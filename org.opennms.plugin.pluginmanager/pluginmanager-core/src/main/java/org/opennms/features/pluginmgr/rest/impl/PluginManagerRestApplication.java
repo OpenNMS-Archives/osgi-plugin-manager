@@ -28,8 +28,7 @@ public class PluginManagerRestApplication extends Application {
 	
 	public PluginManagerRestApplication(){
 		super();
-		System.out.println("Plugin Manager Rest App starting.");
-		LOG.info("Plugin Manager Rest App starting.");
+		LOG.info("Plugin Manager REST Application starting");
 	}
 
 	// doing this because the com.sun.ws.rest.api.core.PackagesResourceConfig 
@@ -48,8 +47,7 @@ public class PluginManagerRestApplication extends Application {
 	//	}
 	
 	public void destroyMethod(){
-		System.out.println("Plugin Manager Rest App  shutting down.");
-		LOG.info("Plugin Manager Rest App  shutting down.");
+		LOG.info("Plugin Manager REST Application shutting down");
 	}
 
 }
