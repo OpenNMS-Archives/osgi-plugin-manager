@@ -138,7 +138,7 @@
     <property name="path" value="/diagnostics" />
   </bean>
 
-  <service id="testResources" ref="testResourceMapping" interface="org.ops4j.pax.web.extender.whiteboard.ResourceMapping" />
+  <service id="testResources" ref="testResourceMapping" auto-export="interfaces" />
 
   <!-- load default properties from  org.opennms.features.pluginmgr.config.cfg if exists -->
   <cm:property-placeholder persistent-id="org.opennms.features.pluginmgr.config" update-strategy="reload">

@@ -13,7 +13,7 @@ mvn archetype:generate -DarchetypeCatalog=local -DarchetypeGroupId=org.opennms.p
 -Dpackage=org.opennms.plugins.myproject.packagename
  
  Where
--DarchetypeVersion=xxx is the version of this archetype (e.g. 1.0.4)
+-DarchetypeVersion=xxx is the version of this archetype (e.g. 1.0.5)
 -DgroupId=org.opennms.plugins is the maven group id of your generated project
 -DartifactId=myproject is the maven artifact id of your generated project
 -Dpackage=org.opennms.plugins.myproject.packagename is the route java package in which the generated licence artifacts will be placed
