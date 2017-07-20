@@ -4,7 +4,7 @@
 
   <groupId>org.opennms.plugins</groupId>
   <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-  <version>1.0.5</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>org.opennms.plugin.pluginmanager.parent</name>
@@ -13,18 +13,19 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.surefire.plugin.version>2.15</maven.surefire.plugin.version>
+    <maven.surefire.plugin.version>2.18</maven.surefire.plugin.version>
     <jerseyVersion>1.19.3</jerseyVersion>
     <vaadinVersion>7.2.7</vaadinVersion>
-    <vaadin.plugin.version>7.2.7</vaadin.plugin.version>
-    <vaadinExtenderVersion>1.0.0</vaadinExtenderVersion>
+    <vaadin.plugin.version>${vaadinVersion}</vaadin.plugin.version>
+    <vaadinExtenderVersion>1.0.0</vaadinExtenderVersion> <!-- NOTE - NOT IN 20 -->
     <licencemanagerVersion>${project.version}</licencemanagerVersion>
     <featuremanagerVersion>${project.version}</featuremanagerVersion>
-    <jettyVersion>8.1.10.v20130312</jettyVersion>
-    <guavaVersion>17.0</guavaVersion>
-    <log4j2Version>2.1</log4j2Version>
-    <slf4jVersion>1.7.7</slf4jVersion>
-    <karafVersion>2.4.0</karafVersion>
+    <jettyVersion>9.4.0.v20161208</jettyVersion>
+    <servletApiVersion>3.1.0</servletApiVersion>
+    <guavaVersion>18.0</guavaVersion>
+    <log4j2Version>2.8.2</log4j2Version>
+    <slf4jVersion>1.7.21</slf4jVersion>
+    <karafVersion>4.0.8</karafVersion>
   </properties>
 
   <modules>
@@ -33,6 +34,7 @@
     <module>karaf-pluginmanager-archetype</module>
     <module>pluginmanager-core</module>
     <module>karaf-pluginmanager</module>
+    <module>karaf-pluginmanager-kar</module>
   </modules>
 
   <build>
@@ -303,10 +305,15 @@
         <artifactId>jetty-jsp</artifactId>
         <version>${jettyVersion}</version>
       </dependency>
+      <!-- <dependency> -->
+      <!-- <groupId>org.eclipse.jetty.orbit</groupId> -->
+      <!-- <artifactId>javax.servlet</artifactId> -->
+      <!-- <version>3.0.0.v201112011016</version> -->
+      <!-- </dependency> -->
       <dependency>
-        <groupId>org.eclipse.jetty.orbit</groupId>
-        <artifactId>javax.servlet</artifactId>
-        <version>3.0.0.v201112011016</version>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${servletApiVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.opennms.vaadin-extender</groupId>

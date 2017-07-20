@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.opennms.plugins</groupId>
+    <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>org.opennms.plugin.pluginmanager.karaf-pluginmanager-kar</artifactId>
+  <packaging>pom</packaging>
+
+  <name>org.opennms.plugin.pluginmanager.karaf-pluginmanager-kar</name>
+  <description>Plugin Manager Kar file to deploy directly in Karaf</description>
+
+  <build>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.karaf.tooling</groupId>
+        <artifactId>features-maven-plugin</artifactId>
+        <version>2.2.8</version>
+        <executions>
+          <execution>
+            <id>create-kar</id>
+            <goals>
+              <goal>create-kar</goal>
+            </goals>
+            <configuration>
+              <featuresFile>src/main/resources/features.xml</featuresFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+
+
+
+    <!-- <pluginManagement> -->
+    <!-- <plugins> -->
+    <!-- <plugin> -->
+    <!-- <groupId>org.apache.karaf.tooling</groupId> -->
+    <!-- <artifactId>karaf-maven-plugin</artifactId> -->
+    <!-- <version>${karafVersion}</version> -->
+    <!-- <version>4.1.0</version> -->
+    <!-- <extensions>true</extensions> -->
+    <!-- </plugin> -->
+    <!-- </plugins> -->
+    <!-- </pluginManagement> -->
+    <!-- <plugins> -->
+    <!-- <plugin> -->
+    <!-- <groupId>org.apache.karaf.tooling</groupId> -->
+    <!-- <artifactId>karaf-maven-plugin</artifactId> -->
+    <!-- <configuration> -->
+    <!-- <featuresFile>src/main/resources/features.xml</featuresFile> -->
+    <!-- </configuration> -->
+    <!-- </plugin> -->
+    <!-- </plugins> -->
+    <!-- </build> -->
+
+
+
+  </build>
+
+
+
+
+
+
+</project>
