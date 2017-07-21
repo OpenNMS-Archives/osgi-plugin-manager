@@ -33,8 +33,8 @@
                   <version>${project.version}</version>
                   <type>kar</type>
                   <!-- <classifier> [classifier - optional] </classifier> -->
-                  <!-- <overWrite>[ true or false ]</overWrite> -->
-                  <!-- <outputDirectory>[ output directory ]</outputDirectory> -->
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.basedir}/karaf-deploy/</outputDirectory>
                   <!-- <destFileName>[ filename ]</destFileName> -->
                 </artifactItem>
               </artifactItems>
@@ -43,6 +43,44 @@
           </execution>
         </executions>
       </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>1.9.4</version>
+        <configuration>
+          <providerImplementations>
+            <git>jgit</git>
+          </providerImplementations>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-jgit</artifactId>
+            <version>1.9.4</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>clone-easy-digital-downloads</id>
+            <goals>
+              <goal>checkout</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <checkoutDirectory>${project.basedir}/localgitrepo/easy-digital-downloads</checkoutDirectory>
+              <connectionType>connection</connectionType>
+              <connectionUrl>scm:git:https://github.com/easydigitaldownloads/easy-digital-downloads.git</connectionUrl>
+              <scmVersionType>branch</scmVersionType>
+              <scmVersion>release/2.4</scmVersion>
+              <skipCheckoutIfExists>true</skipCheckoutIfExists>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
     </plugins>
   </build>
 

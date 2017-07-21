@@ -6,13 +6,13 @@ services:
       container_name: karaf
       ports:
         - "11099:1099"
-        - "144444:44444"
+        - "54444:44444"
         - "18101:8101"
         - "18181:8181" # web consol
       volumes:
         - ./karaf-deploy:/deploy
         - ./karaf-log:/opt/karaf/data/log
-        - ./org.ops4j.pax.logging.cfg:/opt/karaf/etc/org.ops4j.pax.logging.cfg
+        - ./karaf-config/org.ops4j.pax.logging.cfg:/opt/karaf/etc/org.ops4j.pax.logging.cfg
 
       #  - ./karaf-etc:/opt/karaf/etc
       #  - ./karaf-data:/opt/karaf/data
@@ -33,7 +33,7 @@ services:
       # link to easy digtal downloads git clone checked out from
       # Easy Digital Downloads from https://github.com/easydigitaldownloads/easy-digital-downloads
       # Use release/2.4 branch
-      - /home/admin/devel/gitrepos/Easy-Digital-Downloads/:/var/www/html/wp-content/plugins/easy-digital-downloads 
+      - ./localgitrepo/easy-digital-downloads/:/var/www/html/wp-content/plugins/easy-digital-downloads 
       # Local osgi manager extension to EDD 
       - ../edd-downloads-as-osgi:/var/www/html/wp-content/plugins/edd-downloads-as-osgi # Plugin development
      
@@ -55,6 +55,7 @@ services:
       - 127.0.0.1:3306:3306 # change ip if required
     volumes:
       - ./wp-data:/docker-entrypoint-initdb.d
+      - ./mysql-data:/var/lib/mysql # persistant store mysql
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_ROOT_PASSWORD: password
