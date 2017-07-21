@@ -1,3 +1,4 @@
 /wp-app/
 /karaf-data/
 /karaf-log/
+/target/
