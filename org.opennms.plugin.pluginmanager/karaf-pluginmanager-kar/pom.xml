@@ -46,7 +46,7 @@
               <goal>generate-features-xml</goal>
             </goals>
             <configuration>
-              <name>opennms-${project.version}</name>
+              <name>${project.artifactId}</name>
               <!-- This option will recursively pull the all of the <repository> -->
               <!-- references inside all of the referenced repositories and put all of their features into -->
               <!-- a single <features> repository. -->
@@ -57,7 +57,7 @@
               </importRepositoryExclusions>
               <repositories>
                 <!-- Plugin Manager Feature -->
-                <repository>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/${project.version}/xml/features</repository>
+                <repository>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager-feature/${project.version}/xml/features</repository>
                 <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository>
                 <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository>
               </repositories>
@@ -103,97 +103,97 @@
 
   <dependencies>
     <!-- opennms Jersey implementation in Lib directory -->
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-server</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-server</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-servlet</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-servlet</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-core</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-core</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-client</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>jsr311-api</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-client</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>javax.ws.rs</groupId> -->
+    <!-- <artifactId>jsr311-api</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
     <!-- vaadin dependencies -->
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-server</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client-compiled</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-themes</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.vaadin</groupId> -->
+    <!-- <artifactId>vaadin-server</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.vaadin</groupId> -->
+    <!-- <artifactId>vaadin-client-compiled</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.vaadin</groupId> -->
+    <!-- <artifactId>vaadin-client</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.vaadin</groupId> -->
+    <!-- <artifactId>vaadin-themes</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.vaadin</groupId> -->
+    <!-- <artifactId>vaadin-shared</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>org.jsoup</groupId> -->
+    <!-- <artifactId>jsoup</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>com.vaadin.external.json</groupId>
-      <artifactId>json</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.vaadin.external.json</groupId> -->
+    <!-- <artifactId>json</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.google.guava</groupId> -->
+    <!-- <artifactId>guava</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared-deps</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.vaadin</groupId> -->
+    <!-- <artifactId>vaadin-shared-deps</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${servletApiVersion}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.opennms.vaadin-extender</groupId>
-      <artifactId>service</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>javax.servlet</groupId> -->
+    <!-- <artifactId>javax.servlet-api</artifactId> -->
+    <!-- <version>${servletApiVersion}</version> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.opennms.vaadin-extender</groupId> -->
+    <!-- <artifactId>service</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
   </dependencies>
 

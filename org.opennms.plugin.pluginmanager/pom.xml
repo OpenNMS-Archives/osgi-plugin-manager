@@ -34,6 +34,7 @@
     <module>karaf-pluginmanager-archetype</module>
     <module>pluginmanager-core</module>
     <module>karaf-pluginmanager</module>
+    <module>karaf-pluginmanager-feature</module>
     <module>karaf-pluginmanager-kar</module>
   </modules>
 
