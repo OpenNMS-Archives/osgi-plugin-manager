@@ -123,6 +123,14 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>org.opennms.plugin.pluginmanager.karaf-pluginmanager</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.opennms.plugins</groupId>
+      <artifactId>org.opennms.plugin.pluginmanager.pluginmanager-core</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <!-- Jersey Dependencies -->
@@ -261,13 +269,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- plugin-manager core dependencies -->
-    <dependency>
-      <groupId>org.opennms.plugins</groupId>
-      <artifactId>org.opennms.plugin.pluginmanager.pluginmanager-core</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!--test dependencies -->
     <dependency>
