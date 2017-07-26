@@ -77,6 +77,21 @@
               <skipCheckoutIfExists>true</skipCheckoutIfExists>
             </configuration>
           </execution>
+          <execution>
+            <id>clone-shop-front-theme</id>
+            <goals>
+              <goal>checkout</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <checkoutDirectory>${project.basedir}/localgitrepo/shop-front</checkoutDirectory>
+              <connectionType>connection</connectionType>
+              <connectionUrl>scm:git:https://github.com/easydigitaldownloads/shop-front.git</connectionUrl>
+              <scmVersionType>branch</scmVersionType>
+              <scmVersion>master</scmVersion>
+              <skipCheckoutIfExists>true</skipCheckoutIfExists>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 

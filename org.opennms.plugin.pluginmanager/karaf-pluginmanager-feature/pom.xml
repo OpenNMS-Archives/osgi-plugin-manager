@@ -125,7 +125,7 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.opennms.plugins</groupId>
       <artifactId>org.opennms.plugin.pluginmanager.pluginmanager-core</artifactId>
@@ -155,9 +155,14 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- <dependency> -->
+    <!-- <groupId>javax.ws.rs</groupId> -->
+    <!-- <artifactId>jsr311-api</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
     <dependency>
       <groupId>javax.ws.rs</groupId>
-      <artifactId>jsr311-api</artifactId>
+      <artifactId>javax.ws.rs-api</artifactId>
       <scope>compile</scope>
     </dependency>
 

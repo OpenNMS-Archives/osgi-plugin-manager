@@ -12,7 +12,7 @@
   <packaging>bundle</packaging>
   <name>org.opennms.plugin.pluginmanager.karaf-pluginmanager</name>
   <description>Feature for running the OSGi plugin manager in a standalone karaf instance.</description>
-  
+
   <properties>
     <bundle.symbolicName>org.opennms.plugin.pluginmanager.karaf-pluginmanager</bundle.symbolicName>
     <bundle.namespace>UNDEFINED</bundle.namespace>
@@ -85,93 +85,93 @@
           </execution>
         </executions>
       </plugin>
-      
-<!--       <plugin> -->
-<!--         <groupId>org.opennms.maven.plugins</groupId> -->
-<!--         <artifactId>features-maven-plugin</artifactId> -->
-<!--         <executions> -->
-<!--           <execution> -->
-<!--             <id>features.xml</id> -->
-<!--             <phase>process-resources</phase> -->
-<!--             <goals> -->
-<!--               <goal>generate-features-xml</goal> -->
-<!--             </goals> -->
-<!--             <configuration> -->
-<!--                 <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle> -->
-<!--             </configuration> -->
-            
-<!--             <configuration> -->
-<!--               <name>test-${project.artifactId}</name> -->
-<!--               This option will recursively pull the all of the <repository> -->
-<!--               references inside all of the referenced repositories and put all of their features into -->
-<!--               a single <features> repository. -->
-<!--               <importRepositories>true</importRepositories> -->
 
-<!--               <importRepositoryExclusions> -->
+      <!-- <plugin> -->
+      <!-- <groupId>org.opennms.maven.plugins</groupId> -->
+      <!-- <artifactId>features-maven-plugin</artifactId> -->
+      <!-- <executions> -->
+      <!-- <execution> -->
+      <!-- <id>features.xml</id> -->
+      <!-- <phase>process-resources</phase> -->
+      <!-- <goals> -->
+      <!-- <goal>generate-features-xml</goal> -->
+      <!-- </goals> -->
+      <!-- <configuration> -->
+      <!-- <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle> -->
+      <!-- </configuration> -->
 
-<!--               </importRepositoryExclusions> -->
-<!--               <repositories> -->
-<!--                 Plugin Manager Feature -->
-<!--                 <repository>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/${project.version}/xml/features</repository> -->
-<!--                 <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository> -->
-<!--                 <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository> -->
-<!--               </repositories> -->
+      <!-- <configuration> -->
+      <!-- <name>test-${project.artifactId}</name> -->
+      <!-- This option will recursively pull the all of the <repository> -->
+      <!-- references inside all of the referenced repositories and put all of their features into -->
+      <!-- a single <features> repository. -->
+      <!-- <importRepositories>true</importRepositories> -->
 
-<!--               <features> -->
-<!--                 features defined as internal opennms plugins -->
-<!--                 <feature>org.opennms.plugin.licencemanager</feature> -->
-<!--                 <feature>org.opennms.plugin.featuremanager</feature> -->
-<!--                 <feature>org.opennms.plugin.pluginmanager.karaf-pluginmanager</feature> -->
-<!--               </features> -->
-<!--             </configuration> -->
-<!--           </execution> -->
-<!--         </executions> -->
-<!--       </plugin> -->
+      <!-- <importRepositoryExclusions> -->
 
-<!--       <plugin> -->
-<!--         <groupId>org.apache.maven.plugins</groupId> -->
-<!--         <artifactId>maven-resources-plugin</artifactId> -->
-<!--         <executions> -->
-<!--           <execution> -->
-<!--             <id>copy-resources</id> -->
-<!--             <phase>generate-resources</phase> -->
-<!--             <goals> -->
-<!--               <goal>copy-resources</goal> -->
-<!--             </goals> -->
-<!--             <configuration> -->
-<!--               <outputDirectory>${project.build.outputDirectory}/features</outputDirectory> -->
-<!--               <resources> -->
-<!--                 <resource> -->
-<!--                   <directory>src/main/features</directory> -->
-<!--                   <filtering>true</filtering> -->
-<!--                 </resource> -->
-<!--               </resources> -->
-<!--             </configuration> -->
-<!--           </execution> -->
-<!--         </executions> -->
-<!--       </plugin> -->
-<!--       <plugin> -->
-<!--         <groupId>org.codehaus.mojo</groupId> -->
-<!--         <artifactId>build-helper-maven-plugin</artifactId> -->
-<!--         <executions> -->
-<!--           <execution> -->
-<!--             <id>attach-artifacts</id> -->
-<!--             <phase>package</phase> -->
-<!--             <goals> -->
-<!--               <goal>attach-artifact</goal> -->
-<!--             </goals> -->
-<!--             <configuration> -->
-<!--               <artifacts> -->
-<!--                 <artifact> -->
-<!--                   <file>${project.build.outputDirectory}/features/features.xml</file> -->
-<!--                   <type>xml</type> -->
-<!--                   <classifier>features</classifier> -->
-<!--                 </artifact> -->
-<!--               </artifacts> -->
-<!--             </configuration> -->
-<!--           </execution> -->
-<!--         </executions> -->
-<!--       </plugin> -->
+      <!-- </importRepositoryExclusions> -->
+      <!-- <repositories> -->
+      <!-- Plugin Manager Feature -->
+      <!-- <repository>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/${project.version}/xml/features</repository> -->
+      <!-- <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository> -->
+      <!-- <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository> -->
+      <!-- </repositories> -->
+
+      <!-- <features> -->
+      <!-- features defined as internal opennms plugins -->
+      <!-- <feature>org.opennms.plugin.licencemanager</feature> -->
+      <!-- <feature>org.opennms.plugin.featuremanager</feature> -->
+      <!-- <feature>org.opennms.plugin.pluginmanager.karaf-pluginmanager</feature> -->
+      <!-- </features> -->
+      <!-- </configuration> -->
+      <!-- </execution> -->
+      <!-- </executions> -->
+      <!-- </plugin> -->
+
+      <!-- <plugin> -->
+      <!-- <groupId>org.apache.maven.plugins</groupId> -->
+      <!-- <artifactId>maven-resources-plugin</artifactId> -->
+      <!-- <executions> -->
+      <!-- <execution> -->
+      <!-- <id>copy-resources</id> -->
+      <!-- <phase>generate-resources</phase> -->
+      <!-- <goals> -->
+      <!-- <goal>copy-resources</goal> -->
+      <!-- </goals> -->
+      <!-- <configuration> -->
+      <!-- <outputDirectory>${project.build.outputDirectory}/features</outputDirectory> -->
+      <!-- <resources> -->
+      <!-- <resource> -->
+      <!-- <directory>src/main/features</directory> -->
+      <!-- <filtering>true</filtering> -->
+      <!-- </resource> -->
+      <!-- </resources> -->
+      <!-- </configuration> -->
+      <!-- </execution> -->
+      <!-- </executions> -->
+      <!-- </plugin> -->
+      <!-- <plugin> -->
+      <!-- <groupId>org.codehaus.mojo</groupId> -->
+      <!-- <artifactId>build-helper-maven-plugin</artifactId> -->
+      <!-- <executions> -->
+      <!-- <execution> -->
+      <!-- <id>attach-artifacts</id> -->
+      <!-- <phase>package</phase> -->
+      <!-- <goals> -->
+      <!-- <goal>attach-artifact</goal> -->
+      <!-- </goals> -->
+      <!-- <configuration> -->
+      <!-- <artifacts> -->
+      <!-- <artifact> -->
+      <!-- <file>${project.build.outputDirectory}/features/features.xml</file> -->
+      <!-- <type>xml</type> -->
+      <!-- <classifier>features</classifier> -->
+      <!-- </artifact> -->
+      <!-- </artifacts> -->
+      <!-- </configuration> -->
+      <!-- </execution> -->
+      <!-- </executions> -->
+      <!-- </plugin> -->
 
     </plugins>
   </build>
@@ -201,9 +201,14 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- <dependency> -->
+    <!-- <groupId>javax.ws.rs</groupId> -->
+    <!-- <artifactId>jsr311-api</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
     <dependency>
       <groupId>javax.ws.rs</groupId>
-      <artifactId>jsr311-api</artifactId>
+      <artifactId>javax.ws.rs-api</artifactId>
       <scope>compile</scope>
     </dependency>
 

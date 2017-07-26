@@ -30,10 +30,14 @@ services:
       - 127.0.0.1:80:80 # change ip if required
     volumes:
       - ./wp-app:/var/www/html # Full wordpress project
-      # link to easy digtal downloads git clone checked out from
+      # link to easy digtal downloads git clone checked out from Git
       # Easy Digital Downloads from https://github.com/easydigitaldownloads/easy-digital-downloads
       # Use release/2.4 branch
       - ./localgitrepo/easy-digital-downloads/:/var/www/html/wp-content/plugins/easy-digital-downloads 
+      
+      # Use Shop Front Theme checked out from git
+      - ./localgitrepo/shop-front/:/var/www/html/wp-content/themes/shop-front
+      
       # Local osgi manager extension to EDD 
       - ../edd-downloads-as-osgi:/var/www/html/wp-content/plugins/edd-downloads-as-osgi # Plugin development
      
