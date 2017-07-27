@@ -1,5 +1,7 @@
 version: '2'
+
 services:
+
   # from https://hub.docker.com/r/mkroli/karaf/
   karaf:
       image: mkroli/karaf:4.0 # 4.1 docker image broken
@@ -13,7 +15,8 @@ services:
         - ./karaf-deploy:/deploy
         - ./karaf-log:/opt/karaf/data/log
         - ./karaf-config/org.ops4j.pax.logging.cfg:/opt/karaf/etc/org.ops4j.pax.logging.cfg
-
+        - ./karaf-config/org.ops4j.pax.url.mvn.cfg:/opt/karaf/etc/org.ops4j.pax.url.mvn.cfg
+        
       #  - ./karaf-etc:/opt/karaf/etc
       #  - ./karaf-data:/opt/karaf/data
       # restart: always
@@ -65,6 +68,25 @@ services:
       MYSQL_ROOT_PASSWORD: password
     networks:
       - opennms-plugin-shop-network
+
+
+  # nexus repo manager from https://github.com/sonatype/docker-nexus
+  # http://localhost:28081/nexus/
+  # Default credentials are: admin / admin123
+  nexus:
+    image: sonatype/nexus
+    volumes:
+        - "nexus-data:/sonatype-work"
+    ports:
+        - "28081:8081"
+    networks:
+        - opennms-plugin-shop-network
+      
 networks:
-  opennms-plugin-shop-network:
+    opennms-plugin-shop-network:
       driver: bridge
+      
+# data container for nexus - remember to remove if no longer needed (docker volume ls -f dangling=true)
+# note not using host volume because need to change owner id to 200
+volumes:
+    nexus-data: {}

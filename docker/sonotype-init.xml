@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository>
+  <data>
+    <resourceURI>http://localhost:28081/nexus/service/local/repositories/osgi-plugins</resourceURI>
+    <contentResourceURI>http://localhost:28081/nexus/content/repositories/osgi-plugins</contentResourceURI>
+    <id>osgi-plugins</id>
+    <name>osgi-plugins</name>
+    <repoType>hosted</repoType>
+    <repoPolicy>RELEASE</repoPolicy>
+    <provider>maven2</provider>
+    <providerRole>org.sonatype.nexus.proxy.repository.Repository</providerRole>
+    <format>maven2</format>
+    <userManaged>true</userManaged>
+    <exposed>true</exposed>
+    <effectiveLocalStorageUrl>file:/sonatype-work/storage/osgi-plugins</effectiveLocalStorageUrl>
+  </data>
+</repository>
+<repository>
+  <data>
+    <resourceURI>http://localhost:28081/nexus/service/local/repositories/osgi-plugins-snapshots</resourceURI>
+    <contentResourceURI>http://localhost:28081/nexus/content/repositories/osgi-plugins-snapshots</contentResourceURI>
+    <id>osgi-plugins-snapshots</id>
+    <name>osgi-plugins-snapshots</name>
+    <repoType>hosted</repoType>
+    <repoPolicy>SNAPSHOT</repoPolicy>
+    <provider>maven2</provider>
+    <providerRole>org.sonatype.nexus.proxy.repository.Repository</providerRole>
+    <format>maven2</format>
+    <userManaged>true</userManaged>
+    <exposed>true</exposed>
+    <effectiveLocalStorageUrl>file:/sonatype-work/storage/osgi-plugins-snapshots/</effectiveLocalStorageUrl>
+  </data>
+</repository>
+<repository>
+  <data>
+    <resourceURI>http://localhost:28081/nexus/service/local/repositories/osgi-plugins-licence-specs-snapshots</resourceURI>
+    <contentResourceURI>http://localhost:28081/nexus/content/repositories/osgi-plugins-licence-specs-snapshots</contentResourceURI>
+    <id>osgi-plugins-licence-specs-snapshots</id>
+    <name>osgi-plugins-licence-specs-snapshots</name>
+    <repoType>hosted</repoType>
+    <repoPolicy>SNAPSHOT</repoPolicy>
+    <provider>maven2</provider>
+    <providerRole>org.sonatype.nexus.proxy.repository.Repository</providerRole>
+    <format>maven2</format>
+    <userManaged>true</userManaged>
+    <exposed>true</exposed>
+    <effectiveLocalStorageUrl>file:/sonatype-work/storage/osgi-plugins-licence-specs-snapshots/</effectiveLocalStorageUrl>
+  </data>
+</repository>
+<repository>
+  <data>
+    <resourceURI>http://localhost:28081/nexus/service/local/repositories/osgi-plugins-licence-specs</resourceURI>
+    <contentResourceURI>http://localhost:28081/nexus/content/repositories/osgi-plugins-licence-specs</contentResourceURI>
+    <id>osgi-plugins-licence-specs</id>
+    <name>osgi-plugins-licence-specs</name>
+    <repoType>hosted</repoType>
+    <repoPolicy>RELEASE</repoPolicy>
+    <provider>maven2</provider>
+    <providerRole>org.sonatype.nexus.proxy.repository.Repository</providerRole>
+    <format>maven2</format>
+    <userManaged>true</userManaged>
+    <exposed>true</exposed>
+    <effectiveLocalStorageUrl>file:/sonatype-work/storage/osgi-plugins-licence-specs</effectiveLocalStorageUrl>
+  </data>
+</repository>
