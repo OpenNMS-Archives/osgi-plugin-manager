@@ -204,12 +204,12 @@
     <!-- <dependency> -->
     <!-- <groupId>javax.ws.rs</groupId> -->
     <!-- <artifactId>jsr311-api</artifactId> -->
-    <!-- <scope>compile</scope> -->
+    <!-- <scope>provided</scope> -->
     <!-- </dependency> -->
     <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <scope>compile</scope>
+      <groupId>org.apache.servicemix.specs</groupId>
+      <artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- vaadin dependencies -->

@@ -34,9 +34,18 @@
               <goal>generate-features-xml</goal>
             </goals>
             <configuration>
+              <importRepositories>false</importRepositories>
+              <importRepositoryExclusions>
+              </importRepositoryExclusions>
+              <repositories>
+                <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository>
+                <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository>
+              </repositories>
               <features>
                 <feature>http</feature>
                 <feature>http-whiteboard</feature>
+                <feature>org.opennms.plugin.licencemanager</feature>
+                <feature>org.opennms.plugin.featuremanager</feature>
               </features>
             </configuration>
 
@@ -134,37 +143,37 @@
     </dependency>
 
     <!-- Jersey Dependencies -->
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-server</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-servlet</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-core</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-client</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-server</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-servlet</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-core</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>com.sun.jersey</groupId> -->
+    <!-- <artifactId>jersey-client</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
     <!-- <dependency> -->
     <!-- <groupId>javax.ws.rs</groupId> -->
     <!-- <artifactId>jsr311-api</artifactId> -->
     <!-- <scope>compile</scope> -->
     <!-- </dependency> -->
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <scope>compile</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>org.apache.servicemix.specs</groupId> -->
+    <!-- <artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
 
     <!-- vaadin dependencies -->
     <dependency>
@@ -263,16 +272,16 @@
     </dependency>
 
     <!-- licence / feature / plugin manager dependencies -->
-    <dependency>
-      <groupId>org.opennms.plugins</groupId>
-      <artifactId>org.opennms.plugin.licencemanager</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.opennms.plugins</groupId>
-      <artifactId>org.opennms.plugin.featuremanager</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- <dependency> -->
+    <!-- <groupId>org.opennms.plugins</groupId> -->
+    <!-- <artifactId>org.opennms.plugin.licencemanager</artifactId> -->
+    <!-- <scope>provided</scope> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.opennms.plugins</groupId> -->
+    <!-- <artifactId>org.opennms.plugin.featuremanager</artifactId> -->
+    <!-- <scope>provided</scope> -->
+    <!-- </dependency> -->
 
 
     <!--test dependencies -->
