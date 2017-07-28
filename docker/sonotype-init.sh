@@ -2,8 +2,6 @@
 
 # see https://repository.sonatype.org/nexus-restlet1x-plugin/default/docs/index.html -->
 # http://www.sonatype.org/nexus/2015/08/13/using-the-rest-api-in-nexus-2/ -->
-# curl -v -H "Content-Type: application/xml" &#x002D;&#x002D;data @sonotype-init.xml \
-# http://admin:admin123@localhost:28081/nexus/service/local/repositories
 # 
 
 curl -v -H  POST http://admin:admin123@localhost:28081/nexus/service/local/repositories \
