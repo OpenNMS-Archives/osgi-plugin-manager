@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<productSpecifications>
+  <productSpecList>
+    <productMetadata>
+      <productId>myproject/1.0-SNAPSHOT</productId>
+      <featureRepository>mvn:org.opennms.plugins/myproject/1.0-SNAPSHOT/xml/features</featureRepository>
+      <packageingDescriptor>Not Defined</packageingDescriptor>
+      <productName>myproject</productName>
+      <productDescription>TODO complete product description for myproject</productDescription>
+      <productUrl>http:\\opennms.co.uk</productUrl>
+      <organization>OpenNMS Project</organization>
+      <licenceType>See Plugin Documentation for ELUA</licenceType>
+      <licenceKeyRequired>true</licenceKeyRequired>
+      <systemPlugin>false</systemPlugin>
+    </productMetadata>
+  </productSpecList>
+</productSpecifications>
