@@ -97,6 +97,13 @@
             <obrRepository>NONE</obrRepository>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.karaf.tooling</groupId>
+          <artifactId>karaf-maven-plugin</artifactId>
+          <version>${karafVersion}</version>
+          <extensions>true</extensions>
+        </plugin>
+
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
@@ -142,6 +149,29 @@
                       <goal>copy</goal>
                       <goal>copy-dependencies</goal>
                       <goal>unpack</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.karaf.tooling</groupId>
+                    <artifactId>karaf-maven-plugin</artifactId>
+                    <versionRange>[4.0.0,)</versionRange>
+                    <goals>
+                      <goal>default-features-generate-descriptor</goal>
+                      <goal>commands-generate-help</goal>
+                      <goal>features-generate-descriptor</goal>
+                      <goal>features-add-to-repository</goal>
+                      <goal>verify</goal>
+                      <goal>create-kar</goal>
+                      <goal>kar</goal>
+                      <goal>archive</goal>
+                      <goal>run</goal>
+                      <goal>client</goal>
+                      <goal>deploy</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
@@ -236,15 +266,10 @@
         <artifactId>jersey-client</artifactId>
         <version>${jerseyVersion}</version>
       </dependency>
-      <!-- <dependency> -->
-      <!-- <groupId>javax.ws.rs</groupId> -->
-      <!-- <artifactId>jsr311-api</artifactId> -->
-      <!-- <version>1.1.1</version> -->
-      <!-- </dependency> -->
       <dependency>
-        <groupId>org.apache.servicemix.specs</groupId>
-        <artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
-        <version>2.9.0</version>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>jsr311-api</artifactId>
+        <version>1.1.1</version>
       </dependency>
 
       <dependency>

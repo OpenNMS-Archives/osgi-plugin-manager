@@ -122,14 +122,9 @@
       <artifactId>jersey-client</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- <dependency> -->
-    <!-- <groupId>javax.ws.rs</groupId> -->
-    <!-- <artifactId>jsr311-api</artifactId> -->
-    <!-- <scope>provided</scope> -->
-    <!-- </dependency> -->
     <dependency>
-      <groupId>org.apache.servicemix.specs</groupId>
-      <artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -185,11 +180,6 @@
     </dependency>
 
     <!-- servelet dependencies -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.eclipse.jetty.orbit</groupId> -->
-    <!-- <artifactId>javax.servlet</artifactId> -->
-    <!-- <scope>provided</scope> -->
-    <!-- </dependency> -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>

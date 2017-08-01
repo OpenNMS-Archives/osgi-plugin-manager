@@ -48,80 +48,11 @@
                 <feature>org.opennms.plugin.featuremanager</feature>
               </features>
             </configuration>
-
-            <!-- <configuration> -->
-            <!-- <name>test-${project.artifactId}</name> -->
-            <!-- This option will recursively pull the all of the <repository> -->
-            <!-- references inside all of the referenced repositories and put all of their features into -->
-            <!-- a single <features> repository. -->
-            <!-- <importRepositories>true</importRepositories> -->
-
-            <!-- <importRepositoryExclusions> -->
-
-            <!-- </importRepositoryExclusions> -->
-            <!-- <repositories> -->
-            <!-- Plugin Manager Feature -->
-            <!-- <repository>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/${project.version}/xml/features</repository> -->
-            <!-- <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository> -->
-            <!-- <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository> -->
-            <!-- </repositories> -->
-
-            <!-- <features> -->
-            <!-- features defined as internal opennms plugins -->
-            <!-- <feature>org.opennms.plugin.licencemanager</feature> -->
-            <!-- <feature>org.opennms.plugin.featuremanager</feature> -->
-            <!-- <feature>org.opennms.plugin.pluginmanager.karaf-pluginmanager</feature> -->
-            <!-- </features> -->
-            <!-- </configuration> -->
           </execution>
         </executions>
       </plugin>
 
-      <!-- <plugin> -->
-      <!-- <groupId>org.apache.maven.plugins</groupId> -->
-      <!-- <artifactId>maven-resources-plugin</artifactId> -->
-      <!-- <executions> -->
-      <!-- <execution> -->
-      <!-- <id>copy-resources</id> -->
-      <!-- <phase>generate-resources</phase> -->
-      <!-- <goals> -->
-      <!-- <goal>copy-resources</goal> -->
-      <!-- </goals> -->
-      <!-- <configuration> -->
-      <!-- <outputDirectory>${project.build.outputDirectory}/features</outputDirectory> -->
-      <!-- <resources> -->
-      <!-- <resource> -->
-      <!-- <directory>src/main/features</directory> -->
-      <!-- <filtering>true</filtering> -->
-      <!-- </resource> -->
-      <!-- </resources> -->
-      <!-- </configuration> -->
-      <!-- </execution> -->
-      <!-- </executions> -->
-      <!-- </plugin> -->
-      <!-- <plugin> -->
-      <!-- <groupId>org.codehaus.mojo</groupId> -->
-      <!-- <artifactId>build-helper-maven-plugin</artifactId> -->
-      <!-- <executions> -->
-      <!-- <execution> -->
-      <!-- <id>attach-artifacts</id> -->
-      <!-- <phase>package</phase> -->
-      <!-- <goals> -->
-      <!-- <goal>attach-artifact</goal> -->
-      <!-- </goals> -->
-      <!-- <configuration> -->
-      <!-- <artifacts> -->
-      <!-- <artifact> -->
-      <!-- <file>${project.build.outputDirectory}/features/features.xml</file> -->
-      <!-- <type>xml</type> -->
-      <!-- <classifier>features</classifier> -->
-      <!-- </artifact> -->
-      <!-- </artifacts> -->
-      <!-- </configuration> -->
-      <!-- </execution> -->
-      <!-- </executions> -->
-      <!-- </plugin> -->
-
+ 
     </plugins>
   </build>
 
@@ -141,39 +72,6 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-
-    <!-- Jersey Dependencies -->
-    <!-- <dependency> -->
-    <!-- <groupId>com.sun.jersey</groupId> -->
-    <!-- <artifactId>jersey-server</artifactId> -->
-    <!-- <scope>compile</scope> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>com.sun.jersey</groupId> -->
-    <!-- <artifactId>jersey-servlet</artifactId> -->
-    <!-- <scope>compile</scope> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>com.sun.jersey</groupId> -->
-    <!-- <artifactId>jersey-core</artifactId> -->
-    <!-- <scope>compile</scope> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>com.sun.jersey</groupId> -->
-    <!-- <artifactId>jersey-client</artifactId> -->
-    <!-- <scope>compile</scope> -->
-    <!-- </dependency> -->
-
-    <!-- <dependency> -->
-    <!-- <groupId>javax.ws.rs</groupId> -->
-    <!-- <artifactId>jsr311-api</artifactId> -->
-    <!-- <scope>compile</scope> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.apache.servicemix.specs</groupId> -->
-    <!-- <artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId> -->
-    <!-- <scope>compile</scope> -->
-    <!-- </dependency> -->
 
     <!-- vaadin dependencies -->
     <dependency>
@@ -270,18 +168,6 @@
       <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
     </dependency>
-
-    <!-- licence / feature / plugin manager dependencies -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.opennms.plugins</groupId> -->
-    <!-- <artifactId>org.opennms.plugin.licencemanager</artifactId> -->
-    <!-- <scope>provided</scope> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!-- <groupId>org.opennms.plugins</groupId> -->
-    <!-- <artifactId>org.opennms.plugin.featuremanager</artifactId> -->
-    <!-- <scope>provided</scope> -->
-    <!-- </dependency> -->
 
 
     <!--test dependencies -->
