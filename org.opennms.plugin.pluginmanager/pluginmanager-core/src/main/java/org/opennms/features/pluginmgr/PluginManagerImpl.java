@@ -261,7 +261,7 @@ public class PluginManagerImpl implements PluginManager {
 		} catch (Exception e) {
 			throw new RuntimeException("problem refreshing available plugins for"
 					+ " plugin server Url="+this.getPluginServerUrl()
-					+ ": ", e);
+					+ " ", e);
 		}
 
 	}
