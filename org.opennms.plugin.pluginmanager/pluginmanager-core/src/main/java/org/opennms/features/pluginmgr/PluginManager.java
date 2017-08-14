@@ -102,6 +102,12 @@ public interface PluginManager {
 	 * @return the availablePlugins
 	 */
 	public ProductSpecList getAvailablePlugins();
+	
+	/**
+	 * gets the locally available plugins listed as available in the local system
+	 * @return 
+	 */
+	public ProductSpecList getLocalAvailablePlugins();
 
 	/**
 	 * refreshes complete KarafEntryJaxb from remote karaf server

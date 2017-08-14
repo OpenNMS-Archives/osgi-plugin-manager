@@ -67,6 +67,6 @@ public interface PluginManagerRest {
 	@Path("/updateremotekarafstate")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response updateRemoteKaraState(RemoteKarafState remoteKarafState) throws Exception ;
+	public Response updateRemoteKarafState(RemoteKarafState remoteKarafState) throws Exception ;
 
 }

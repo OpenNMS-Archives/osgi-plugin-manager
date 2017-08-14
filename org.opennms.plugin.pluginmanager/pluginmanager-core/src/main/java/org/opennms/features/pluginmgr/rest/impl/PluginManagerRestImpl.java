@@ -104,7 +104,8 @@ public class PluginManagerRestImpl implements PluginManagerRest {
 	@Path("/updateremotekarafstate")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response updateRemoteKaraState(RemoteKarafState remoteKarafState) throws Exception {
+	@Override
+	public Response updateRemoteKarafState(RemoteKarafState remoteKarafState) throws Exception {
 		
 		PluginManager pluginManager = ServiceLoader.getPluginManager();
 		if (pluginManager == null) throw new RuntimeException("ServiceLoader.getPluginManager() cannot be null.");

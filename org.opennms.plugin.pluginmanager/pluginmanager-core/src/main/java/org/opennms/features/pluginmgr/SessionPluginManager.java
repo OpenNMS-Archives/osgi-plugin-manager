@@ -103,7 +103,13 @@ public class SessionPluginManager {
 	public ProductSpecList getAvailablePlugins() {
 		return pluginManager.getAvailablePlugins();
 	}
-
+	/**
+	 * 
+	 * @return the localAvailablePlugins
+	 */
+	public ProductSpecList getLocalAvailablePlugins() {
+		return pluginManager.getLocalAvailablePlugins();
+	}
 
 
 	/**
@@ -302,6 +308,8 @@ public class SessionPluginManager {
 	public BlueprintContainer getBlueprintContainer() {
 		return blueprintContainer;
 	}
+
+
 
 
 }

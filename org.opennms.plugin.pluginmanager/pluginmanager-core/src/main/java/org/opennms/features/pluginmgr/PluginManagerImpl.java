@@ -280,6 +280,41 @@ public class PluginManagerImpl implements PluginManager {
 
 		return pluginModelJaxb.getAvailablePlugins();
 	}
+	
+
+	@Override
+	public synchronized ProductSpecList getLocalAvailablePlugins() {
+
+		// reads local plugins available directly - no refresh
+		ProductRegisterClientRestJerseyImpl productRegisterClient = new ProductRegisterClientRestJerseyImpl();
+		productRegisterClient.setBaseUrl(this.getLocalKarafInstanceUrl());
+		productRegisterClient.setUserName(this.getLocalKarafInstanceUserName());
+		productRegisterClient.setPassword(this.getLocalKarafInstancePassword());
+
+		productRegisterClient.setBasePath(PRODUCT_PUB_BASE_PATH);
+
+		ProductSpecList localAvailablePlugins;
+		try {
+			localAvailablePlugins = productRegisterClient.getList();
+			pluginModelJaxb.setLocalAvailablePlugins(localAvailablePlugins);
+			pluginModelJaxb.setLocalAvailablePluginsLastUpdated(new Date());
+			persist();
+		} catch (Exception e) {
+			throw new RuntimeException("problem refreshing local available plugins for"
+					+ " plugin server Url="+this.getPluginServerUrl()
+					+ " ", e);
+		}
+		
+		return pluginModelJaxb.getLocalAvailablePlugins();
+
+	}
+	
+	
+	
+	
+	
+	
+	
 
 	/* (non-Javadoc)
 	 * @see org.opennms.features.pluginmgr.PluginManager#refreshKarafEntry(java.lang.String)
@@ -977,7 +1012,8 @@ public class PluginManagerImpl implements PluginManager {
 		String karafInstance=karafManifestEntryJaxb.getKarafInstanceName();
 		if(karafInstance==null || "".equals(karafInstance))  throw new RuntimeException("cannot add new karaf instance - karafInstanceName in karafManifestEntryJaxb cannot be null or empty");
 
-		if("localhost".equals(karafInstance)) throw new RuntimeException("cannot add localhost karaf instance to plugin manager");
+		if(getLocalKarafInstanceName().equals(karafInstance)) throw new RuntimeException("cannot add localKarafInstanceName '"+getLocalKarafInstanceName()
+				+ "' karaf instance to plugin manager");
 
 		if (pluginModelJaxb.getKarafManifestEntryMap().containsKey(karafInstance)){
 			throw new RuntimeException("cannot add new karaf instance - '"+karafInstance
@@ -993,8 +1029,9 @@ public class PluginManagerImpl implements PluginManager {
 	public synchronized void deleteKarafInstance(String karafInstance) {
 		if(karafInstance==null  || "".equals(karafInstance)) throw new RuntimeException("karafInstance cannot be null or empty");
 
-		if("localhost".equals(karafInstance)) throw new RuntimeException("cannot delete localhost karaf instance from plugin manager");
-
+		if(getLocalKarafInstanceName().equals(karafInstance)) throw new RuntimeException("cannot delete localKarafInstanceName '"+getLocalKarafInstanceName()
+				+ "' karaf instance to plugin manager");
+		
 		pluginModelJaxb.getKarafManifestEntryMap().remove(karafInstance);
 		pluginModelJaxb.getKarafDataMap().remove(karafInstance);
 
@@ -1091,7 +1128,5 @@ public class PluginManagerImpl implements PluginManager {
 		System.out.println("Plugin Manager Shutting Down ");
 		LOG.info("Plugin Manager Shutting Down ");
 	}
-
-
 
 }
