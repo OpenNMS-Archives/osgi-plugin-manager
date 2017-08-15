@@ -79,7 +79,7 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 		setCompositionRoot(mainLayout);
 
 		// manually add user code here
-		
+
 		// Handle the installPluginButton events with an anonymous class
 		uninstallPluginButton.addClickListener(new Button.ClickListener() {
 			private static final long serialVersionUID = 1L;
@@ -88,16 +88,16 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 				systemMessages.clear();
 				try{
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
-                    sessionPluginManager.unInstallPlugin(selectedProductId);
+					sessionPluginManager.unInstallPlugin(selectedProductId);
 					systemMessages.info("uninstalled product Id "+selectedProductId);
-				    ProductSpecList productSpeclist = sessionPluginManager.getInstalledPlugins();
+					ProductSpecList productSpeclist = sessionPluginManager.getInstalledPlugins();
 					if (productSpeclist!=null) productDescriptorTablePanel.addProductList(productSpeclist);
 				} catch (Exception e){
 					systemMessages.error("Problem uninstalling plugin.",e);
 				}
 			}
 		});
-		
+
 		// Handle the reInstallPluginButton events with an anonymous class
 		reInstallPluginButton.addClickListener(new Button.ClickListener() {
 			private static final long serialVersionUID = 1L;
@@ -109,21 +109,31 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 					String selectedProductId = productDescriptorTablePanel.getSelectedProductId();
 					message = "Re-installing product Id "+selectedProductId;
 					systemMessages.info(message);
-					sessionPluginManager.unInstallPlugin(selectedProductId);
-					message = message +"\nUn-installed product Id "+selectedProductId;
-					systemMessages.info(message);
+					try {
+						sessionPluginManager.unInstallPlugin(selectedProductId);
+						message = message +"\nUn-installed product Id "+selectedProductId;
+						systemMessages.info(message);
+					} catch (Exception e){
+						message = message +"\nCould not Un-install product Id "+selectedProductId;
+						systemMessages.error(message,e);
+					}
 					productDescriptorTablePanel.markAsDirty();
-					sessionPluginManager.installPlugin(selectedProductId);
-					message = message +"\nRe-installed product Id "+selectedProductId;
-					systemMessages.info(message);
-				    ProductSpecList productSpeclist = sessionPluginManager.getInstalledPlugins();
+					try {
+						sessionPluginManager.installPlugin(selectedProductId);
+						message = message +"\nRe-installed product Id "+selectedProductId;
+						systemMessages.info(message);
+					} catch (Exception e){
+						message = message +"\nCould not Re-install product Id "+selectedProductId;
+						systemMessages.error(message,e);
+					}
+					ProductSpecList productSpeclist = sessionPluginManager.getInstalledPlugins();
 					if (productSpeclist!=null) productDescriptorTablePanel.addProductList(productSpeclist);
 				} catch (Exception e){
 					systemMessages.error(message,e);
 				}
 			}
 		});
-		
+
 	}
 
 	public void setSystemMessages(SystemMessages systemMessages) {
@@ -141,31 +151,31 @@ public class InstalledPluginControlsPanel extends CustomComponent {
 		mainLayout.setHeight("100%");
 		mainLayout.setMargin(true);
 		mainLayout.setSpacing(true);
-		
+
 		// top-level component properties
 		setWidth("100.0%");
 		setHeight("100.0%");
-		
+
 		// reInstallPluginButton
 		reInstallPluginButton = new Button();
 		reInstallPluginButton.setCaption("Reinstall / Restart Selected Plugin");
 		reInstallPluginButton.setImmediate(true);
 		reInstallPluginButton
-				.setDescription("This command reinstalls and restarts the selected plugin. (This allows you to re-apply a new licence to a restarted plugin).");
+		.setDescription("This command reinstalls and restarts the selected plugin. (This allows you to re-apply a new licence to a restarted plugin).");
 		reInstallPluginButton.setWidth("-1px");
 		reInstallPluginButton.setHeight("-1px");
 		mainLayout.addComponent(reInstallPluginButton);
-		
+
 		// uninstallPluginButton
 		uninstallPluginButton = new Button();
 		uninstallPluginButton.setCaption("Uninstall Selected Plugin");
 		uninstallPluginButton.setImmediate(true);
 		uninstallPluginButton
-				.setDescription("This command uninstalls the selected plugin.");
+		.setDescription("This command uninstalls the selected plugin.");
 		uninstallPluginButton.setWidth("-1px");
 		uninstallPluginButton.setHeight("-1px");
 		mainLayout.addComponent(uninstallPluginButton);
-		
+
 		return mainLayout;
 	}
 }

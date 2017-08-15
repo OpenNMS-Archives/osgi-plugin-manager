@@ -59,7 +59,7 @@ public class PluginManagerImpl implements PluginManager {
 	private String fileUri="./etc/pluginManifestData.xml";
 
 	private PluginModelJaxb pluginModelJaxb = new PluginModelJaxb();
-	
+
 	// default local values for local karaf system
 	// can be set from blueprint config
 	private String localKarafInstanceName="localhost";
@@ -85,7 +85,7 @@ public class PluginManagerImpl implements PluginManager {
 	public void setFileUri(String fileUri) {
 		this.fileUri = fileUri;
 	}
-	
+
 	public String getLocalKarafInstanceName() {
 		return localKarafInstanceName;
 	}
@@ -280,7 +280,7 @@ public class PluginManagerImpl implements PluginManager {
 
 		return pluginModelJaxb.getAvailablePlugins();
 	}
-	
+
 
 	@Override
 	public synchronized ProductSpecList getLocalAvailablePlugins() {
@@ -304,17 +304,17 @@ public class PluginManagerImpl implements PluginManager {
 					+ " plugin server Url="+this.getPluginServerUrl()
 					+ " ", e);
 		}
-		
+
 		return pluginModelJaxb.getLocalAvailablePlugins();
 
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 
 	/* (non-Javadoc)
 	 * @see org.opennms.features.pluginmgr.PluginManager#refreshKarafEntry(java.lang.String)
@@ -750,7 +750,7 @@ public class PluginManagerImpl implements PluginManager {
 
 		SortedMap<String, KarafManifestEntryJaxb> karafInstances = getKarafInstances();
 		if (! karafInstances.containsKey(karafInstance)) throw new RuntimeException("system does not know karafInstance="+karafInstance);
-		
+
 		// check if this is a systemPlugin before trying to remove
 		ProductSpecList installedPluginsList = getInstalledPlugins(karafInstance);
 		Map<String,ProductMetadata> pmap = new TreeMap<String,ProductMetadata>();
@@ -761,7 +761,7 @@ public class PluginManagerImpl implements PluginManager {
 		if(selectedProductMetadata==null)throw new RuntimeException("cannot uninstall "+selectedProductId+" as not installed.");
 		if(selectedProductMetadata.getSystemPlugin()!=null && selectedProductMetadata.getSystemPlugin()==true )
 			throw new RuntimeException(selectedProductId+" is a system plugin and cannot be uninstalled.");
-		
+
 		// not a system plugin so try to uninstall plugin
 		KarafManifestEntryJaxb karafManifest = karafInstances.get(karafInstance);
 		String karafInstanceUrl=karafManifest.getKarafInstanceUrl();
@@ -1031,7 +1031,7 @@ public class PluginManagerImpl implements PluginManager {
 
 		if(getLocalKarafInstanceName().equals(karafInstance)) throw new RuntimeException("cannot delete localKarafInstanceName '"+getLocalKarafInstanceName()
 				+ "' karaf instance to plugin manager");
-		
+
 		pluginModelJaxb.getKarafManifestEntryMap().remove(karafInstance);
 		pluginModelJaxb.getKarafDataMap().remove(karafInstance);
 
@@ -1085,12 +1085,37 @@ public class PluginManagerImpl implements PluginManager {
 
 	/**
 	 * blueprint init-method
+	 */
+	public synchronized void init(){
+		try{
+			System.out.println("Plugin Manager Starting");
+			LOG.info("Plugin Manager Starting");
+
+			load();
+
+			try{
+				refreshKarafEntry(getLocalKarafInstanceName()); // update the local values if we can
+				LOG.info("karaf data for local karaf instance "+ getLocalKarafInstanceName()+" successfully reloaded");
+			} catch (Exception e){
+				LOG.error("unable to load data for local karaf instance "+ getLocalKarafInstanceName(), e);
+			}
+
+			System.out.println("Plugin Manager Started");
+			LOG.info("Plugin Manager Started");
+
+		} catch (Exception e){
+			System.out.println("Plugin Manager Problem Starting: "+ SimpleStackTrace.errorToString(e));
+			LOG.error("Plugin Manager Problem Starting: ",e);
+			throw new RuntimeException("Plugin Manager Problem Starting",e);
+		}
+
+	}
+
+	/**
 	 * loads the persisted plugin data to the file indicated by fileUri
 	 */
 	public synchronized void load(){
 		if (fileUri==null) throw new RuntimeException("load failed - fileUri must be set for plugin manager");
-		System.out.println("Plugin Manager Starting");
-		LOG.info("Plugin Manager Starting");
 
 		//TODO CREATE ROLLING FILE TO AVOID CORRUPTED FILE
 		try {
@@ -1112,11 +1137,8 @@ public class PluginManagerImpl implements PluginManager {
 				LOG.info("Plugin Manager data file="+pluginManagerFile.getAbsolutePath()+" does not exist. A new one will be created.");
 				persist(); // persists first version of plugin model
 			}
-			System.out.println("Plugin Manager Started");
-			LOG.info("Plugin Manager Started");
+
 		} catch (JAXBException e) {
-			System.out.println("Plugin Manager Problem Starting: "+ SimpleStackTrace.errorToString(e));
-			LOG.error("Plugin Manager Problem Starting: ",e);
 			throw new RuntimeException("Problem loading Plugin Manager Data",e);
 		}
 	}
