@@ -1086,12 +1086,12 @@ public class PluginManagerImpl implements PluginManager {
 	/**
 	 * blueprint init-method
 	 */
-	public synchronized void init(){
+	public synchronized void load(){
 		try{
 			System.out.println("Plugin Manager Starting");
 			LOG.info("Plugin Manager Starting");
 
-			load();
+			loadPersistedData();
 
 			try{
 				refreshKarafEntry(getLocalKarafInstanceName()); // update the local values if we can
@@ -1114,8 +1114,8 @@ public class PluginManagerImpl implements PluginManager {
 	/**
 	 * loads the persisted plugin data to the file indicated by fileUri
 	 */
-	public synchronized void load(){
-		if (fileUri==null) throw new RuntimeException("load failed - fileUri must be set for plugin manager");
+	public synchronized void loadPersistedData(){
+		if (fileUri==null) throw new RuntimeException("loadPersistedData failed - fileUri must be set for plugin manager");
 
 		//TODO CREATE ROLLING FILE TO AVOID CORRUPTED FILE
 		try {
