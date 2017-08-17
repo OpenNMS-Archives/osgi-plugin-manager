@@ -565,7 +565,7 @@ public class PluginManagerUIMainPanel extends CustomComponent {
 		// Local Available Plugins Tab
 		localAvailablePluginsControlsPanel= new AvailablePluginControlsPanel();
 		localAvailablePluginsControlsPanel.setSessionPluginManager(sessionPluginManager);
-		localAvailablePluginsControlsPanel.setProductDescriptorTablePanel(availablePluginsPanel);
+		localAvailablePluginsControlsPanel.setProductDescriptorTablePanel(localAvailablePluginsPanel);
 		localAvailablePluginsControlsPanel.setSystemMessages(systemMessages);
 		localAvailablePluginsPanel.getControlsVerticalLayout().addComponent( localAvailablePluginsControlsPanel);
 
