@@ -1,3 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2014 OpenNMS Group Inc., Entimoss ltd. -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); -->
+<!-- you may not use this file except in compliance with the License. -->
+<!-- You may obtain a copy of the License at -->
+<!-- -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- -->
+<!-- Unless required by applicable law or agreed to in writing, software -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS, -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and -->
+<!-- limitations under the License. -->
+
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
@@ -11,10 +26,48 @@
                 http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.1.xsd
 ">
 
+  <!-- load default properties from org.opennms.features.licencemgr.config.cfg if exists -->
+  <cm:property-placeholder persistent-id="org.opennms.features.featuremgr.config" update-strategy="reload">
+    <cm:default-properties>
+      <!-- if true, will try to download feature list from remote urls -->
+      <cm:property name="org.opennms.karaf.featuremgr.useRemotePluginManagers" value="false" />
+      <!-- comma separated local list of urls to contact remote licence managers -->
+      <!-- in order to download feature manifest list for this system. Urls will be tried in order -->
+      <cm:property name="org.opennms.karaf.featuremgr.remotePluginManagersUrls" value="" />
+      <!-- basic authentication username to access remote plugin manager -->
+      <cm:property name="org.opennms.karaf.featuremgr.remoteUsername" value="admin" />
+      <!-- basic authentication password to access remote plugin manager -->
+      <cm:property name="org.opennms.karaf.featuremgr.remotePassword" value="admin" />
+
+      <!-- persistent store of local manifest of comma separated list of features to run at startup -->
+      <cm:property name="org.opennms.karaf.featuremgr.requiredmanifest" value="" />
+
+      <!-- local list of plugins which this feature manager has installed -->
+      <cm:property name="org.opennms.karaf.featuremgr.installedmanifest" value="" />
+
+    </cm:default-properties>
+  </cm:property-placeholder>
+
   <!-- karaf features service interface -->
-  <reference id="featuresService" interface="org.apache.karaf.features.FeaturesService"/>
+  <reference id="featuresService" interface="org.apache.karaf.features.FeaturesService" />
 
+  <!-- karaf configuration service interface -->
+  <reference id="configurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" />
+  
+  <!-- plugin feature manager service -->
+  <service interface="org.opennms.karaf.featuremgr.PluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
 
+  <bean id="pluginFeatureManagerImpl" class="org.opennms.karaf.featuremgr.PluginFeatureManagerImpl">
+    <property name="propertiesCache" ref="propertiesCache" />
+    <property name="featuresService" ref="featuresService" />
+  </bean>
+  
+  <bean id="propertiesCache" class="org.opennms.karaf.featuremgr.PropertiesCache">
+    <!-- same as property-placeholder persistent-id -->
+    <property name="persistentId" value="org.opennms.features.featuremgr.config" />
+    <property name="configurationAdmin" ref="configurationAdmin" />
+  </bean>
+  
   <!-- ReST Servelet configuration for jersey -->
 
   <bean id="featureManagerRestServlet" class="com.sun.jersey.spi.container.servlet.ServletContainer">
@@ -27,7 +80,7 @@
     </service-properties>
   </service>
 
-  <bean id="featureManagerRestApplication" class="org.opennms.karaf.featuremgr.rest.impl.FeatureManagerRestApplication" destroy-method="destroyMethod"/>
+  <bean id="featureManagerRestApplication" class="org.opennms.karaf.featuremgr.rest.impl.FeatureManagerRestApplication" destroy-method="destroyMethod" />
 
   <!-- ServiceLoader(FeaturesService featuresService) -->
   <bean id="serviceLoader" class="org.opennms.karaf.featuremgr.rest.impl.ServiceLoader">
@@ -41,5 +94,24 @@
   </bean>
 
   <service id="testResources" ref="testResourceMapping" auto-export="interfaces" />
+  
+  <!-- command line commands -->
+  <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+
+    <!-- feature manager service commands -->
+
+    <command name="plugin-feature-mgr/installedManifest">
+      <action class="org.opennms.karaf.featuremgr.cmd.ListInstalledManifestCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+    
+    <command name="plugin-feature-mgr/installNewManifest">
+      <action class="org.opennms.karaf.featuremgr.cmd.InstallNewManifestCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+
+  </command-bundle>
 
 </blueprint>
