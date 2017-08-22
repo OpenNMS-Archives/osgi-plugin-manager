@@ -41,14 +41,23 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	
 	@Override
 	public synchronized String installNewManifest(String newManifestStr) {
-		// TODO Auto-generated method stub
-		return null;
+		String result = "installing new manifest '"+newManifestStr+ "'";
+		
+		try{
+			Map<String,String> requiredManifest= ManifestUtils.csvStringToManifestMap(newManifestStr);
+		    synchronizeRequiredManifest(requiredManifest);
+		} catch(Exception e){
+			throw new RuntimeException("problem installing manifest",e);
+		}
+
+		return result;
 	}
 
 	@Override
 	public synchronized String getInstalledManifest() {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, String> installedManifest = propertiesCache.getInstalledManifest();
+		String installedManifestString= ManifestUtils.manifestMapToCsvString(installedManifest);
+		return installedManifestString;
 	}
 	
 	@Override
@@ -162,7 +171,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 						}
 					}
 					try{
-						LOG.info("installing featureName="+feature.getName()+" version="+feature.getVersion());
+						LOG.info("installing featureName="+featureName+" version="+featureVersion);
 						featuresService.installFeature(featureName,featureVersion);
 						installedManifest.put(featureName, featureVersion);
 					} catch (Exception e) {

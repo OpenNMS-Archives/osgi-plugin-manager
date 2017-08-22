@@ -25,7 +25,7 @@ import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Command(scope = "plugin-feature-mgr", name = "listInstalledManifest", description="Gets currently installed plugin manifest")
+@Command(scope = "plugin-feature-mgr", name = "getInstalledManifest", description="Gets currently installed plugin manifest")
 public class ListInstalledManifestCommand extends OsgiCommandSupport {
 	private static final Logger LOG = LoggerFactory.getLogger(ListInstalledManifestCommand.class);
 

@@ -100,7 +100,7 @@
 
     <!-- feature manager service commands -->
 
-    <command name="plugin-feature-mgr/installedManifest">
+    <command name="plugin-feature-mgr/getInstalledManifest">
       <action class="org.opennms.karaf.featuremgr.cmd.ListInstalledManifestCommand">
         <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
       </action>

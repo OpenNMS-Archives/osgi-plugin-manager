@@ -132,7 +132,7 @@ public class PropertiesCache {
 				sb.append(itr.next());
 				if (itr.hasNext()) sb.append(",");
 			}
-			saveStringProperty(sb.toString(), key);
+			saveStringProperty(key, sb.toString());
 
 		} catch (Exception e) {
 			throw new RuntimeException("problem updating key definition "+key+ " in "+persistentId+".cfg",e);
@@ -187,7 +187,7 @@ public class PropertiesCache {
 			config.update(props);
 
 		} catch (Exception e) {
-			throw new RuntimeException("problem updating key definition "+key+ " with value '"+value
+			throw new RuntimeException("problem updating key definition '"+key+ "' with value '"+value
 					+"' in "+persistentId+".cfg",e);
 		}
 	}
@@ -212,7 +212,7 @@ public class PropertiesCache {
 			valueStr = (String) props.get(key);
 
 		} catch (Exception e) {
-			throw new RuntimeException("problem getting key definition "+key+ " from "+persistentId+".cfg",e);
+			throw new RuntimeException("problem getting key definition '"+key+ "' from "+persistentId+".cfg",e);
 		}
 		return valueStr;
 	}
