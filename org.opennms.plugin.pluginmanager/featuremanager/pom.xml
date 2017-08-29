@@ -61,10 +61,50 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- generating our own feature classes because not included in karaf 2.4.x in foundation2017 -->
+      <!-- version of karaf 3.x and above have their own jaxb models which can be accessed directly -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>xjc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>${project.build.directory}/generated-sources/jaxb</outputDirectory>
+          <!-- Set the package of the generated code -->
+          <packageName>org.opennms.karaf.featuremgr.jaxb.karaf.feature</packageName>
+          <sourceType>xsd</sourceType>
+          <sources>
+            <source>src/main/xsd</source>
+          </sources>
+          <!-- <catalog>src/main/catalog.xml</catalog> -->
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/jaxb</source>
+              </sources>
+            </configuration>
+          </execution>
+
           <execution>
             <id>attach-artifacts</id>
             <phase>package</phase>
@@ -107,7 +147,7 @@
       <artifactId>org.apache.karaf.features.core</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.karaf.shell</groupId>
       <artifactId>org.apache.karaf.shell.console</artifactId>
