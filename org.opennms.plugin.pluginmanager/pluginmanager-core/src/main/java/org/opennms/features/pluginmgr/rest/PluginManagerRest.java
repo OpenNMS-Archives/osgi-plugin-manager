@@ -48,6 +48,17 @@ public interface PluginManagerRest {
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  getManifestList(@QueryParam("systemId") String systemId) throws Exception ;
 
+	/**
+	 * Returns manifest list in XML features file format in response to HTTP GET request.
+	 * http://localhost:8181/pluginmgr/rest/v1-0/manifest-feature-list?karafInstance=
+	 * @param karafInstance the karaf instance for which to get the manifest
+	 * @return response containing manifest feature list or an error message if not found
+	 * @throws Exception 
+	 */
+	@GET
+	@Path("/manifest-feature-list")
+	@Produces(MediaType.APPLICATION_XML)
+	Response getManifestFeatureList(@QueryParam("karafInstance") String karafInstance) throws Exception;
 
 	/**
 	 * Updates the karaf state known to the plugin manager using a RemoteKarafState xml message
@@ -68,5 +79,7 @@ public interface PluginManagerRest {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response updateRemoteKarafState(RemoteKarafState remoteKarafState) throws Exception ;
+
+
 
 }

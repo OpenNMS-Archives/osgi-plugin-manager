@@ -214,6 +214,14 @@ public interface PluginManager {
 	 * @return the installedPlugins
 	 */
 	public ProductSpecList getPluginsManifest(String karafInstance);
+	
+	/**
+	 * returns the manifest of plugins scheduled to be installed in the given karaf instance
+	 * as the contents of a features file
+	 * returns an empty features file if no entries are found
+	 * @return the manifest feature
+	 */
+	public String getPluginsManifestFeatures(String karafInstance);
 
 	/**
 	 * adds a plugin to the manifest of plugins scheduled to be installed in the given karaf instance

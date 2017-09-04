@@ -15,27 +15,52 @@
 
 package org.opennms.karaf.featuremgr.rest.impl;
 
+import org.apache.karaf.features.BundleInfo;
+import org.apache.karaf.features.Capability;
+import org.apache.karaf.features.Conditional;
+import org.apache.karaf.features.ConfigFileInfo;
+import org.apache.karaf.features.ConfigInfo;
+import org.apache.karaf.features.Dependency;
 import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
+import org.apache.karaf.features.Library;
 import org.apache.karaf.features.Repository;
+import org.apache.karaf.features.FeaturesService.Option;
+import org.apache.karaf.features.Requirement;
+import org.apache.karaf.features.Scoping;
+import org.opennms.karaf.featuremgr.FeaturesUtils;
 import org.opennms.karaf.featuremgr.jaxb.FeatureList;
 import org.opennms.karaf.featuremgr.jaxb.FeatureWrapperJaxb;
 import org.opennms.karaf.featuremgr.jaxb.ErrorMessage;
 import org.opennms.karaf.featuremgr.jaxb.RepositoryList;
 import org.opennms.karaf.featuremgr.jaxb.RepositoryWrapperJaxb;
 import org.opennms.karaf.featuremgr.jaxb.ReplyMessage;
+import org.opennms.karaf.featuremgr.jaxb.karaf.feature.Features;
+import org.opennms.karaf.featuremgr.jaxb.karaf.feature.ObjectFactory;
 
+import java.io.File;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBElement;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
 
 
 /**
@@ -48,7 +73,7 @@ public class FeaturesServiceRestImpl {
 	 * feature management rest interface
 	 * ************************************
 	 */
-	
+
 	/**
 	 * Returns an explicit collection of all features in XML format in response to HTTP GET requests.
 	 * @return a response containing a list of Features
@@ -57,20 +82,20 @@ public class FeaturesServiceRestImpl {
 	@Path("/features-list")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  getFeaturesList() throws Exception {
-		
+
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		FeatureList featuresList = new FeatureList();
 		Feature[] features = featuresService.listFeatures();
 		for (int i = 0; i < features.length; i++) {
-            Boolean isInstalled = featuresService.isInstalled(features[i]);
+			Boolean isInstalled = featuresService.isInstalled(features[i]);
 			FeatureWrapperJaxb wrapper = new FeatureWrapperJaxb(features[i].getName(), features[i].getVersion(), features[i].getDescription(), features[i].getDetails(),isInstalled);
 			featuresList.getFeatureList().add(wrapper);     
 		}     
 		return Response.status(200).entity(featuresList).build();  
 	}
-	
+
 	/** 
 	 * Returns feature in XML format in response to HTTP GET requests.
 	 * @return a response containing a feature or an ErrorMessage
@@ -79,12 +104,12 @@ public class FeaturesServiceRestImpl {
 	@Path("/features-info")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  getFeaturesInfo(@QueryParam("name") String name, @QueryParam("version") String version) throws Exception {
-		
+
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		Feature feature=null;
-        Boolean isInstalled=null;
+		Boolean isInstalled=null;
 		try{
 			if (name== null) throw new RuntimeException("feature name cannot be null.");
 			if (version !=null) {
@@ -110,16 +135,16 @@ public class FeaturesServiceRestImpl {
 	@Path("/features-install")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  featuresInstall(@QueryParam("name") String name, @QueryParam("version") String version) throws Exception {
-		
+
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		try{
 			if (name== null) throw new RuntimeException("feature name cannot be null.");
 			if (version !=null) {
 				featuresService.installFeature(name, version);
 			} else featuresService.installFeature(name); 
-		
+
 		} catch (Exception exception){
 			//return status 400 Error
 			return Response.status(400).entity(new ErrorMessage(400, 0, "unable to install feature name="+name+ " version="+version, null, exception)).build();
@@ -128,7 +153,7 @@ public class FeaturesServiceRestImpl {
 		return Response.status(200).entity(new ReplyMessage(200, 0, "Success. Installed feature name="+name+ " version="+version, null,null)).build();
 
 	}
-	
+
 
 	/** 
 	 * Uninstalls a feature with the specified name and version.
@@ -140,16 +165,16 @@ public class FeaturesServiceRestImpl {
 	@Path("/features-uninstall")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  featuresUninstall(@QueryParam("name") String name, @QueryParam("version") String version) throws Exception {
-		
+
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		try{
 			if (name== null) throw new RuntimeException("feature name cannot be null.");
 			if (version !=null) {
 				featuresService.uninstallFeature(name, version);
 			} else featuresService.uninstallFeature(name); 
-		
+
 		} catch (Exception exception){
 			//return status 400 Error
 			return Response.status(400).entity(new ErrorMessage(400, 0, "Unable to uninstall feature name="+name+ " version="+version, null, exception)).build();
@@ -157,12 +182,12 @@ public class FeaturesServiceRestImpl {
 
 		return Response.status(200).entity(new ReplyMessage(200, 0, "Success. Uninstalled feature name="+name+ " version="+version, null,null)).build();
 	}
-	
-/* ************************************
- * repository management rest interface
- * ************************************
- */
-	
+
+	/* ************************************
+	 * repository management rest interface
+	 * ************************************
+	 */
+
 	/** 
 	 * Returns an explicit collection of all defined repositories in XML format in response to HTTP GET requests.
 	 * @return a response containing a feature or an ErrorMessage
@@ -173,7 +198,7 @@ public class FeaturesServiceRestImpl {
 	public Response  getFeaturesListRepositories() throws Exception {
 
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		Repository[] repositories = featuresService.listRepositories();
 		RepositoryList repositoryList= new RepositoryList();
@@ -183,7 +208,7 @@ public class FeaturesServiceRestImpl {
 		}
 		return Response.status(200).entity(repositoryList).build();
 	}
-	
+
 	/** 
 	 * Returns repository in XML format in response to HTTP GET requests.
 	 * name or URI can be used to select the repository
@@ -193,9 +218,9 @@ public class FeaturesServiceRestImpl {
 	@Path("/features-repositoryinfo")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  getFeaturesRepositoryInfo(@QueryParam("name") String name, @QueryParam("uri") String uriStr) throws Exception {
-		
+
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		Repository repository=null;
 		RepositoryWrapperJaxb repositoryWrapper=null;
@@ -203,10 +228,10 @@ public class FeaturesServiceRestImpl {
 			// check parameters
 			if (name== null && uriStr==null) throw new RuntimeException("you must specify either a ?uri= or ?name= parameter.");
 			if (name!=null && uriStr!=null) throw new RuntimeException("you can only specify ONE of either a ?uri= or ?name= parameter.");
-			
+
 			URI repoUri=null;
 			if(uriStr!=null) repoUri = new URI(uriStr); // will throw exception if uriStr cannot be parsed
-			
+
 			//find repository
 			Repository repositories[]=featuresService.listRepositories();
 			for (int i = 0; i < repositories.length; i++){
@@ -217,24 +242,24 @@ public class FeaturesServiceRestImpl {
 				}
 			}	
 			if (repository== null) throw new RuntimeException("repository not found.");
-			
+
 			// wrap repository details as Jaxb objects
 			FeatureList featuresList = new FeatureList();
 			Feature[] features = repository.getFeatures();
 			for (int i = 0; i < features.length; i++) {
-	            Boolean isInstalled = featuresService.isInstalled(features[i]);
+				Boolean isInstalled = featuresService.isInstalled(features[i]);
 				FeatureWrapperJaxb wrapper = new FeatureWrapperJaxb(features[i].getName(), features[i].getVersion(), features[i].getDescription(), features[i].getDetails(),isInstalled);
 				featuresList.getFeatureList().add(wrapper);     
 			}
-			
+
 			List<URI> repositoriesURI = Arrays.asList(repository.getRepositories());
-			
+
 			repositoryWrapper= new RepositoryWrapperJaxb(
 					repository.getName(), 
 					repository.getURI(), 
 					featuresList, 
 					repositoriesURI);
-			
+
 		} catch (URISyntaxException uriException){
 			//return status 400 Error
 			return Response.status(400).entity(new ErrorMessage(400, 0, "unable to parse URI for feature uri="+uriStr, null, uriException)).build();
@@ -245,7 +270,7 @@ public class FeaturesServiceRestImpl {
 
 		return Response.status(200).entity(repositoryWrapper).build();  
 	}
-	
+
 	/** 
 	 * Removes the specified repository features service..
 	 * @param String uri locating the repository
@@ -255,23 +280,23 @@ public class FeaturesServiceRestImpl {
 	@Path("/features-removerepository")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  featuresRemoveRepository(@QueryParam("uri") String uriStr) throws Exception {
-		
+
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		try{
 			if ( uriStr == null) throw new RuntimeException("you must supply ?uri= paramater.");
 			URI url= new URI(uriStr);
-			
+
 			//find repository
 			Repository repositories[]=featuresService.listRepositories();
 			Repository repository=null;
 			for (int i = 0; i < repositories.length; i++){
-				 // or testing uri
-					if(repositories[i].getURI().equals(url)) repository=repositories[i];
-				}	
+				// or testing uri
+				if(repositories[i].getURI().equals(url)) repository=repositories[i];
+			}	
 			if (repository== null) throw new RuntimeException("repository not found.");
-			
+
 			featuresService.removeRepository(url); // remove repository if found
 		} catch (URISyntaxException uriException){
 			//return status 400 Error
@@ -280,11 +305,11 @@ public class FeaturesServiceRestImpl {
 			//return status 400 Error
 			return Response.status(400).entity(new ErrorMessage(400, 0, "problem removing repository uri="+uriStr, null, exception)).build();
 		}
-		
+
 		return Response.status(200).entity(new ReplyMessage(200, 0, "Success. Removed repository uri="+uriStr, null,null)).build();
 
 	}
-	
+
 	/** 
 	 * adds a repository url.
 	 * @param String uri locating the repository
@@ -294,9 +319,9 @@ public class FeaturesServiceRestImpl {
 	@Path("/features-addrepositoryurl")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  featuresAddRepository(@QueryParam("uri") String uriStr) throws Exception {
-		
+
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
-		if (featuresService == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
 		try{
 			if ( uriStr == null) throw new RuntimeException("you must supply ?uri= paramater.");
@@ -309,9 +334,78 @@ public class FeaturesServiceRestImpl {
 			//return status 400 Error
 			return Response.status(400).entity(new ErrorMessage(400, 0, "problem adding repository uri="+uriStr, null, exception)).build();
 		}
-		
+
 		return Response.status(200).entity(new ReplyMessage(200, 0, "Success. Added repository uri="+uriStr, null,null)).build();
 	}
-	
+
+	/*
+	 * Manifest Management ReST Interface
+	 */
+
+
+	@GET
+	@Path("/features-installedmanifest")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response  featuresInstalledManifest() throws Exception {
+
+		String installedManifestUri = ServiceLoader.getInstalledManifestUri();
+		JAXBElement<Features> jbeFeature;
+		if (installedManifestUri == null) throw new RuntimeException("ServiceLoader.getInstalledManifestUri() cannot be null.");
+		try {
+			URI uri = new URI(installedManifestUri);
+
+			File installedManifestFile = new File(uri.getPath());
+
+			Features features = FeaturesUtils.loadFeaturesFile(installedManifestFile);
+			// wrap features in JaxbElement
+			ObjectFactory of = new ObjectFactory();
+			jbeFeature = of.createFeatures(features);
+
+		} catch(Exception ex) {
+			//return status 400 Error
+			return Response.status(400).entity(new ErrorMessage(400, 0, "problem loading installedManifestFile "+installedManifestUri, null, ex)).build();
+		}
+
+		return Response.status(200).entity(jbeFeature).build();
+
+	}
+
+	/*
+	 * Manifest Management ReST Interface
+	 */
+	@POST
+	@Path("/features-synchronizemanifest")
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response  featuresSynchronizeManifest(String manifest) throws Exception {
+
+		String installedManifestUri = ServiceLoader.getInstalledManifestUri();
+		if (installedManifestUri == null) throw new RuntimeException("ServiceLoader.getInstalledManifestUri() cannot be null.");
+
+		FeaturesService featuresService = ServiceLoader.getFeaturesService();
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
+
+		//String manifest;
+		try {
+			// Document doc
+			//			DOMSource domSource = new DOMSource(doc);
+			//			StringWriter writer = new StringWriter();
+			//			StreamResult result = new StreamResult(writer);
+			//			TransformerFactory tf = TransformerFactory.newInstance();
+			//			Transformer transformer = tf.newTransformer();
+			//			transformer.transform(domSource, result);
+			//			manifest = writer.toString();
+
+			FeaturesUtils.installManifestFeatures(manifest, installedManifestUri, featuresService);
+
+		} catch(Exception ex) {
+			//return status 400 Error
+			return Response.status(400).entity(new ErrorMessage(400, 0, "problem parsing manifest xml and persisting to "+installedManifestUri, null, ex)).build();
+		}
+
+
+		return Response.status(200).entity(new ReplyMessage(200, 0, "successfully deployed features in "+installedManifestUri, "", "")).build();
+
+	}
 
 } 

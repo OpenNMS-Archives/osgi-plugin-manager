@@ -29,14 +29,17 @@ import org.apache.karaf.features.FeaturesService;
 public class ServiceLoader {
 
 	private static AtomicReference<FeaturesService> featuresService = new AtomicReference<>();
+	
+	private static AtomicReference<String> installedManifestUri = new AtomicReference<>();
 
 	public ServiceLoader(){
 		super();
 	}
 
-	public ServiceLoader(FeaturesService featuresService ){
+	public ServiceLoader(FeaturesService featuresService, String installedManifestUri ){
 		super();
 		setFeaturesService(featuresService);
+		setInstalledManifestUri(installedManifestUri);
 	}
 
 	/**
@@ -51,6 +54,15 @@ public class ServiceLoader {
 	 */
 	public static void setFeaturesService(FeaturesService featuresService) {
 		ServiceLoader.featuresService.set(featuresService);
+	}
+	
+	
+	public static String getInstalledManifestUri() {
+		return installedManifestUri.get();
+	}
+
+	public static void setInstalledManifestUri(String installedManifestUri) {
+		ServiceLoader.installedManifestUri.set(installedManifestUri);
 	}
 
 }

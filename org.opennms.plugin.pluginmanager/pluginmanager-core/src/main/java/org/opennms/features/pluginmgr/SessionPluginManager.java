@@ -211,6 +211,10 @@ public class SessionPluginManager {
 		return pluginManager.getPluginsManifest(karafInstance);
 	}
 	
+	public String getPluginsManifestFeatures(String karafInstance) {
+		return pluginManager.getPluginsManifestFeatures(karafInstance);
+	}
+	
 	public void addPluginToManifest(String selectedProductId) {
 		pluginManager.addPluginToManifest(selectedProductId, karafInstance);
 		

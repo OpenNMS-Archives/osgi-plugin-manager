@@ -19,9 +19,11 @@ package org.opennms.features.pluginmgr;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -811,6 +813,37 @@ public class PluginManagerImpl implements PluginManager {
 		if (pluginManifest==null) return new ProductSpecList(); // return empty list if no entry found
 		return pluginManifest;
 	}
+	
+	@Override
+	public String getPluginsManifestFeatures(String karafInstance) {
+		if(karafInstance==null) throw new RuntimeException("karafInstance cannot be null");
+		ProductSpecList pluginManifest;
+		if (! pluginModelJaxb.getKarafManifestEntryMap().containsKey(karafInstance)){
+			throw new RuntimeException("unknown karafInstance "+karafInstance);
+		} else pluginManifest = pluginModelJaxb.getKarafManifestEntryMap().get(karafInstance).getPluginManifest();
+		
+		//get set of repos and set of features. Multiple instances of the same repo will only create one entry;
+		Set<String> repos = new LinkedHashSet<String>();
+		Set<String> features = new LinkedHashSet<String>();
+
+		List<ProductMetadata> pslist = pluginManifest.getProductSpecList();
+		if (pslist!=null) for(ProductMetadata productMetadata:pslist){
+			if(productMetadata.getFeatureRepository()!=null) repos.add(productMetadata.getFeatureRepository());
+			if(productMetadata.getProductName()!=null) features.add(productMetadata.getProductName());
+		}
+
+		StringBuffer repostr= new StringBuffer("<features name=\"manifest-features\" xmlns=\"http://karaf.apache.org/xmlns/features/v1.2.0\">\n");
+		
+		for(String repo:repos){
+			repostr.append("  <repository>").append(repo).append("</repository>\n");
+		}
+		for(String feature:features){
+			repostr.append("  <feature>").append(feature).append("</feature>\n");
+		}
+		repostr.append("</features>\n");
+
+		return repostr.toString();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.opennms.features.pluginmgr.PluginManager#addPluginToManifest(java.lang.String, java.lang.String)
@@ -1150,5 +1183,6 @@ public class PluginManagerImpl implements PluginManager {
 		System.out.println("Plugin Manager Shutting Down ");
 		LOG.info("Plugin Manager Shutting Down ");
 	}
+
 
 }

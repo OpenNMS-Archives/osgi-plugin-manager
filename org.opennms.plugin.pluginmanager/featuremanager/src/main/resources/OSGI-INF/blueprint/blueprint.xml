@@ -26,6 +26,9 @@
                 http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.1.xsd
 ">
 
+  <!-- Used for sytem properties -->
+  <ext:property-placeholder placeholder-prefix="$[" placeholder-suffix="]" />
+
   <!-- load default properties from org.opennms.features.licencemgr.config.cfg if exists -->
   <cm:property-placeholder persistent-id="org.opennms.features.featuremgr.config" update-strategy="reload">
     <cm:default-properties>
@@ -82,9 +85,10 @@
 
   <bean id="featureManagerRestApplication" class="org.opennms.karaf.featuremgr.rest.impl.FeatureManagerRestApplication" destroy-method="destroyMethod" />
 
-  <!-- ServiceLoader(FeaturesService featuresService) -->
+  <!-- ServiceLoader(FeaturesService featuresService, String installedManifestUri) -->
   <bean id="serviceLoader" class="org.opennms.karaf.featuremgr.rest.impl.ServiceLoader">
     <argument ref="featuresService" />
+    <argument value="file:$[karaf.etc]$[file.separator]installed-manifest-features.xml" />
   </bean>
 
   <!-- Maps in the test resource files for serving basic test pages -->
