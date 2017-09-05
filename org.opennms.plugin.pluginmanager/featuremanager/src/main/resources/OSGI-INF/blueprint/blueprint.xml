@@ -13,11 +13,9 @@
 <!-- See the License for the specific language governing permissions and -->
 <!-- limitations under the License. -->
 
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
-    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0"
-    xsi:schemaLocation="
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+  xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0"
+  xsi:schemaLocation="
                 http://www.osgi.org/xmlns/blueprint/v1.0.0
                 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
                 http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
@@ -26,7 +24,7 @@
                 http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.1.xsd
 ">
 
-  <!-- Used for sytem properties -->
+  <!-- Used for system properties -->
   <ext:property-placeholder placeholder-prefix="$[" placeholder-suffix="]" />
 
   <!-- load default properties from org.opennms.features.licencemgr.config.cfg if exists -->
@@ -41,36 +39,27 @@
       <cm:property name="org.opennms.karaf.featuremgr.remoteUsername" value="admin" />
       <!-- basic authentication password to access remote plugin manager -->
       <cm:property name="org.opennms.karaf.featuremgr.remotePassword" value="admin" />
-
-      <!-- persistent store of local manifest of comma separated list of features to run at startup -->
-      <cm:property name="org.opennms.karaf.featuremgr.requiredmanifest" value="" />
-
-      <!-- local list of plugins which this feature manager has installed -->
-      <cm:property name="org.opennms.karaf.featuremgr.installedmanifest" value="" />
-
+      <!-- karaf instance name defaults to karaf.name system property-->
+      <cm:property name="org.opennms.karaf.featuremgr.karafInstance" value="$[karaf.name]" />
     </cm:default-properties>
   </cm:property-placeholder>
 
   <!-- karaf features service interface -->
   <reference id="featuresService" interface="org.apache.karaf.features.FeaturesService" />
 
-  <!-- karaf configuration service interface -->
-  <reference id="configurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" />
-  
   <!-- plugin feature manager service -->
   <service interface="org.opennms.karaf.featuremgr.PluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
 
   <bean id="pluginFeatureManagerImpl" class="org.opennms.karaf.featuremgr.PluginFeatureManagerImpl">
-    <property name="propertiesCache" ref="propertiesCache" />
     <property name="featuresService" ref="featuresService" />
+    <property name="useRemotePluginManagers" value="${org.opennms.karaf.featuremgr.useRemotePluginManagers}" />
+    <property name="remotePluginManagersUrls" value="${org.opennms.karaf.featuremgr.remotePluginManagersUrls}" />
+    <property name="remoteUsername" value="${org.opennms.karaf.featuremgr.remoteUsername}" />
+    <property name="remotePassword" value="${org.opennms.karaf.featuremgr.remotePassword}" />
+    <property name="installedManifestUri" value="file:$[karaf.etc]$[file.separator]installed-manifest-features.xml" />
+    <property name="karafInstance" value="${org.opennms.karaf.featuremgr.karafInstance}" />
   </bean>
-  
-  <bean id="propertiesCache" class="org.opennms.karaf.featuremgr.PropertiesCache">
-    <!-- same as property-placeholder persistent-id -->
-    <property name="persistentId" value="org.opennms.features.featuremgr.config" />
-    <property name="configurationAdmin" ref="configurationAdmin" />
-  </bean>
-  
+
   <!-- ReST Servelet configuration for jersey -->
 
   <bean id="featureManagerRestServlet" class="com.sun.jersey.spi.container.servlet.ServletContainer">
@@ -85,10 +74,10 @@
 
   <bean id="featureManagerRestApplication" class="org.opennms.karaf.featuremgr.rest.impl.FeatureManagerRestApplication" destroy-method="destroyMethod" />
 
-  <!-- ServiceLoader(FeaturesService featuresService, String installedManifestUri) -->
+  <!-- ServiceLoader(FeaturesService featuresService, PluginFeatureManagerService pluginFeatureManagerService) -->
   <bean id="serviceLoader" class="org.opennms.karaf.featuremgr.rest.impl.ServiceLoader">
     <argument ref="featuresService" />
-    <argument value="file:$[karaf.etc]$[file.separator]installed-manifest-features.xml" />
+    <argument ref="pluginFeatureManagerImpl" />
   </bean>
 
   <!-- Maps in the test resource files for serving basic test pages -->
@@ -98,20 +87,44 @@
   </bean>
 
   <service id="testResources" ref="testResourceMapping" auto-export="interfaces" />
-  
+
   <!-- command line commands -->
   <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
 
     <!-- feature manager service commands -->
 
-    <command name="plugin-feature-mgr/getInstalledManifest">
+    <command name="plugin-feature-mgr/listInstalledManifest">
       <action class="org.opennms.karaf.featuremgr.cmd.ListInstalledManifestCommand">
         <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
       </action>
     </command>
-    
+
     <command name="plugin-feature-mgr/installNewManifest">
       <action class="org.opennms.karaf.featuremgr.cmd.InstallNewManifestCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+
+    <command name="plugin-feature-mgr/uninstallManifest">
+      <action class="org.opennms.karaf.featuremgr.cmd.UninstallManifestCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+
+    <command name="plugin-feature-mgr/installManifestFromUrl">
+      <action class="org.opennms.karaf.featuremgr.cmd.InstallNewManifestFromUrlCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+
+    <command name="plugin-feature-mgr/setRemotePluginServers">
+      <action class="org.opennms.karaf.featuremgr.cmd.SetRemotePluginServersCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+
+    <command name="plugin-feature-mgr/setKarafInstance">
+      <action class="org.opennms.karaf.featuremgr.cmd.SetKarafInstanceCommand">
         <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
       </action>
     </command>

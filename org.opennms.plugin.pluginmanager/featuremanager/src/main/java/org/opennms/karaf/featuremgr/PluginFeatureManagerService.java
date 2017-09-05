@@ -15,17 +15,20 @@
 
 package org.opennms.karaf.featuremgr;
 
-import java.util.Map;
-
 public interface PluginFeatureManagerService {
 
 	String installNewManifest(String newManifestStr);
 	
-	String installNewManifestFromUrl(String url, String userName, String password);
+	String uninstallManifest();
 	
 	String getInstalledManifest();
 	
+	void installNewManifestFromPluginManagerUrl(String karafInstance, String url, String userName, String password);
+	
+	void updateRemotePluginServers(String urls, String remoteUserName, String remotePassword);
+	
+	String updateManifestFromPluginManagers();
 
-
+	void updateKarafInstance(String karafInstance);
 	
 }

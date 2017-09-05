@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014 OpenNMS Group Inc., Entimoss ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.opennms.karaf.featuremgr;
 
 import java.io.File;
@@ -33,7 +48,13 @@ public class FeaturesUtils {
 
 	private static final String MANIFEST_FEATURES_REPOSITORY_NAME ="manifest-features" ;
 	private static final String MANIFEST_FEATURE_NAME ="manifest" ;
-	private static final String MANIFEST_FEATURE_VERSION = "0.0.1-SNAPSHOT";
+	private static final String MANIFEST_FEATURE_VERSION = "1.0-SNAPSHOT";
+
+	private static final String EMPTY_MANIFEST_FEATURES="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+			+"<features name=\"manifest-features\" xmlns=\"http://karaf.apache.org/xmlns/features/v1.2.0\">"
+			+"  <feature name=\"manifest\" version=\"1.0-SNAPSHOT\" description=\"Plugin manifest to be installed at startup\">"
+			+"  </feature>"
+			+"</features>";
 
 	public static synchronized String synchronizeManifestFeaturesFiles(String manifestFeaturesUri, String installedManifestFeaturesUri, FeaturesService featuresService){
 
@@ -202,6 +223,20 @@ public class FeaturesUtils {
 		}
 	}
 
+	public static synchronized void uninstallManifestFeatures(String installedManifestFeaturesUri, FeaturesService featuresService) {
+		try{
+			installManifestFeatures (EMPTY_MANIFEST_FEATURES, installedManifestFeaturesUri,featuresService);
+
+		} catch(Exception ex) {
+			throw new RuntimeException("problem uninstalling manifest features", ex);
+		}
+
+	}
+
+
+
+
+
 	public static  Features parseFeatures(String featuresStr){
 		Features features=null;
 		JAXBContext jaxbContext;
@@ -286,6 +321,7 @@ public class FeaturesUtils {
 		return features;
 
 	}
+
 
 }
 

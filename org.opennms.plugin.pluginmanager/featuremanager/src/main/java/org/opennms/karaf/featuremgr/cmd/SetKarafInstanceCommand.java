@@ -21,13 +21,12 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Command(scope = "plugin-feature-mgr", name = "installNewManifest", description="Installs a new plugin manifest. Installs all features in manifest.")
-public class InstallNewManifestCommand extends OsgiCommandSupport {
-	private static final Logger LOG = LoggerFactory.getLogger(InstallNewManifestCommand.class);
+@Command(scope = "plugin-feature-mgr", name = "setKarafInstance", description="sets the karaf instance name to use when requesting manifest.")
+public class SetKarafInstanceCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(SetKarafInstanceCommand.class);
 
 	private PluginFeatureManagerService _pluginFeatureManagerService;
 
@@ -39,26 +38,21 @@ public class InstallNewManifestCommand extends OsgiCommandSupport {
 		_pluginFeatureManagerService = pluginFeatureManager;
 	}
 
-	@Argument(index = 0, name = "manifest", description = "XML manifest feature definition. See documentation.", required = true, multiValued = false)
-    String newManifestStr = null;
+	@Argument(index = 0, name = "karafInstance", description = "karaf instance name to use when requesting manifest", required = true, multiValued = false)
+    String karafInstance = null;
+	
 
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-			String msg="Trying to install new manifest="+newManifestStr;
-			LOG.info(msg);
-			System.out.println(msg);
+			getPluginFeatureManagerService().updateKarafInstance(karafInstance);;
 			
-			String result = getPluginFeatureManagerService().installNewManifest(newManifestStr);
-			String installedManifest = getPluginFeatureManagerService().getInstalledManifest();
-			
-			msg="Result of operation:"+result;
-            msg=msg+"\nCurrently Installed Manifest='"+installedManifest+"'";
+			String msg="set remote karafInstance="+karafInstance;
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {
-			System.err.println("Error installing new manifest. Exception="+e);
-			LOG.error("Error installing new manifest. Exception=",e);
+			System.err.println("error setting karaf instance. Exception="+e);
+			LOG.error("error setting karaf instance. Exception=",e);
 		}
 		return null;
 	}

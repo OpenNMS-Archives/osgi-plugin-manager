@@ -19,6 +19,7 @@ package org.opennms.karaf.featuremgr.rest.impl;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.karaf.features.FeaturesService;
+import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 
 
 /** 
@@ -30,16 +31,16 @@ public class ServiceLoader {
 
 	private static AtomicReference<FeaturesService> featuresService = new AtomicReference<>();
 	
-	private static AtomicReference<String> installedManifestUri = new AtomicReference<>();
+	private static AtomicReference<PluginFeatureManagerService> pluginFeatureManagerService = new AtomicReference<>();
 
 	public ServiceLoader(){
 		super();
 	}
 
-	public ServiceLoader(FeaturesService featuresService, String installedManifestUri ){
+	public ServiceLoader(FeaturesService featuresService, PluginFeatureManagerService pluginFeatureManagerService ){
 		super();
 		setFeaturesService(featuresService);
-		setInstalledManifestUri(installedManifestUri);
+		setPluginFeatureManagerService(pluginFeatureManagerService);
 	}
 
 	/**
@@ -57,12 +58,12 @@ public class ServiceLoader {
 	}
 	
 	
-	public static String getInstalledManifestUri() {
-		return installedManifestUri.get();
+	public static PluginFeatureManagerService getPluginFeatureManagerService() {
+		return ServiceLoader.pluginFeatureManagerService.get();
 	}
 
-	public static void setInstalledManifestUri(String installedManifestUri) {
-		ServiceLoader.installedManifestUri.set(installedManifestUri);
+	public static void setPluginFeatureManagerService(PluginFeatureManagerService pluginFeatureManagerService) {
+		ServiceLoader.pluginFeatureManagerService.set(pluginFeatureManagerService);
 	}
 
 }

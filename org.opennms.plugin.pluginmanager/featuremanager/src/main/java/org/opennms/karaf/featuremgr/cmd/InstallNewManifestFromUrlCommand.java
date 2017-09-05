@@ -25,9 +25,9 @@ import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Command(scope = "plugin-feature-mgr", name = "installNewManifest", description="Installs a new plugin manifest. Installs all features in manifest.")
-public class InstallNewManifestCommand extends OsgiCommandSupport {
-	private static final Logger LOG = LoggerFactory.getLogger(InstallNewManifestCommand.class);
+@Command(scope = "plugin-feature-mgr", name = "installManifestFromUrl", description="Installs a new plugin manifest from a given url.")
+public class InstallNewManifestFromUrlCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(InstallNewManifestFromUrlCommand.class);
 
 	private PluginFeatureManagerService _pluginFeatureManagerService;
 
@@ -38,27 +38,37 @@ public class InstallNewManifestCommand extends OsgiCommandSupport {
 	public void setPluginFeatureManagerService( PluginFeatureManagerService pluginFeatureManager) {
 		_pluginFeatureManagerService = pluginFeatureManager;
 	}
+	
+	@Argument(index = 0, name = "karafInstance", description = "karaf instance for which to request manifest", required = true, multiValued = false)
+    String karafInstance = null;
 
-	@Argument(index = 0, name = "manifest", description = "XML manifest feature definition. See documentation.", required = true, multiValued = false)
-    String newManifestStr = null;
+	@Argument(index = 1, name = "url", description = "url to download manifest", required = true, multiValued = false)
+    String urlStr = null;
+	
+	@Argument(index = 2, name = "RemoteUsername", description = "Remote Username to download manifest (optional)", required = false, multiValued = false)
+    String remoteUserName = null;
+	
+	@Argument(index = 3, name = "RemotePassword", description = "Remote Password to download manifest (optional)", required = false, multiValued = false)
+    String remotePassword = null;
 
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-			String msg="Trying to install new manifest="+newManifestStr;
+			
+			String newManifestStr=null;
+			String msg="Trying to install manifest from url="+urlStr+", karafInstance="+karafInstance;
 			LOG.info(msg);
 			System.out.println(msg);
 			
-			String result = getPluginFeatureManagerService().installNewManifest(newManifestStr);
+			getPluginFeatureManagerService().installNewManifestFromPluginManagerUrl(karafInstance, urlStr, remoteUserName, remotePassword);
 			String installedManifest = getPluginFeatureManagerService().getInstalledManifest();
-			
-			msg="Result of operation:"+result;
-            msg=msg+"\nCurrently Installed Manifest='"+installedManifest+"'";
+
+            msg=msg+"\nSuccess. Currently Installed Manifest='"+installedManifest+"'";
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {
-			System.err.println("Error installing new manifest. Exception="+e);
-			LOG.error("Error installing new manifest. Exception=",e);
+			System.err.println("Error installing new manifest from url="+urlStr+", karafInstance="+karafInstance+ " Exception="+e);
+			LOG.error("Error installing new manifest from url="+urlStr+", karafInstance="+karafInstance,e);
 		}
 		return null;
 	}

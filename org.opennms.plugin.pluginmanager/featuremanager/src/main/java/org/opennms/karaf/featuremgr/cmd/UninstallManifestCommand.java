@@ -25,9 +25,9 @@ import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Command(scope = "plugin-feature-mgr", name = "installNewManifest", description="Installs a new plugin manifest. Installs all features in manifest.")
-public class InstallNewManifestCommand extends OsgiCommandSupport {
-	private static final Logger LOG = LoggerFactory.getLogger(InstallNewManifestCommand.class);
+@Command(scope = "plugin-feature-mgr", name = "uninstallManifest", description="Uninstalls current manifest .")
+public class UninstallManifestCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(UninstallManifestCommand.class);
 
 	private PluginFeatureManagerService _pluginFeatureManagerService;
 
@@ -39,17 +39,15 @@ public class InstallNewManifestCommand extends OsgiCommandSupport {
 		_pluginFeatureManagerService = pluginFeatureManager;
 	}
 
-	@Argument(index = 0, name = "manifest", description = "XML manifest feature definition. See documentation.", required = true, multiValued = false)
-    String newManifestStr = null;
 
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-			String msg="Trying to install new manifest="+newManifestStr;
+			String msg="Uninstalling manifest";
 			LOG.info(msg);
 			System.out.println(msg);
 			
-			String result = getPluginFeatureManagerService().installNewManifest(newManifestStr);
+			String result = getPluginFeatureManagerService().uninstallManifest();
 			String installedManifest = getPluginFeatureManagerService().getInstalledManifest();
 			
 			msg="Result of operation:"+result;
@@ -57,8 +55,8 @@ public class InstallNewManifestCommand extends OsgiCommandSupport {
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {
-			System.err.println("Error installing new manifest. Exception="+e);
-			LOG.error("Error installing new manifest. Exception=",e);
+			System.err.println("Error uninstalling manifest. Exception="+e);
+			LOG.error("Error uninstalling manifest. Exception=",e);
 		}
 		return null;
 	}

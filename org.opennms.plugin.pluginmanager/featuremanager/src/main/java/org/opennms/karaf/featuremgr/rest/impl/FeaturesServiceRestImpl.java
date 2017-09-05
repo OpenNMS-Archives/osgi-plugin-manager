@@ -29,6 +29,7 @@ import org.apache.karaf.features.FeaturesService.Option;
 import org.apache.karaf.features.Requirement;
 import org.apache.karaf.features.Scoping;
 import org.opennms.karaf.featuremgr.FeaturesUtils;
+import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 import org.opennms.karaf.featuremgr.jaxb.FeatureList;
 import org.opennms.karaf.featuremgr.jaxb.FeatureWrapperJaxb;
 import org.opennms.karaf.featuremgr.jaxb.ErrorMessage;
@@ -342,31 +343,22 @@ public class FeaturesServiceRestImpl {
 	 * Manifest Management ReST Interface
 	 */
 
-
 	@GET
 	@Path("/features-installedmanifest")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response  featuresInstalledManifest() throws Exception {
 
-		String installedManifestUri = ServiceLoader.getInstalledManifestUri();
-		JAXBElement<Features> jbeFeature;
-		if (installedManifestUri == null) throw new RuntimeException("ServiceLoader.getInstalledManifestUri() cannot be null.");
+		PluginFeatureManagerService pluginFeatureManagerService = ServiceLoader.getPluginFeatureManagerService();
+		if (pluginFeatureManagerService == null) throw new RuntimeException("ServiceLoader.getPluginFeatureManagerService() cannot be null.");
+		String manifest=null;
 		try {
-			URI uri = new URI(installedManifestUri);
-
-			File installedManifestFile = new File(uri.getPath());
-
-			Features features = FeaturesUtils.loadFeaturesFile(installedManifestFile);
-			// wrap features in JaxbElement
-			ObjectFactory of = new ObjectFactory();
-			jbeFeature = of.createFeatures(features);
-
+			manifest =pluginFeatureManagerService.getInstalledManifest();
 		} catch(Exception ex) {
 			//return status 400 Error
-			return Response.status(400).entity(new ErrorMessage(400, 0, "problem loading installedManifestFile "+installedManifestUri, null, ex)).build();
+			return Response.status(400).entity(new ErrorMessage(400, 0, "problem loading installedManifestFile ", null, ex)).build();
 		}
 
-		return Response.status(200).entity(jbeFeature).build();
+		return Response.status(200).entity(manifest).build();
 
 	}
 
@@ -379,32 +371,20 @@ public class FeaturesServiceRestImpl {
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response  featuresSynchronizeManifest(String manifest) throws Exception {
 
-		String installedManifestUri = ServiceLoader.getInstalledManifestUri();
-		if (installedManifestUri == null) throw new RuntimeException("ServiceLoader.getInstalledManifestUri() cannot be null.");
+		PluginFeatureManagerService pluginFeatureManagerService = ServiceLoader.getPluginFeatureManagerService();
+		if (pluginFeatureManagerService == null) throw new RuntimeException("ServiceLoader.getPluginFeatureManagerService() cannot be null.");
 
 		FeaturesService featuresService = ServiceLoader.getFeaturesService();
 		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
 
-		//String manifest;
 		try {
-			// Document doc
-			//			DOMSource domSource = new DOMSource(doc);
-			//			StringWriter writer = new StringWriter();
-			//			StreamResult result = new StreamResult(writer);
-			//			TransformerFactory tf = TransformerFactory.newInstance();
-			//			Transformer transformer = tf.newTransformer();
-			//			transformer.transform(domSource, result);
-			//			manifest = writer.toString();
-
-			FeaturesUtils.installManifestFeatures(manifest, installedManifestUri, featuresService);
-
+			pluginFeatureManagerService.installNewManifest(manifest);
 		} catch(Exception ex) {
 			//return status 400 Error
-			return Response.status(400).entity(new ErrorMessage(400, 0, "problem parsing manifest xml and persisting to "+installedManifestUri, null, ex)).build();
+			return Response.status(400).entity(new ErrorMessage(400, 0, "problem installing manifest ", null, ex)).build();
 		}
 
-
-		return Response.status(200).entity(new ReplyMessage(200, 0, "successfully deployed features in "+installedManifestUri, "", "")).build();
+		return Response.status(200).entity(new ReplyMessage(200, 0, "successfully deployed features in manifest", "", "")).build();
 
 	}
 

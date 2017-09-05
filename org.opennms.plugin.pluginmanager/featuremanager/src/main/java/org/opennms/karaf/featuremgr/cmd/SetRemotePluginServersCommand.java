@@ -21,13 +21,12 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Command(scope = "plugin-feature-mgr", name = "installNewManifest", description="Installs a new plugin manifest. Installs all features in manifest.")
-public class InstallNewManifestCommand extends OsgiCommandSupport {
-	private static final Logger LOG = LoggerFactory.getLogger(InstallNewManifestCommand.class);
+@Command(scope = "plugin-feature-mgr", name = "setRemotePluginServers", description="sets the remote plugin server urls, username and password.")
+public class SetRemotePluginServersCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(SetRemotePluginServersCommand.class);
 
 	private PluginFeatureManagerService _pluginFeatureManagerService;
 
@@ -39,26 +38,26 @@ public class InstallNewManifestCommand extends OsgiCommandSupport {
 		_pluginFeatureManagerService = pluginFeatureManager;
 	}
 
-	@Argument(index = 0, name = "manifest", description = "XML manifest feature definition. See documentation.", required = true, multiValued = false)
-    String newManifestStr = null;
+	@Argument(index = 0, name = "urlList", description = "comma separated list of plugin manger urls to ask for manifest", required = true, multiValued = false)
+    String urls = null;
+	
+	@Argument(index = 0, name = "RemoteUsername", description = "Remote Username to download manifest", required = false, multiValued = false)
+    String remoteUsername = null;
+	
+	@Argument(index = 0, name = "RemotePassword", description = "Remote Password to download manifest", required = false, multiValued = false)
+    String remotePassword = null;
 
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-			String msg="Trying to install new manifest="+newManifestStr;
-			LOG.info(msg);
-			System.out.println(msg);
+			getPluginFeatureManagerService().updateRemotePluginServers(urls, remoteUsername, remotePassword);;
 			
-			String result = getPluginFeatureManagerService().installNewManifest(newManifestStr);
-			String installedManifest = getPluginFeatureManagerService().getInstalledManifest();
-			
-			msg="Result of operation:"+result;
-            msg=msg+"\nCurrently Installed Manifest='"+installedManifest+"'";
+			String msg="set remote plugin servers urls="+urls;
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {
-			System.err.println("Error installing new manifest. Exception="+e);
-			LOG.error("Error installing new manifest. Exception=",e);
+			System.err.println("error setting remote plugin servers. Exception="+e);
+			LOG.error("error setting remote plugin servers. Exception=",e);
 		}
 		return null;
 	}

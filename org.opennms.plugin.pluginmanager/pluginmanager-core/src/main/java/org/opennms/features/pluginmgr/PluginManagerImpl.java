@@ -837,9 +837,11 @@ public class PluginManagerImpl implements PluginManager {
 		for(String repo:repos){
 			repostr.append("  <repository>").append(repo).append("</repository>\n");
 		}
+		repostr.append("  <feature name=\"manifest\" version=\"1.0-SNAPSHOT\" description=\"Plugin manifest to be installed at startup\">\n");
 		for(String feature:features){
-			repostr.append("  <feature>").append(feature).append("</feature>\n");
+			repostr.append("    <feature>").append(feature).append("</feature>\n");
 		}
+		repostr.append("  </feature>\n");
 		repostr.append("</features>\n");
 
 		return repostr.toString();
