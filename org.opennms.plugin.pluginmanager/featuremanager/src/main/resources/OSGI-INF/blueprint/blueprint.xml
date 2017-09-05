@@ -56,12 +56,16 @@
 
   <!-- karaf features service interface -->
   <reference id="featuresService" interface="org.apache.karaf.features.FeaturesService" />
+  
+  <!-- karaf configuration admin service -->
+  <reference id="configurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin"/>
 
   <!-- plugin feature manager service -->
   <service interface="org.opennms.karaf.featuremgr.PluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
 
   <bean id="pluginFeatureManagerImpl" class="org.opennms.karaf.featuremgr.PluginFeatureManagerImpl">
     <property name="featuresService" ref="featuresService" />
+    <property name="configurationAdmin" ref="configurationAdmin" />
     <property name="useRemotePluginManagers" value="${org.opennms.karaf.featuremgr.useRemotePluginManagers}" />
     <property name="remotePluginManagersUrls" value="${org.opennms.karaf.featuremgr.remotePluginManagersUrls}" />
     <property name="remoteUsername" value="${org.opennms.karaf.featuremgr.remoteUsername}" />
@@ -142,13 +146,13 @@
       </action>
     </command>
 
-    <command name="plugin-feature-mgr/persistConfiguration">
+    <command name="plugin-feature-mgr/scheduleManifestDownload">
       <action class="org.opennms.karaf.featuremgr.cmd.SetScheduleManifestDownloadCommand">
         <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
       </action>
     </command>
 
-    <command name="plugin-feature-mgr/scheduleManifestDownload">
+    <command name="plugin-feature-mgr/persistConfiguration">
       <action class="org.opennms.karaf.featuremgr.cmd.PersistConfigurationCommand">
         <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
       </action>

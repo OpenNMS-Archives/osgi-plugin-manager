@@ -38,18 +38,6 @@ public class SetScheduleManifestDownloadCommand extends OsgiCommandSupport {
 	public void setPluginFeatureManagerService( PluginFeatureManagerService pluginFeatureManager) {
 		_pluginFeatureManagerService = pluginFeatureManager;
 	}
-
-//    <!-- if true, will try to download manifest feature list from remote urls -->
-//    <cm:property name="org.opennms.karaf.featuremgr.useRemotePluginManagers" value="false" />
-//    
-//    <!-- interval before retrying unsuccessful download of manifests -->
-//    <cm:property name="org.opennms.karaf.featuremgr.retryInterval" value="false" />
-//    
-//    <!-- unsuccessful number of retrys -1= forever until successful -->
-//    <cm:property name="org.opennms.karaf.featuremgr.retryNumber" value="0" />
-//    
-//    <!-- long term update interval before attempting to reload config. -1= only try on startup -->
-//    <cm:property name="org.opennms.karaf.featuremgr.updateInterval" value="false" />
 	
 	@Option(name = "-p", aliases =  "--useRemotePluginManagers", description = "(true or false) If true, will try to download manifest feature list from remote urls", required = false, multiValued = false)
 	String useRemotePluginManagersStr;
@@ -73,7 +61,7 @@ public class SetScheduleManifestDownloadCommand extends OsgiCommandSupport {
 			
 			String schedule = getPluginFeatureManagerService().updateSchedule(useRemotePluginManagers, retryInterval, retryNumber, updateInterval);;
 
-			String msg="manifest schedule set to ="+schedule;
+			String msg="manifest schedule set to: "+schedule;
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {

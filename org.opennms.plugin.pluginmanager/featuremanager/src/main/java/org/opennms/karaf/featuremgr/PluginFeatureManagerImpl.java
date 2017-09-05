@@ -17,12 +17,18 @@ package org.opennms.karaf.featuremgr;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.karaf.features.FeaturesService;
 import org.opennms.karaf.featuremgr.jaxb.karaf.feature.Features;
 import org.opennms.karaf.featuremgr.manifest.client.jerseyimpl.ManifestServiceClientRestJerseyImpl;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +36,20 @@ import org.slf4j.LoggerFactory;
 public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	private static final Logger LOG = LoggerFactory.getLogger(PluginFeatureManagerImpl.class);
 
+	// name of config  file <persistentId>.cfg
+	private static final String PERSISTANT_ID="org.opennms.features.featuremgr.config";
+	private static final String USE_REMOTE_PLUGIN_MANAGER_KEY = "org.opennms.karaf.featuremgr.useRemotePluginManagers";
+	private static final String REMOTE_PLUGIN_MANAGER_URLS_KEY = "org.opennms.karaf.featuremgr.remotePluginManagersUrls";
+	private static final String REMOTE_PLUGIN_MANAGER_USERNAME_KEY = "org.opennms.karaf.featuremgr.remoteUsername";
+	private static final String REMOTE_PLUGIN_MANAGER_PASSWORD_KEY = "org.opennms.karaf.featuremgr.remotePassword";
+	private static final String KARAF_INSTANCE_KEY="org.opennms.karaf.featuremgr.karafInstance";
+	private static final String RETRY_INTERVAL_KEY="org.opennms.karaf.featuremgr.retryInterval";
+	private static final String RETRY_NUMBER_KEY="org.opennms.karaf.featuremgr.retryNumber";
+	private static final String UPDATE_INTERVAL_KEY="org.opennms.karaf.featuremgr.updateInterval";
+
 	private FeaturesService featuresService=null;
-	
+	private ConfigurationAdmin configurationAdmin=null;
+
 	private boolean useRemotePluginManagers = false;
 	private Set<String> remotePluginManagersUrls = new LinkedHashSet<String>();
 	private String remoteUsername=null;
@@ -43,12 +61,16 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	private Integer updateInterval=null;
 
 	// blueprint wiring methods
+	public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
+		this.configurationAdmin = configurationAdmin;
+	}
+
 	public void setUseRemotePluginManagers(String useRemotePluginManagers) {
 		this.useRemotePluginManagers = Boolean.parseBoolean(useRemotePluginManagers);
 	}
 
 	public void setRemotePluginManagersUrls(String remotePluginManagersUrls) {
-		this.remotePluginManagersUrls = listStringCsvProperty(remotePluginManagersUrls);
+		this.remotePluginManagersUrls = stringCsvPropertyToList(remotePluginManagersUrls);
 	}
 
 	public void setRemoteUsername(String remoteUsername) {
@@ -62,11 +84,11 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	public void setFeaturesService(FeaturesService featuresService) {
 		this.featuresService = featuresService;
 	}
-	
+
 	public void setInstalledManifestUri(String installedManifestUri) {
 		this.installedManifestUri = installedManifestUri;
 	}
-	
+
 	public String getKarafInstance() {
 		return karafInstance;
 	}
@@ -74,7 +96,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	public void setKarafInstance(String karafInstance) {
 		this.karafInstance = karafInstance;
 	}
-	
+
 	public void setRetryInterval(Integer retryInterval) {
 		this.retryInterval = retryInterval;
 	}
@@ -94,7 +116,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 		FeaturesUtils.installManifestFeatures(newManifestStr, installedManifestUri, featuresService);
 		return "installed manifest";
 	}
-	
+
 	@Override
 	public synchronized String uninstallManifest() {
 		FeaturesUtils.uninstallManifestFeatures(installedManifestUri, featuresService);
@@ -109,7 +131,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 		manifestServiceClient.setBasePath(""); // include based path in url e.g. http://localhost:8181/pluginmgr
 		manifestServiceClient.setUserName(userName);
 		manifestServiceClient.setPassword(password);
-		
+
 		String manifest=null;
 		try {
 			manifest=manifestServiceClient.getFeatureManifest(karafInstance);
@@ -152,48 +174,80 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 			throw new RuntimeException("problem loading installed manifest from installedManifestUri="+installedManifestUri,ex);
 		}
 	}
-	
-	
+
+
 	@Override
 	public synchronized void updateKarafInstance(String karafInstance) {
 		this.karafInstance=karafInstance;
-		
 	}
-	
+
 	@Override
 	public synchronized void updateRemotePluginServers(String remotePluginManagersUrls, String remoteUserName, String remotePassword) {
-		this.remotePluginManagersUrls=listStringCsvProperty(remotePluginManagersUrls);
+		this.remotePluginManagersUrls=stringCsvPropertyToList(remotePluginManagersUrls);
 		this.remoteUsername=remoteUserName;
 		this.remotePassword=remotePassword;
 	}
-	
+
 
 	@Override
 	public synchronized String updateSchedule(Boolean useRemotePluginManagers, Integer retryInterval, Integer retryNumber, Integer updateInterval) {
-		
+
 		if(useRemotePluginManagers!=null) this.useRemotePluginManagers = useRemotePluginManagers;
 		if(retryInterval!=null) this.retryInterval = retryInterval;
 		if(retryNumber!=null) this.retryNumber = retryNumber;
 		if(updateInterval!=null) this.updateInterval = updateInterval;
-		
-		return ("useRemotePluginManagers="+ useRemotePluginManagers
-				+", retryInterval="+retryInterval
-				+", retryNumber="+retryNumber
-				+", updateInterval="+updateInterval);
+
+		return ("useRemotePluginManagers="+ this.useRemotePluginManagers
+				+", retryInterval="+this.retryInterval
+				+", retryNumber="+this.retryNumber
+				+", updateInterval="+this.updateInterval);
 
 	}
 
 
 	@Override
 	public synchronized String persistConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			Configuration config = configurationAdmin.getConfiguration(PERSISTANT_ID);
+
+			@SuppressWarnings("unchecked")
+			Dictionary<String, Object> props = config.getProperties();
+
+			// if null, the configuration is new
+			if (props == null) {
+				props = new Hashtable<String, Object>();
+			}
+
+			props.put(USE_REMOTE_PLUGIN_MANAGER_KEY,Boolean.toString(useRemotePluginManagers));
+			props.put(REMOTE_PLUGIN_MANAGER_URLS_KEY,listToStringCsvProperty(remotePluginManagersUrls));
+			props.put(REMOTE_PLUGIN_MANAGER_USERNAME_KEY,remoteUsername);
+			props.put(REMOTE_PLUGIN_MANAGER_PASSWORD_KEY,remotePassword);
+			props.put(KARAF_INSTANCE_KEY,karafInstance);
+			props.put(RETRY_INTERVAL_KEY,Integer.toString(retryInterval));
+			props.put(RETRY_NUMBER_KEY,Integer.toString(retryNumber));
+			props.put(UPDATE_INTERVAL_KEY,Integer.toString(updateInterval));
+
+			StringBuffer msg = new StringBuffer("Persisted configuration:\n");
+			Enumeration<String> e = props.keys();
+			while(e.hasMoreElements()){
+				String key = e.nextElement();
+				String value = (String) props.get(key);
+				msg.append("    "+key+"="+value+"\n");
+			}
+			
+			config.update(props);
+			
+			LOG.info(msg.toString());
+			return msg.toString();
+		} catch (Exception e) {
+			throw new RuntimeException("problem updating configuration in "+PERSISTANT_ID+".cfg",e);
+		}
 	}
 
 
 	// helper methods
-	
-	private Set<String> listStringCsvProperty(String setStringStr){
+
+	private Set<String> stringCsvPropertyToList(String setStringStr){
 		Set<String> setString= new LinkedHashSet<String>();
 		if ((setStringStr!=null) & (! "".equals(setStringStr)) ) {
 			String[] stringArray = setStringStr.split(",");
@@ -205,8 +259,22 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 				} 
 			}
 		}
-
 		return setString;
+	}
+
+	private String listToStringCsvProperty(Set<String> setString){
+
+		StringBuffer sb=new StringBuffer();
+
+		Iterator<String> itr = setString.iterator();
+		while(itr.hasNext()){
+			sb.append(itr.next());
+			if (itr.hasNext()) sb.append(",");
+		}
+
+		return sb.toString();
+
+
 	}
 
 }
