@@ -25,10 +25,14 @@ public interface PluginFeatureManagerService {
 	
 	void installNewManifestFromPluginManagerUrl(String karafInstance, String url, String userName, String password);
 	
-	void updateRemotePluginServers(String urls, String remoteUserName, String remotePassword);
-	
 	String updateManifestFromPluginManagers();
 
 	void updateKarafInstance(String karafInstance);
+	
+	void updateRemotePluginServers(String remotePluginManagersUrls, String remoteUserName, String remotePassword);
+
+	String updateSchedule(Boolean useRemotePluginManagers,Integer retryInterval,Integer retryNumber,Integer updateInterval);
+
+	String persistConfiguration();
 	
 }

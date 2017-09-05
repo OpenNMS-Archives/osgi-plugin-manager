@@ -38,30 +38,25 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	private String remotePassword=null;
 	private String installedManifestUri=null;
 	private String karafInstance=null;
+	private Integer retryInterval=null;
+	private Integer retryNumber=null;
+	private Integer updateInterval=null;
 
 	// blueprint wiring methods
 	public void setUseRemotePluginManagers(String useRemotePluginManagers) {
 		this.useRemotePluginManagers = Boolean.parseBoolean(useRemotePluginManagers);
 	}
 
-
 	public void setRemotePluginManagersUrls(String remotePluginManagersUrls) {
 		this.remotePluginManagersUrls = listStringCsvProperty(remotePluginManagersUrls);
 	}
-
 
 	public void setRemoteUsername(String remoteUsername) {
 		this.remoteUsername = remoteUsername;
 	}
 
-
 	public void setRemotePassword(String remotePassword) {
 		this.remotePassword = remotePassword;
-	}
-
-
-	public FeaturesService getFeaturesService() {
-		return featuresService;
 	}
 
 	public void setFeaturesService(FeaturesService featuresService) {
@@ -79,24 +74,36 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	public void setKarafInstance(String karafInstance) {
 		this.karafInstance = karafInstance;
 	}
+	
+	public void setRetryInterval(Integer retryInterval) {
+		this.retryInterval = retryInterval;
+	}
+
+	public void setRetryNumber(Integer retryNumber) {
+		this.retryNumber = retryNumber;
+	}
+
+	public void setUpdateInterval(Integer updateInterval) {
+		this.updateInterval = updateInterval;
+	}
 
 	// business methods
 
 	@Override
-	public String installNewManifest(String newManifestStr) {
+	public synchronized String installNewManifest(String newManifestStr) {
 		FeaturesUtils.installManifestFeatures(newManifestStr, installedManifestUri, featuresService);
 		return "installed manifest";
 	}
 	
 	@Override
-	public String uninstallManifest() {
+	public synchronized String uninstallManifest() {
 		FeaturesUtils.uninstallManifestFeatures(installedManifestUri, featuresService);
 		return "uninstalled manifest";
 	}
 
 
 	@Override
-	public void installNewManifestFromPluginManagerUrl(String karafInstance, String url, String userName, String password) {
+	public synchronized void installNewManifestFromPluginManagerUrl(String karafInstance, String url, String userName, String password) {
 		ManifestServiceClientRestJerseyImpl manifestServiceClient = new ManifestServiceClientRestJerseyImpl(); 
 		manifestServiceClient.setBaseUrl(url);
 		manifestServiceClient.setBasePath(""); // include based path in url e.g. http://localhost:8181/pluginmgr
@@ -114,11 +121,10 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 		}catch (Exception e) {
 			throw new RuntimeException("problem installing manifest="+manifest,e);
 		}
-		
 	}
 
 	@Override
-	public String updateManifestFromPluginManagers() {
+	public synchronized String updateManifestFromPluginManagers() {
 		StringBuffer msg = new StringBuffer("updateManifest: ");
 		for (String url :remotePluginManagersUrls){
 			try{
@@ -133,38 +139,58 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 		}
 		return msg.toString();
 	}
-	
-	@Override
-	public void updateKarafInstance(String karafInstance) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
-	public String getInstalledManifest() {
+	public synchronized String getInstalledManifest() {
 		if (installedManifestUri == null) throw new RuntimeException("ServiceLoader.getInstalledManifestUri() cannot be null.");
 		try {
 			URI uri = new URI(installedManifestUri);
-
 			File installedManifestFile = new File(uri.getPath());
-
 			Features features = FeaturesUtils.loadFeaturesFile(installedManifestFile);
-			
 			return FeaturesUtils.featuresToString(features);
-
 		} catch(Exception ex) {
 			throw new RuntimeException("problem loading installed manifest from installedManifestUri="+installedManifestUri,ex);
 		}
-
+	}
+	
+	
+	@Override
+	public synchronized void updateKarafInstance(String karafInstance) {
+		this.karafInstance=karafInstance;
+		
 	}
 	
 	@Override
-	public void updateRemotePluginServers(String urls, String remoteUserName, String remotePassword) {
-		// TODO Auto-generated method stub
+	public synchronized void updateRemotePluginServers(String remotePluginManagersUrls, String remoteUserName, String remotePassword) {
+		this.remotePluginManagersUrls=listStringCsvProperty(remotePluginManagersUrls);
+		this.remoteUsername=remoteUserName;
+		this.remotePassword=remotePassword;
+	}
+	
+
+	@Override
+	public synchronized String updateSchedule(Boolean useRemotePluginManagers, Integer retryInterval, Integer retryNumber, Integer updateInterval) {
 		
+		if(useRemotePluginManagers!=null) this.useRemotePluginManagers = useRemotePluginManagers;
+		if(retryInterval!=null) this.retryInterval = retryInterval;
+		if(retryNumber!=null) this.retryNumber = retryNumber;
+		if(updateInterval!=null) this.updateInterval = updateInterval;
+		
+		return ("useRemotePluginManagers="+ useRemotePluginManagers
+				+", retryInterval="+retryInterval
+				+", retryNumber="+retryNumber
+				+", updateInterval="+updateInterval);
+
 	}
 
-	
+
+	@Override
+	public synchronized String persistConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	// helper methods
 	
 	private Set<String> listStringCsvProperty(String setStringStr){
@@ -182,6 +208,5 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 
 		return setString;
 	}
-
 
 }

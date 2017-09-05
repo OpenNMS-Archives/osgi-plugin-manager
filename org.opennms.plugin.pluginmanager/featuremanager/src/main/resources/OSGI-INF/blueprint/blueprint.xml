@@ -27,19 +27,29 @@
   <!-- Used for system properties -->
   <ext:property-placeholder placeholder-prefix="$[" placeholder-suffix="]" />
 
-  <!-- load default properties from org.opennms.features.licencemgr.config.cfg if exists -->
-  <cm:property-placeholder persistent-id="org.opennms.features.featuremgr.config" update-strategy="reload">
+  <!-- load default properties from org.opennms.features.licencemgr.config.cfg if exists at startup -->
+  <cm:property-placeholder persistent-id="org.opennms.features.featuremgr.config" update-strategy="none">
     <cm:default-properties>
-      <!-- if true, will try to download feature list from remote urls -->
+      <!-- if true, will try to download manifest feature list from remote urls -->
       <cm:property name="org.opennms.karaf.featuremgr.useRemotePluginManagers" value="false" />
+
+      <!-- interval (ms) before retrying unsuccessful download of manifests -->
+      <cm:property name="org.opennms.karaf.featuremgr.retryInterval" value="60000" />
+
+      <!-- number of retrys if unsuccessful -1= forever until successful -->
+      <cm:property name="org.opennms.karaf.featuremgr.retryNumber" value="1" />
+
+      <!-- long term update interval (ms) before attempting to reload config. -1= only try on startup -->
+      <cm:property name="org.opennms.karaf.featuremgr.updateInterval" value="-1" />
+
       <!-- comma separated local list of urls to contact remote licence managers -->
       <!-- in order to download feature manifest list for this system. Urls will be tried in order -->
-      <cm:property name="org.opennms.karaf.featuremgr.remotePluginManagersUrls" value="" />
+      <cm:property name="org.opennms.karaf.featuremgr.remotePluginManagersUrls" value="http://localhost:8181/pluginmgr" />
       <!-- basic authentication username to access remote plugin manager -->
       <cm:property name="org.opennms.karaf.featuremgr.remoteUsername" value="admin" />
       <!-- basic authentication password to access remote plugin manager -->
       <cm:property name="org.opennms.karaf.featuremgr.remotePassword" value="admin" />
-      <!-- karaf instance name defaults to karaf.name system property-->
+      <!-- karaf instance name defaults to karaf.name system property -->
       <cm:property name="org.opennms.karaf.featuremgr.karafInstance" value="$[karaf.name]" />
     </cm:default-properties>
   </cm:property-placeholder>
@@ -58,6 +68,9 @@
     <property name="remotePassword" value="${org.opennms.karaf.featuremgr.remotePassword}" />
     <property name="installedManifestUri" value="file:$[karaf.etc]$[file.separator]installed-manifest-features.xml" />
     <property name="karafInstance" value="${org.opennms.karaf.featuremgr.karafInstance}" />
+    <property name="retryInterval" value="${org.opennms.karaf.featuremgr.retryInterval}" />
+    <property name="retryNumber" value="${org.opennms.karaf.featuremgr.retryNumber}" />
+    <property name="updateInterval" value="${org.opennms.karaf.featuremgr.updateInterval}" />
   </bean>
 
   <!-- ReST Servelet configuration for jersey -->
@@ -125,6 +138,18 @@
 
     <command name="plugin-feature-mgr/setKarafInstance">
       <action class="org.opennms.karaf.featuremgr.cmd.SetKarafInstanceCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+
+    <command name="plugin-feature-mgr/persistConfiguration">
+      <action class="org.opennms.karaf.featuremgr.cmd.SetScheduleManifestDownloadCommand">
+        <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
+      </action>
+    </command>
+
+    <command name="plugin-feature-mgr/scheduleManifestDownload">
+      <action class="org.opennms.karaf.featuremgr.cmd.PersistConfigurationCommand">
         <property name="pluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
       </action>
     </command>

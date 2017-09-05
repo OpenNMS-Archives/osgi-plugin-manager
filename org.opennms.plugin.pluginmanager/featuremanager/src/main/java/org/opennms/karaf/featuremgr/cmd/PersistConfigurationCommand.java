@@ -25,9 +25,9 @@ import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Command(scope = "plugin-feature-mgr", name = "setRemotePluginServers", description="sets the remote plugin server urls, username and password.")
-public class SetRemotePluginServersCommand extends OsgiCommandSupport {
-	private static final Logger LOG = LoggerFactory.getLogger(SetRemotePluginServersCommand.class);
+@Command(scope = "plugin-feature-mgr", name = "persistConfiguration", description="Persists current plugin manager configuration to be used on start up.")
+public class PersistConfigurationCommand extends OsgiCommandSupport {
+	private static final Logger LOG = LoggerFactory.getLogger(PersistConfigurationCommand.class);
 
 	private PluginFeatureManagerService _pluginFeatureManagerService;
 
@@ -38,26 +38,18 @@ public class SetRemotePluginServersCommand extends OsgiCommandSupport {
 	public void setPluginFeatureManagerService( PluginFeatureManagerService pluginFeatureManager) {
 		_pluginFeatureManagerService = pluginFeatureManager;
 	}
-	@Argument(index = 0, name = "urlList", description = "comma separated list of plugin manger urls to ask for manifest", required = true, multiValued = false)
-    String urls = null;
-	
-	@Argument(index = 0, name = "RemoteUsername", description = "Remote Username to download manifest", required = false, multiValued = false)
-    String remoteUsername = null;
-	
-	@Argument(index = 0, name = "RemotePassword", description = "Remote Password to download manifest", required = false, multiValued = false)
-    String remotePassword = null;
 
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-			getPluginFeatureManagerService().updateRemotePluginServers(urls, remoteUsername, remotePassword);;
+			String result = getPluginFeatureManagerService().persistConfiguration();
 			
-			String msg="set remote plugin servers urls="+urls;
+			String msg="persisted configuration:"+result;
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {
-			System.err.println("error setting remote plugin servers. Exception="+e);
-			LOG.error("error setting remote plugin servers. Exception=",e);
+			System.err.println("error persisting configuration. Exception="+e);
+			LOG.error("error persisting configuration. Exception=",e);
 		}
 		return null;
 	}
