@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+
 import org.apache.karaf.features.FeaturesService;
 import org.opennms.karaf.featuremgr.jaxb.karaf.feature.Features;
 import org.opennms.karaf.featuremgr.manifest.client.jerseyimpl.ManifestServiceClientRestJerseyImpl;
@@ -146,20 +147,19 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	}
 
 	@Override
-	public synchronized String updateManifestFromPluginManagers() {
-		StringBuffer msg = new StringBuffer("updateManifest: ");
+	public synchronized boolean updateManifestFromPluginManagers() {
+		boolean success=false;
 		for (String url :remotePluginManagersUrls){
 			try{
 				installNewManifestFromPluginManagerUrl(karafInstance, url, remoteUsername, remotePassword);
-				msg.append(" successfully updated manifest from url="+url);
+				success=true;
 				LOG.debug(" successfully updated manifest from url="+url);
 				break; // if success do not try other urls
 			}catch (Exception ex){
-				msg.append(" failed to update manifest from url="+url+"\n");
 				LOG.error(" failed to update manifest from url="+url,ex);
 			}
 		}
-		return msg.toString();
+		return success;
 	}
 
 	@Override
@@ -273,8 +273,8 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 		}
 
 		return sb.toString();
-
-
 	}
+	
+
 
 }

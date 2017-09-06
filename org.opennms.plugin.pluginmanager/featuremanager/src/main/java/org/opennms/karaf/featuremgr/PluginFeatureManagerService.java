@@ -25,7 +25,7 @@ public interface PluginFeatureManagerService {
 	
 	void installNewManifestFromPluginManagerUrl(String karafInstance, String url, String userName, String password);
 	
-	String updateManifestFromPluginManagers();
+	boolean updateManifestFromPluginManagers();
 
 	void updateKarafInstance(String karafInstance);
 	
