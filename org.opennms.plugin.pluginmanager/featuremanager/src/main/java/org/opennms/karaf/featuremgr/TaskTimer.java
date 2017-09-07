@@ -9,7 +9,7 @@ public class TaskTimer {
 	private static final Logger LOG = LoggerFactory.getLogger(TaskTimer.class);
 
 	/**
-	 * if runScheduledTask returns true, the task was successful and retries are not attempted
+	 * if runScheduledTask returns true, the task was successful and retries will not be attempted
 	 */
 	public static interface ScheduledTask{
 		public boolean runScheduledTask();

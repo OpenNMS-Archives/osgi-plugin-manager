@@ -22,10 +22,13 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
-
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.karaf.features.FeaturesService;
+import org.opennms.karaf.featuremgr.TaskTimer.ScheduledTask;
 import org.opennms.karaf.featuremgr.jaxb.karaf.feature.Features;
 import org.opennms.karaf.featuremgr.manifest.client.jerseyimpl.ManifestServiceClientRestJerseyImpl;
 import org.osgi.service.cm.Configuration;
@@ -48,79 +51,81 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	private static final String RETRY_NUMBER_KEY="org.opennms.karaf.featuremgr.retryNumber";
 	private static final String UPDATE_INTERVAL_KEY="org.opennms.karaf.featuremgr.updateInterval";
 
-	private FeaturesService featuresService=null;
-	private ConfigurationAdmin configurationAdmin=null;
+	private FeaturesService m_featuresService=null;
+	private ConfigurationAdmin m_configurationAdmin=null;
 
-	private boolean useRemotePluginManagers = false;
-	private Set<String> remotePluginManagersUrls = new LinkedHashSet<String>();
-	private String remoteUsername=null;
-	private String remotePassword=null;
-	private String installedManifestUri=null;
-	private String karafInstance=null;
-	private Integer retryInterval=null;
-	private Integer retryNumber=null;
-	private Integer updateInterval=null;
+	private TaskTimer m_timer=new TaskTimer();
+
+	private boolean m_useRemotePluginManagers = false;	
+	private Set<String> m_remotePluginManagersUrls = new LinkedHashSet<String>();
+	private String m_remoteUsername=null;
+	private String m_remotePassword=null;
+	private String m_installedManifestUri=null;
+	private String m_karafInstance=null;
+	private Integer m_retryInterval=null;
+	private Integer m_retryNumber=null;
+	private Integer m_updateInterval=null;
 
 	// blueprint wiring methods
 	public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
-		this.configurationAdmin = configurationAdmin;
+		this.m_configurationAdmin = configurationAdmin;
 	}
 
 	public void setUseRemotePluginManagers(String useRemotePluginManagers) {
-		this.useRemotePluginManagers = Boolean.parseBoolean(useRemotePluginManagers);
+		this.m_useRemotePluginManagers = Boolean.parseBoolean(useRemotePluginManagers);
 	}
 
 	public void setRemotePluginManagersUrls(String remotePluginManagersUrls) {
-		this.remotePluginManagersUrls = stringCsvPropertyToList(remotePluginManagersUrls);
+		this.m_remotePluginManagersUrls = stringCsvPropertyToList(remotePluginManagersUrls);
 	}
 
 	public void setRemoteUsername(String remoteUsername) {
-		this.remoteUsername = remoteUsername;
+		this.m_remoteUsername = remoteUsername;
 	}
 
 	public void setRemotePassword(String remotePassword) {
-		this.remotePassword = remotePassword;
+		this.m_remotePassword = remotePassword;
 	}
 
 	public void setFeaturesService(FeaturesService featuresService) {
-		this.featuresService = featuresService;
+		this.m_featuresService = featuresService;
 	}
 
 	public void setInstalledManifestUri(String installedManifestUri) {
-		this.installedManifestUri = installedManifestUri;
+		this.m_installedManifestUri = installedManifestUri;
 	}
 
 	public String getKarafInstance() {
-		return karafInstance;
+		return m_karafInstance;
 	}
 
 	public void setKarafInstance(String karafInstance) {
-		this.karafInstance = karafInstance;
+		this.m_karafInstance = karafInstance;
 	}
 
 	public void setRetryInterval(Integer retryInterval) {
-		this.retryInterval = retryInterval;
+		this.m_retryInterval = retryInterval;
 	}
 
 	public void setRetryNumber(Integer retryNumber) {
-		this.retryNumber = retryNumber;
+		this.m_retryNumber = retryNumber;
 	}
 
 	public void setUpdateInterval(Integer updateInterval) {
-		this.updateInterval = updateInterval;
+		this.m_updateInterval = updateInterval;
 	}
 
 	// business methods
 
 	@Override
 	public synchronized String installNewManifest(String newManifestStr) {
-		FeaturesUtils.installManifestFeatures(newManifestStr, installedManifestUri, featuresService);
+		FeaturesUtils.installManifestFeatures(newManifestStr, m_installedManifestUri, m_featuresService);
 		return "installed manifest";
 	}
 
 	@Override
 	public synchronized String uninstallManifest() {
-		FeaturesUtils.uninstallManifestFeatures(installedManifestUri, featuresService);
+		FeaturesUtils.uninstallManifestFeatures(m_installedManifestUri, m_featuresService);
 		return "uninstalled manifest";
 	}
 
@@ -140,7 +145,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 			throw new RuntimeException("problem fetching manifest from remote pluging manager",e);
 		}
 		try {
-			FeaturesUtils.installManifestFeatures(manifest, installedManifestUri, featuresService);
+			FeaturesUtils.installManifestFeatures(manifest, m_installedManifestUri, m_featuresService);
 		}catch (Exception e) {
 			throw new RuntimeException("problem installing manifest="+manifest,e);
 		}
@@ -149,11 +154,11 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	@Override
 	public synchronized boolean updateManifestFromPluginManagers() {
 		boolean success=false;
-		for (String url :remotePluginManagersUrls){
+		for (String url :m_remotePluginManagersUrls){
 			try{
-				installNewManifestFromPluginManagerUrl(karafInstance, url, remoteUsername, remotePassword);
+				installNewManifestFromPluginManagerUrl(m_karafInstance, url, m_remoteUsername, m_remotePassword);
 				success=true;
-				LOG.debug(" successfully updated manifest from url="+url);
+				LOG.info(" successfully updated manifest from url="+url);
 				break; // if success do not try other urls
 			}catch (Exception ex){
 				LOG.error(" failed to update manifest from url="+url,ex);
@@ -164,51 +169,113 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 
 	@Override
 	public synchronized String getInstalledManifest() {
-		if (installedManifestUri == null) throw new RuntimeException("ServiceLoader.getInstalledManifestUri() cannot be null.");
+		if (m_installedManifestUri == null) throw new RuntimeException("ServiceLoader.getInstalledManifestUri() cannot be null.");
 		try {
-			URI uri = new URI(installedManifestUri);
+			URI uri = new URI(m_installedManifestUri);
 			File installedManifestFile = new File(uri.getPath());
 			Features features = FeaturesUtils.loadFeaturesFile(installedManifestFile);
 			return FeaturesUtils.featuresToString(features);
 		} catch(Exception ex) {
-			throw new RuntimeException("problem loading installed manifest from installedManifestUri="+installedManifestUri,ex);
+			throw new RuntimeException("problem loading installed manifest from installedManifestUri="+m_installedManifestUri,ex);
 		}
 	}
 
 
 	@Override
 	public synchronized void updateKarafInstance(String karafInstance) {
-		this.karafInstance=karafInstance;
+		this.m_karafInstance=karafInstance;
 	}
 
 	@Override
 	public synchronized void updateRemotePluginServers(String remotePluginManagersUrls, String remoteUserName, String remotePassword) {
-		this.remotePluginManagersUrls=stringCsvPropertyToList(remotePluginManagersUrls);
-		this.remoteUsername=remoteUserName;
-		this.remotePassword=remotePassword;
+		this.m_remotePluginManagersUrls=stringCsvPropertyToList(remotePluginManagersUrls);
+		this.m_remoteUsername=remoteUserName;
+		this.m_remotePassword=remotePassword;
 	}
 
+	private class ScheduledManifestUpdate implements ScheduledTask{
+		private PluginFeatureManagerImpl pluginFeatureManager;
+		private AtomicInteger count = new AtomicInteger(0);
+
+		ScheduledManifestUpdate(PluginFeatureManagerImpl pluginFeatureManager){
+			this.pluginFeatureManager=Objects.requireNonNull(pluginFeatureManager);
+		}
+
+		@Override
+		public boolean runScheduledTask() {
+			int c = count.incrementAndGet();
+			boolean success=false;
+
+			LOG.info("Running scheduled manifest update. Times this schedule has run: "+c);
+			try{
+				success=pluginFeatureManager.updateManifestFromPluginManagers();
+			} catch(Exception e){
+				LOG.error("problem running scheduled updating manifest from plugin managers",e);
+			}
+			return success;
+		}
+
+	}
 
 	@Override
 	public synchronized String updateSchedule(Boolean useRemotePluginManagers, Integer retryInterval, Integer retryNumber, Integer updateInterval) {
+		boolean justlist=true;
+		String msg="";
+		if(retryInterval!=null) {
+			justlist=false;
+			this.m_retryInterval = retryInterval;
+		}
+		if(retryNumber!=null) {
+			justlist=false;
+			this.m_retryNumber = retryNumber;
+		}
+		if(updateInterval!=null) {
+			justlist=false;
+			this.m_updateInterval = updateInterval;
+		}
+		if(useRemotePluginManagers!=null) {
+			justlist=false;
+			this.m_useRemotePluginManagers=useRemotePluginManagers;
+		}
 
-		if(useRemotePluginManagers!=null) this.useRemotePluginManagers = useRemotePluginManagers;
-		if(retryInterval!=null) this.retryInterval = retryInterval;
-		if(retryNumber!=null) this.retryNumber = retryNumber;
-		if(updateInterval!=null) this.updateInterval = updateInterval;
+		if(!justlist){
+			msg="Restarting schedule with new configuration.\n";
+			m_timer.stopSchedule();
 
-		return ("useRemotePluginManagers="+ this.useRemotePluginManagers
-				+", retryInterval="+this.retryInterval
-				+", retryNumber="+this.retryNumber
-				+", updateInterval="+this.updateInterval);
+			if(this.m_useRemotePluginManagers){
+				m_timer.stopSchedule();
+				m_timer.setRetryInterval(this.m_retryInterval);
+				m_timer.setRetryNumber(this.m_retryNumber);
+				m_timer.setUpdateInterval(this.m_updateInterval);
+
+				PluginFeatureManagerImpl pluginFeatureManager=this;
+				ScheduledTask task = new ScheduledManifestUpdate(pluginFeatureManager);
+
+				m_timer.setTask(task);
+
+				m_timer.startSchedule();
+			}
+		}
+		
+		if(m_timer.getScheduleIsRunning()){
+			msg=msg+"Schedule Running\n";
+		} else msg=msg+"Schedule Stopped\n";
+
+		msg=msg+"Schedule configuration = useRemotePluginManagers="+ this.m_useRemotePluginManagers
+				+", retryInterval="+this.m_retryInterval
+				+", retryNumber="+this.m_retryNumber
+				+", updateInterval="+this.m_updateInterval;
+
+		return msg;
 
 	}
+
 
 
 	@Override
 	public synchronized String persistConfiguration() {
 		try {
-			Configuration config = configurationAdmin.getConfiguration(PERSISTANT_ID);
+			Configuration config = m_configurationAdmin.getConfiguration(PERSISTANT_ID);
 
 			@SuppressWarnings("unchecked")
 			Dictionary<String, Object> props = config.getProperties();
@@ -218,14 +285,14 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 				props = new Hashtable<String, Object>();
 			}
 
-			props.put(USE_REMOTE_PLUGIN_MANAGER_KEY,Boolean.toString(useRemotePluginManagers));
-			props.put(REMOTE_PLUGIN_MANAGER_URLS_KEY,listToStringCsvProperty(remotePluginManagersUrls));
-			props.put(REMOTE_PLUGIN_MANAGER_USERNAME_KEY,remoteUsername);
-			props.put(REMOTE_PLUGIN_MANAGER_PASSWORD_KEY,remotePassword);
-			props.put(KARAF_INSTANCE_KEY,karafInstance);
-			props.put(RETRY_INTERVAL_KEY,Integer.toString(retryInterval));
-			props.put(RETRY_NUMBER_KEY,Integer.toString(retryNumber));
-			props.put(UPDATE_INTERVAL_KEY,Integer.toString(updateInterval));
+			props.put(USE_REMOTE_PLUGIN_MANAGER_KEY,Boolean.toString(m_useRemotePluginManagers));
+			props.put(REMOTE_PLUGIN_MANAGER_URLS_KEY,listToStringCsvProperty(m_remotePluginManagersUrls));
+			props.put(REMOTE_PLUGIN_MANAGER_USERNAME_KEY,m_remoteUsername);
+			props.put(REMOTE_PLUGIN_MANAGER_PASSWORD_KEY,m_remotePassword);
+			props.put(KARAF_INSTANCE_KEY,m_karafInstance);
+			props.put(RETRY_INTERVAL_KEY,Integer.toString(m_retryInterval));
+			props.put(RETRY_NUMBER_KEY,Integer.toString(m_retryNumber));
+			props.put(UPDATE_INTERVAL_KEY,Integer.toString(m_updateInterval));
 
 			StringBuffer msg = new StringBuffer("Persisted configuration:\n");
 			Enumeration<String> e = props.keys();
@@ -234,9 +301,9 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 				String value = (String) props.get(key);
 				msg.append("    "+key+"="+value+"\n");
 			}
-			
+
 			config.update(props);
-			
+
 			LOG.info(msg.toString());
 			return msg.toString();
 		} catch (Exception e) {
@@ -274,7 +341,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 
 		return sb.toString();
 	}
-	
+
 
 
 }

@@ -233,10 +233,6 @@ public class FeaturesUtils {
 
 	}
 
-
-
-
-
 	public static  Features parseFeatures(String featuresStr){
 		Features features=null;
 		JAXBContext jaxbContext;
@@ -281,7 +277,20 @@ public class FeaturesUtils {
 					"Problem persisting feature file", e);
 		}
 	}
+	
+	/**
+	 * returns true if features manifests are functionaly the same (no change)
+	 * @return
+	 */
+	public static boolean compareManifestFeatures(Features manifest1, Features  manifest2){
+		if(manifest1==null) throw new RuntimeException("parameter manifest1 cannot be null");
+		if(manifest2==null) throw new RuntimeException("parameter manifest2 cannot be null");
+		
+		// note may not work if marshallar orders lists randomly
+		if(featuresToString(manifest1).equals(featuresToString(manifest2))) return true;
+		return false;
 
+	}
 
 	public static synchronized void persistFeaturesFile(Features features, File featuresFile){
 		try {

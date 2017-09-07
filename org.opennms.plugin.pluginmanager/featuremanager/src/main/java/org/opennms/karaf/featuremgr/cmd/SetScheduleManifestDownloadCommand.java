@@ -61,7 +61,7 @@ public class SetScheduleManifestDownloadCommand extends OsgiCommandSupport {
 			
 			String schedule = getPluginFeatureManagerService().updateSchedule(useRemotePluginManagers, retryInterval, retryNumber, updateInterval);;
 
-			String msg="manifest schedule set to: "+schedule;
+			String msg="manifest schedule command result: "+schedule;
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {
