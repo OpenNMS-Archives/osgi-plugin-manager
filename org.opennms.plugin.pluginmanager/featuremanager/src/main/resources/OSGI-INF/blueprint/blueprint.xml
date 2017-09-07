@@ -30,7 +30,10 @@
   <!-- load default properties from org.opennms.features.licencemgr.config.cfg if exists at startup -->
   <cm:property-placeholder persistent-id="org.opennms.features.featuremgr.config" update-strategy="none">
     <cm:default-properties>
-      <!-- if true, will try to download manifest feature list from remote urls -->
+      <!-- if true, will try to use local manifest file before trying to download new manifest -->
+      <cm:property name="org.opennms.karaf.featuremgr.useLocalManifestAtStartup" value="true" />
+      
+      <!-- if true, will try to download manifest feature list from remote urls after initial startup -->
       <cm:property name="org.opennms.karaf.featuremgr.useRemotePluginManagers" value="false" />
 
       <!-- interval (ms) before retrying unsuccessful download of manifests -->
@@ -63,9 +66,10 @@
   <!-- plugin feature manager service -->
   <service interface="org.opennms.karaf.featuremgr.PluginFeatureManagerService" ref="pluginFeatureManagerImpl" />
 
-  <bean id="pluginFeatureManagerImpl" class="org.opennms.karaf.featuremgr.PluginFeatureManagerImpl">
+  <bean id="pluginFeatureManagerImpl" class="org.opennms.karaf.featuremgr.PluginFeatureManagerImpl" init-method="init" destroy-method="destroy" >
     <property name="featuresService" ref="featuresService" />
     <property name="configurationAdmin" ref="configurationAdmin" />
+    <property name="useLocalManifestAtStartup" value="${org.opennms.karaf.featuremgr.useLocalManifestAtStartup}" />
     <property name="useRemotePluginManagers" value="${org.opennms.karaf.featuremgr.useRemotePluginManagers}" />
     <property name="remotePluginManagersUrls" value="${org.opennms.karaf.featuremgr.remotePluginManagersUrls}" />
     <property name="remoteUsername" value="${org.opennms.karaf.featuremgr.remoteUsername}" />

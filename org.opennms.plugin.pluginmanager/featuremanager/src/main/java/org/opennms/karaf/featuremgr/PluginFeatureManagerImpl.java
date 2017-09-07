@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.karaf.features.FeaturesService;
@@ -56,6 +55,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 
 	private TaskTimer m_timer=new TaskTimer();
 
+	private boolean m_useLocalManifestAtStartup=true;
 	private boolean m_useRemotePluginManagers = false;	
 	private Set<String> m_remotePluginManagersUrls = new LinkedHashSet<String>();
 	private String m_remoteUsername=null;
@@ -67,8 +67,17 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	private Integer m_updateInterval=null;
 
 	// blueprint wiring methods
+
+	public void setFeaturesService(FeaturesService featuresService) {
+		this.m_featuresService = featuresService;
+	}
+
 	public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
 		this.m_configurationAdmin = configurationAdmin;
+	}
+
+	public void setUseLocalManifestAtStartup(String useLocalManifestAtStartup) {
+		this.m_useLocalManifestAtStartup = Boolean.parseBoolean(useLocalManifestAtStartup);
 	}
 
 	public void setUseRemotePluginManagers(String useRemotePluginManagers) {
@@ -85,10 +94,6 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 
 	public void setRemotePassword(String remotePassword) {
 		this.m_remotePassword = remotePassword;
-	}
-
-	public void setFeaturesService(FeaturesService featuresService) {
-		this.m_featuresService = featuresService;
 	}
 
 	public void setInstalledManifestUri(String installedManifestUri) {
@@ -116,6 +121,71 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 	}
 
 	// business methods
+
+
+
+	/**
+	 * init method at startup
+	 */
+	public synchronized void init(){
+		System.out.println("PluginFeatureManager starting up. Use local manifest at startup="+m_useLocalManifestAtStartup
+				+ " Use remote plugin managers="+m_useRemotePluginManagers);
+		LOG.info("PluginFeatureManager starting up Use local manifest at startup="+m_useLocalManifestAtStartup
+				+ " Use remote plugin managers="+m_useRemotePluginManagers);
+
+		// run in separate thread so that init thread completes
+		Thread manifestStartup = new Thread(new Runnable() {
+			public void run() {
+				if(m_useLocalManifestAtStartup) {
+					LOG.info("PluginFeatureManager starting up without using local manifest (useLocalManifestAtStartup=true)");
+					try{
+						String manifest = getInstalledManifest();
+						if (manifest==null){
+							LOG.info("PluginFeatureManager trying to startup using local manifest but no local manifest file present.");
+						} else{
+							LOG.info("PluginFeatureManager trying to startup using local manifest="+manifest);
+							installNewManifest(manifest);
+							LOG.info("PluginFeatureManager installed local manifest");
+						}
+					}catch(Exception ex){
+						LOG.error("PluginFeatureManager problem installing local manifest",ex);
+					}
+				} LOG.info("PluginFeatureManager starting up without using local manifest (useLocalManifestAtStartup=false)");
+				// start manifest schedule if enabled after installing local manifest
+				if(m_useRemotePluginManagers){
+					LOG.info("PluginFeatureManager schedulling download of manifests from remote plugin manager (useRemotePluginManagers=true)");
+					try{
+						restartSchedule();
+					}catch(Exception ex){
+						LOG.error("PluginFeatureManager problem starting manifest download schedule",ex);
+					}
+				} else {
+					LOG.info("PluginFeatureManager download of manifests from remote plugin manager not scheduled. (useRemotePluginManagers=false)");
+				}
+			}
+		});
+		manifestStartup.start();
+
+
+		LOG.info("PluginFeatureManager started");
+		System.out.println("PluginFeatureManager started");
+	}
+
+	/**
+	 * destroy method
+	 */
+	public synchronized void destroy(){
+		LOG.info("PluginFeatureManager shutting down");
+		System.out.println("PluginFeatureManager shutting down");
+		try{
+			if (m_timer!=null) m_timer.stopSchedule();
+		} catch ( Exception ex){
+			LOG.error("problem stopping schedule when shutting down", ex);
+		}finally {
+			m_timer=null;
+		}
+
+	}
 
 	@Override
 	public synchronized String installNewManifest(String newManifestStr) {
@@ -173,6 +243,9 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 		try {
 			URI uri = new URI(m_installedManifestUri);
 			File installedManifestFile = new File(uri.getPath());
+
+			if(!installedManifestFile.exists()) return null;
+
 			Features features = FeaturesUtils.loadFeaturesFile(installedManifestFile);
 			return FeaturesUtils.featuresToString(features);
 		} catch(Exception ex) {
@@ -210,11 +283,35 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 			try{
 				success=pluginFeatureManager.updateManifestFromPluginManagers();
 			} catch(Exception e){
-				LOG.error("problem running scheduled updating manifest from plugin managers",e);
+				LOG.error("problem running schedule updating manifest from plugin managers",e);
 			}
 			return success;
 		}
 
+	}
+
+	public synchronized void restartSchedule(){
+		if(this.m_retryInterval==null) throw new RuntimeException("retryInterval cannot be null when starting schedule");
+		if(this.m_retryNumber==null) throw new RuntimeException("retryNumber cannot be null when starting schedule");
+		if(this.m_updateInterval==null) throw new RuntimeException("updateInterval cannot be null when starting schedule");
+
+		m_timer.stopSchedule();
+		if(this.m_useRemotePluginManagers){
+			m_timer.setRetryInterval(this.m_retryInterval);
+			m_timer.setRetryNumber(this.m_retryNumber);
+			m_timer.setUpdateInterval(this.m_updateInterval);
+
+			PluginFeatureManagerImpl pluginFeatureManager=this;
+			ScheduledTask task = new ScheduledManifestUpdate(pluginFeatureManager);
+
+			m_timer.setTask(task);
+
+			m_timer.startSchedule();
+		}
+	}
+
+	public synchronized void stopSchedule(){
+		if (m_timer!=null) m_timer.stopSchedule();
 	}
 
 	@Override
@@ -240,23 +337,9 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 
 		if(!justlist){
 			msg="Restarting schedule with new configuration.\n";
-			m_timer.stopSchedule();
-
-			if(this.m_useRemotePluginManagers){
-				m_timer.stopSchedule();
-				m_timer.setRetryInterval(this.m_retryInterval);
-				m_timer.setRetryNumber(this.m_retryNumber);
-				m_timer.setUpdateInterval(this.m_updateInterval);
-
-				PluginFeatureManagerImpl pluginFeatureManager=this;
-				ScheduledTask task = new ScheduledManifestUpdate(pluginFeatureManager);
-
-				m_timer.setTask(task);
-
-				m_timer.startSchedule();
-			}
+			restartSchedule();
 		}
-		
+
 		if(m_timer.getScheduleIsRunning()){
 			msg=msg+"Schedule Running\n";
 		} else msg=msg+"Schedule Stopped\n";

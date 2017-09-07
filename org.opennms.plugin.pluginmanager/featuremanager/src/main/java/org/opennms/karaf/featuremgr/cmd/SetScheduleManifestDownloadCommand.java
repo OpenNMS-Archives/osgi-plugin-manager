@@ -39,7 +39,7 @@ public class SetScheduleManifestDownloadCommand extends OsgiCommandSupport {
 		_pluginFeatureManagerService = pluginFeatureManager;
 	}
 	
-	@Option(name = "-p", aliases =  "--useRemotePluginManagers", description = "(true or false) If true, will try to download manifest feature list from remote urls", required = false, multiValued = false)
+	@Option(name = "-e", aliases =  "--enableRemotePluginManagers", description = "(true or false) If true, will try to download manifest feature list from remote urls", required = false, multiValued = false)
 	String useRemotePluginManagersStr;
 	
 	@Option(name = "-i", aliases =  "--retryInterval", description = "(integer ms) Interval before retrying unsuccessful download of manifests ", required = false, multiValued = false)

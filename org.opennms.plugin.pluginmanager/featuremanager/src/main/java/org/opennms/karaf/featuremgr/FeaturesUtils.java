@@ -42,7 +42,6 @@ import org.opennms.karaf.featuremgr.jaxb.karaf.feature.ObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class FeaturesUtils {
 	private static final Logger LOG = LoggerFactory.getLogger(FeaturesUtils.class);
 
