@@ -865,15 +865,17 @@ public class PluginManagerImpl implements PluginManager {
 			throw new RuntimeException("karafInstance="+karafInstance+" is not accessable remotely");
 		}
 
-		String manifest = getPluginsManifestFeatures(karafInstance);
-
 		FeaturesServiceClientRestJerseyImpl featuresServiceClient = new FeaturesServiceClientRestJerseyImpl(); 
 		featuresServiceClient.setBaseUrl(karafInstanceUrl);
 		featuresServiceClient.setUserName(karafManifest.getKarafInstanceUserName());
 		featuresServiceClient.setPassword(karafManifest.getKarafInstancePassword());
 		featuresServiceClient.setBasePath(FEATURE_MGR_BASE_PATH);
 
+		String manifest=null;
 		try {
+			// get manifest to install
+			manifest = getPluginsManifestFeatures(karafInstance);
+			
 			// install feature manifest
 			featuresServiceClient.featuresSynchronizeManifest(manifest);
 
