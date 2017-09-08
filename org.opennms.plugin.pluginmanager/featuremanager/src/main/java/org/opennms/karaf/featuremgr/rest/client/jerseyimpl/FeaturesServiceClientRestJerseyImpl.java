@@ -16,8 +16,9 @@
 
 package org.opennms.karaf.featuremgr.rest.client.jerseyimpl;
 
-
 import javax.ws.rs.core.MediaType;
+
+import jline.internal.Log;
 
 import org.opennms.karaf.featuremgr.jaxb.ErrorMessage;
 import org.opennms.karaf.featuremgr.jaxb.FeatureList;
@@ -29,20 +30,20 @@ import org.opennms.karaf.featuremgr.jaxb.Util;
 import org.opennms.karaf.featuremgr.rest.client.FeaturesServiceClient;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 
 /**
  * @author craig gallen
- *
  */
 public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClient {
-	
+
 	private String baseUrl = "http://localhost:8181";
 	private String basePath = "/featuremgr";
 	private String userName = null; // If userName is null no basic authentication is generated
 	private String password = "";
-	
+
 	/**
 	 * @return the userName
 	 */
@@ -60,7 +61,7 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	}
 
 	/**
-     * @return the password
+	 * @return the password
 	 */
 	public String getPassword() {
 		return password;
@@ -109,7 +110,7 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	public void setBasePath(String basePath) {
 		this.basePath = basePath;
 	}
-	
+
 	private Client newClient(){
 		Client client = Client.create();
 		if (userName!=null) client.addFilter(new HTTPBasicAuthFilter(userName, password));
@@ -123,18 +124,18 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	public FeatureList getFeaturesList() throws Exception {
 
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-		
+
 		Client client = newClient();
-		
+
 		//http://localhost:8181/featuremgr/rest/v1-0/features-list
-		
+
 		WebResource r = client
 				.resource(baseUrl+basePath+"/rest/v1-0/features-list");
 
 		FeatureList featurelist = r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(FeatureList.class);
-		
+
 		return featurelist;
 
 	}
@@ -146,47 +147,47 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	public FeatureWrapperJaxb getFeaturesInfo(String name, String version) throws Exception {
 
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-	    if (name==null)throw new RuntimeException("?name= parameter must be set");
-	    
+		if (name==null)throw new RuntimeException("?name= parameter must be set");
+
 		Client client = newClient();
-		
+
 		//http://localhost:8181/featuremgr/rest/v1-0/features-info?name=myproject.Feature&version=1.0-SNAPSHOT
-		
+
 		String getStr= baseUrl+basePath+"/rest/v1-0/features-info?name="+name;
 		if(version != null) getStr=getStr+"&version="+version;
-		
+
 		WebResource r = client
 				.resource(getStr);
 
 		FeatureWrapperJaxb featurewrapper = r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(FeatureWrapperJaxb.class);
-		
+
 		return featurewrapper;
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.opennms.karaf.featuremgr.rest.client.FeaturesService#featuresInstall(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void featuresInstall(String name, String version) throws Exception {
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-	    if (name==null)throw new RuntimeException("?name= parameter must be set");
-	    
+		if (name==null)throw new RuntimeException("?name= parameter must be set");
+
 		Client client = newClient();
-		
+
 		//http://localhost:8181/featuremgr/rest/v1-0/features-install?name=myproject.Feature&version=1.0-SNAPSHOT
-		
+
 		String getStr= baseUrl+basePath+"/rest/v1-0/features-install?name="+name;
 		if(version != null) getStr=getStr+"&version="+version;
-		
+
 		WebResource r = client.resource(getStr);
 
 		String replyString= r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(String.class);
-		
+
 		// unmarshalling reply
 		Object replyObject = Util.fromXml(replyString);
 		if (replyObject instanceof ErrorMessage){
@@ -196,7 +197,7 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 					+" message:"+ errorm.getMessage()
 					+" code:"+ errorm.getCode()
 					+" developer message:"+errorm.getDeveloperMessage());
-			
+
 		} else if (! (replyObject instanceof ReplyMessage) ){
 			throw new RuntimeException("received unexpected reply object: "+replyObject.getClass().getCanonicalName());
 		} 
@@ -209,21 +210,21 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	@Override
 	public void featuresUninstall(String name, String version) throws Exception {
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-	    if (name==null)throw new RuntimeException("?name= parameter must be set");
-	    
+		if (name==null)throw new RuntimeException("?name= parameter must be set");
+
 		Client client = newClient();
-		
+
 		//http://localhost:8181/featuremgr/rest/v1-0/features-uninstall?name=myproject.Feature&version=1.0-SNAPSHOT
-		
+
 		String getStr= baseUrl+basePath+"/rest/v1-0/features-uninstall?name="+name;
 		if(version != null) getStr=getStr+"&version="+version;
-		
+
 		WebResource r = client.resource(getStr);
 
 		String replyString= r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(String.class);
-		
+
 		// unmarshalling reply
 		Object replyObject = Util.fromXml(replyString);
 		if (replyObject instanceof ErrorMessage){
@@ -233,7 +234,7 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 					+" message:"+ errorm.getMessage()
 					+" code:"+ errorm.getCode()
 					+" developer message:"+errorm.getDeveloperMessage());
-			
+
 		} else if (! (replyObject instanceof ReplyMessage) ){
 			throw new RuntimeException("received unexpected reply object: "+replyObject.getClass().getCanonicalName());
 		} 
@@ -247,18 +248,18 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	@Override
 	public RepositoryList getFeaturesListRepositories() throws Exception {
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-		
+
 		Client client = newClient();
-		
+
 		//http://localhost:8181/featuremgr/rest/v1-0/features-listrepositories
-		
+
 		WebResource r = client
 				.resource(baseUrl+basePath+"/rest/v1-0/features-listrepositories");
 
 		RepositoryList repositoryList = r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(RepositoryList.class);
-		
+
 		return repositoryList;
 
 	}
@@ -272,20 +273,20 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 		// check parameters
 		if (name== null && uriStr==null) throw new RuntimeException("you must specify either a ?uri= or ?name= parameter.");
 		if (name!=null && uriStr!=null) throw new RuntimeException("you can only specify ONE of either a ?uri= or ?name= parameter.");
-	    
+
 		Client client = newClient();
 
 		//http://localhost:8181/featuremgr/rest/v1-0/features-repositoryinfo?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
-		
+
 		String getStr= baseUrl+basePath+"/rest/v1-0/features-repositoryinfo?"+ ( (uriStr==null)? "name="+name : "uri="+uriStr);
-		
+
 		WebResource r = client
 				.resource(getStr);
 
 		RepositoryWrapperJaxb repositoryWrapper = r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(RepositoryWrapperJaxb.class);
-		
+
 		return repositoryWrapper;
 	}
 
@@ -295,21 +296,21 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	@Override
 	public void featuresRemoveRepository(String uriStr) throws Exception {
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-		
-	    if (uriStr==null)throw new RuntimeException("uriStr= parameter must be set");
-	    
+
+		if (uriStr==null)throw new RuntimeException("uriStr= parameter must be set");
+
 		Client client = newClient();
-		
+
 		//http://localhost:8181/featuremgr/rest/v1-0/features-removerepository?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
-		
+
 		String getStr= baseUrl+basePath+"/rest/v1-0/features-removerepository?uri="+uriStr;
-		
+
 		WebResource r = client.resource(getStr);
 
 		String replyString= r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(String.class);
-		
+
 		// unmarshalling reply
 		Object replyObject = Util.fromXml(replyString);
 		if (replyObject instanceof ErrorMessage){
@@ -319,7 +320,7 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 					+" message:"+ errorm.getMessage()
 					+" code:"+ errorm.getCode()
 					+" developer message:"+errorm.getDeveloperMessage());
-			
+
 		} else if (! (replyObject instanceof ReplyMessage) ){
 			throw new RuntimeException("received unexpected reply object: "+replyObject.getClass().getCanonicalName());
 		} 
@@ -333,20 +334,20 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	@Override
 	public void featuresAddRepository(String uriStr) throws Exception {
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-	    if (uriStr==null)throw new RuntimeException("uriStr= parameter must be set");
-	    
+		if (uriStr==null)throw new RuntimeException("uriStr= parameter must be set");
+
 		Client client = newClient();
-		
+
 		//http://localhost:8181/featuremgr/rest/v1-0/features-addrepositoryurl?uri=mvn:org.opennms.project/myproject.Feature/1.0-SNAPSHOT/xml/features
-		
+
 		String getStr= baseUrl+basePath+"/rest/v1-0/features-addrepositoryurl?uri="+uriStr;
-		
+
 		WebResource r = client.resource(getStr);
 
 		String replyString= r
 				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
 				.accept(MediaType.APPLICATION_XML).get(String.class);
-		
+
 		// unmarshalling reply
 		Object replyObject = Util.fromXml(replyString);
 		if (replyObject instanceof ErrorMessage){
@@ -356,7 +357,7 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 					+" message:"+ errorm.getMessage()
 					+" code:"+ errorm.getCode()
 					+" developer message:"+errorm.getDeveloperMessage());
-			
+
 		} else if (! (replyObject instanceof ReplyMessage) ){
 			throw new RuntimeException("received unexpected reply object: "+replyObject.getClass().getCanonicalName());
 		} 
@@ -364,4 +365,51 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 
 	}
 
+	/*
+	 * Manifest Management ReST Interface
+	 * (non-Javadoc)
+	 * @see org.opennms.karaf.featuremgr.rest.client.FeaturesServiceClient#featuresSynchronizeManifest(java.lang.String)
+	 */
+	@Override
+	public void featuresSynchronizeManifest(String manifest) throws Exception {
+		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
+		if(manifest==null ) throw new RuntimeException("licenceMetadata must be set");
+
+		Client client = newClient();
+
+		//http://localhost:8181/featuremgr/rest/v1-0/features-synchronizemanifest
+
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-synchronizemanifest";
+
+		WebResource r = client.resource(getStr);
+
+		// POST method
+		ClientResponse response = r.accept(MediaType.APPLICATION_XML)
+				.type(MediaType.APPLICATION_XML).post(ClientResponse.class, manifest);
+
+		// check response status code and reply error message
+
+		if (response.getStatus() != 200) {
+			String errMsg= "SynchronizeManifest Failed : HTTP error code : "+ response.getStatus();
+			String replyString=null;
+			Object replyObject=null;
+			try {
+				replyString = response.getEntity(String.class);
+				// unmarshalling reply
+				replyObject = Util.fromXml(replyString);
+			} catch (Exception e) {
+				throw new RuntimeException(errMsg+"cannot parse reply: replyString="+replyString,e);
+			}
+
+			if (replyObject instanceof ErrorMessage){
+				ErrorMessage errorm= (ErrorMessage)replyObject;
+				throw new RuntimeException("could not synchronize manifest."
+						+" status:"+ errorm.getStatus()
+						+" message:"+ errorm.getMessage()
+						+" code:"+ errorm.getCode()
+						+" developer message:"+errorm.getDeveloperMessage());
+			} else throw new RuntimeException("received unexpected reply object replyString="+replyString);
+		}
+		// success !!!
+	}
 }

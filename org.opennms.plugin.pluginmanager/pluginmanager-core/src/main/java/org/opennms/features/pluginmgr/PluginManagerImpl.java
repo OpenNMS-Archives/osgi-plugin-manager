@@ -813,7 +813,7 @@ public class PluginManagerImpl implements PluginManager {
 		if (pluginManifest==null) return new ProductSpecList(); // return empty list if no entry found
 		return pluginManifest;
 	}
-	
+
 	@Override
 	public String getPluginsManifestFeatures(String karafInstance) {
 		if(karafInstance==null) throw new RuntimeException("karafInstance cannot be null");
@@ -821,7 +821,7 @@ public class PluginManagerImpl implements PluginManager {
 		if (! pluginModelJaxb.getKarafManifestEntryMap().containsKey(karafInstance)){
 			throw new RuntimeException("unknown karafInstance "+karafInstance);
 		} else pluginManifest = pluginModelJaxb.getKarafManifestEntryMap().get(karafInstance).getPluginManifest();
-		
+
 		//get set of repos and set of features. Multiple instances of the same repo will only create one entry;
 		Set<String> repos = new LinkedHashSet<String>();
 		Set<String> features = new LinkedHashSet<String>();
@@ -833,7 +833,7 @@ public class PluginManagerImpl implements PluginManager {
 		}
 
 		StringBuffer repostr= new StringBuffer("<features name=\"manifest-features\" xmlns=\"http://karaf.apache.org/xmlns/features/v1.2.0\">\n");
-		
+
 		for(String repo:repos){
 			repostr.append("  <repository>").append(repo).append("</repository>\n");
 		}
@@ -845,6 +845,46 @@ public class PluginManagerImpl implements PluginManager {
 		repostr.append("</features>\n");
 
 		return repostr.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.opennms.features.pluginmgr.PluginManager#installPluginsManifestFeatures(java.lang.String)
+	 */
+	@Override
+	public void installPluginsManifestFeatures(String karafInstance) {
+		if(karafInstance==null) throw new RuntimeException("karafInstance cannot be null");
+				
+		SortedMap<String, KarafManifestEntryJaxb> karafInstances = getKarafInstances();
+		if (! karafInstances.containsKey(karafInstance)) throw new RuntimeException("system does not know karafInstance="+karafInstance);
+		KarafManifestEntryJaxb karafManifest = karafInstances.get(karafInstance);
+		String karafInstanceUrl=karafManifest.getKarafInstanceUrl();
+
+		// only update remote if accessible
+		if (karafManifest.getRemoteIsAccessible()==null || ! karafManifest.getRemoteIsAccessible()){
+			throw new RuntimeException("karafInstance="+karafInstance+" is not accessable remotely");
+		}
+
+		String manifest = getPluginsManifestFeatures(karafInstance);
+
+		FeaturesServiceClientRestJerseyImpl featuresServiceClient = new FeaturesServiceClientRestJerseyImpl(); 
+		featuresServiceClient.setBaseUrl(karafInstanceUrl);
+		featuresServiceClient.setUserName(karafManifest.getKarafInstanceUserName());
+		featuresServiceClient.setPassword(karafManifest.getKarafInstancePassword());
+		featuresServiceClient.setBasePath(FEATURE_MGR_BASE_PATH);
+
+		try {
+			// install feature manifest
+			featuresServiceClient.featuresSynchronizeManifest(manifest);
+
+			// refresh karaf instance - note the remote may not update features immediately
+			refreshKarafEntry(karafInstance);
+		} catch (Exception e) {
+			throw new RuntimeException("problem installing plugins manifest "+manifest
+					+ " for Karaf Instance="+karafInstance
+					+ " karafInstanceUrl="+karafInstanceUrl
+					+ ": ", e);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -1185,6 +1225,5 @@ public class PluginManagerImpl implements PluginManager {
 		System.out.println("Plugin Manager Shutting Down ");
 		LOG.info("Plugin Manager Shutting Down ");
 	}
-
 
 }

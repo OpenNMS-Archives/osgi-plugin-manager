@@ -137,13 +137,13 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 		Thread manifestStartup = new Thread(new Runnable() {
 			public void run() {
 				if(m_useLocalManifestAtStartup) {
-					LOG.info("PluginFeatureManager starting up without using local manifest (useLocalManifestAtStartup=true)");
+					LOG.info("PluginFeatureManager trying to startup using local manifest (useLocalManifestAtStartup=true)");
 					try{
 						String manifest = getInstalledManifest();
 						if (manifest==null){
 							LOG.info("PluginFeatureManager trying to startup using local manifest but no local manifest file present.");
 						} else{
-							LOG.info("PluginFeatureManager trying to startup using local manifest="+manifest);
+							LOG.info("PluginFeatureManager trying to install local manifest="+manifest);
 							installNewManifest(manifest);
 							LOG.info("PluginFeatureManager installed local manifest");
 						}
@@ -160,7 +160,7 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 						LOG.error("PluginFeatureManager problem starting manifest download schedule",ex);
 					}
 				} else {
-					LOG.info("PluginFeatureManager download of manifests from remote plugin manager not scheduled. (useRemotePluginManagers=false)");
+					LOG.info("PluginFeatureManager scheduled download of manifests from remote plugin manager not enabled. (useRemotePluginManagers=false)");
 				}
 			}
 		});

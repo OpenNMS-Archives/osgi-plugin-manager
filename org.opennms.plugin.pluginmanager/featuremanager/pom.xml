@@ -132,6 +132,7 @@
           <excludes>
             <!-- prevent tests running in this package. These are one off development tests -->
             <exclude>**/org/opennms/karaf/featuremgr/rest/client/test/manual/*.java</exclude>
+            <exclude>**/org/opennms/karaf/featuremgr/manifest/client/test/jerseyimpl/manual/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>

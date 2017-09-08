@@ -1,4 +1,4 @@
-package org.opennms.karaf.featuremgr.manifest.client.test.manual.jerseyimpl;
+package org.opennms.karaf.featuremgr.manifest.client.test.jerseyimpl.manual;
 
 import static org.junit.Assert.*;
 

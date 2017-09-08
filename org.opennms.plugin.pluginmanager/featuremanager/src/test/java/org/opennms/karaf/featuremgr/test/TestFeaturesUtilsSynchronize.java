@@ -75,9 +75,9 @@ public class TestFeaturesUtilsSynchronize {
 
 		String featuresStr = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
 				+"<features name=\"manifest-features\" xmlns=\"http://karaf.apache.org/xmlns/features/v1.2.0\">"
-				+"  <repository>mvn:org.opennms.karaf/opennms/21.0.0-SNAPSHOT/xml/features</repository>"
+				+"  <repository>mvn:org.apache.activemq/activemq-karaf/5.14.5/xml/features</repository>"
 				+"  <feature name=\"manifest\" version=\"1.0-SNAPSHOT\" description=\"Manifest\">"
-				+"  <feature>alarm-change-notifier</feature> "
+				+"  <feature>camel-http</feature> "
 				+"</feature>"
 				+"</features>";
 

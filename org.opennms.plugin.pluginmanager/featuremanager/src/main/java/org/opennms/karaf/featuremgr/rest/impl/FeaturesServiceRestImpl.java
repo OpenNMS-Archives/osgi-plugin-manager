@@ -15,20 +15,9 @@
 
 package org.opennms.karaf.featuremgr.rest.impl;
 
-import org.apache.karaf.features.BundleInfo;
-import org.apache.karaf.features.Capability;
-import org.apache.karaf.features.Conditional;
-import org.apache.karaf.features.ConfigFileInfo;
-import org.apache.karaf.features.ConfigInfo;
-import org.apache.karaf.features.Dependency;
 import org.apache.karaf.features.Feature;
 import org.apache.karaf.features.FeaturesService;
-import org.apache.karaf.features.Library;
 import org.apache.karaf.features.Repository;
-import org.apache.karaf.features.FeaturesService.Option;
-import org.apache.karaf.features.Requirement;
-import org.apache.karaf.features.Scoping;
-import org.opennms.karaf.featuremgr.FeaturesUtils;
 import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 import org.opennms.karaf.featuremgr.jaxb.FeatureList;
 import org.opennms.karaf.featuremgr.jaxb.FeatureWrapperJaxb;
@@ -36,15 +25,9 @@ import org.opennms.karaf.featuremgr.jaxb.ErrorMessage;
 import org.opennms.karaf.featuremgr.jaxb.RepositoryList;
 import org.opennms.karaf.featuremgr.jaxb.RepositoryWrapperJaxb;
 import org.opennms.karaf.featuremgr.jaxb.ReplyMessage;
-import org.opennms.karaf.featuremgr.jaxb.karaf.feature.Features;
-import org.opennms.karaf.featuremgr.jaxb.karaf.feature.ObjectFactory;
-
-import java.io.File;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -55,13 +38,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBElement;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
 
 
 /**
