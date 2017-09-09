@@ -105,6 +105,12 @@ public interface FeaturesServiceClient {
 	 */
 	public void  featuresSynchronizeManifest(String manifest) throws Exception;
 
-
+	/**
+	 * Uninstalls manifest of features in remote karaf
+	 * @param manifest as karaf XML format features file
+	 * @return
+	 * @throws Exception
+	 */
+	void featuresUninstallManifest();
 
 } 

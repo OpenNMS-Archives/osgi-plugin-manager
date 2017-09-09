@@ -118,7 +118,9 @@ public class FeaturesServiceClientRestJerseyTest {
 		this.featuresInstall();
 		this.getFeaturesInfo();
 		this.featuresUninstall();
-		this.featuresRemoveRepository();		
+		this.featuresRemoveRepository();
+		this.featuresSynchronizeManifest();
+		this.featuresUninstallManifest();
 		
 		LOG.debug("@Test - LICENCE MANAGER TESTS.FINISH");
 	}
@@ -269,7 +271,7 @@ public class FeaturesServiceClientRestJerseyTest {
 		LOG.debug("@Test - featuresRemoveRepository.FINISH");
 	}
 	
-	@Test
+	//@Test
 	public void featuresSynchronizeManifest() {
 		LOG.debug("@Test - featuresSynchronizeManifest.START");
 
@@ -285,6 +287,24 @@ public class FeaturesServiceClientRestJerseyTest {
 		}
 		
 		LOG.debug("@Test - featuresSynchronizeManifest.FINISH");
+	}
+	
+	//@Test
+	public void featuresUninstallManifest() {
+		LOG.debug("@Test - featuresUninstallManifest.START");
+
+		//http://localhost:8181/featuremgr/rest/v1-0/features-uninstallmanifest
+
+		FeaturesServiceClient featuresService = getFeaturesService(); 
+		try {
+			LOG.debug("@Test - featuresUninstallManifest trying to uninstall manifest");
+			featuresService.featuresUninstallManifest();
+		} catch (Exception e) {
+			LOG.error("problem in test featuresUninstallManifest(). Exception:",e);
+			fail("@Test - featuresUninstallManifest() failed. See stack trace in consol");
+		}
+		
+		LOG.debug("@Test - featuresUninstallManifest.FINISH");
 	}
 
 }

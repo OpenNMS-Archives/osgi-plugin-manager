@@ -228,6 +228,12 @@ public interface PluginManager {
 	 * @param karafInstance
 	 */
 	public void installPluginsManifestFeatures(String karafInstance);
+	
+	/**
+	 * uninstalls the plugin manifest in a karafInstance
+	 * @param karafInstance
+	 */
+	public void uninstallPluginsManifestFeatures(String karafInstance);
 
 	/**
 	 * adds a plugin to the manifest of plugins scheduled to be installed in the given karaf instance

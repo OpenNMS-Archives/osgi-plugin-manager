@@ -373,7 +373,7 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 	@Override
 	public void featuresSynchronizeManifest(String manifest) throws Exception {
 		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
-		if(manifest==null ) throw new RuntimeException("licenceMetadata must be set");
+		if(manifest==null ) throw new RuntimeException("manifest must be set");
 
 		Client client = newClient();
 
@@ -412,4 +412,47 @@ public class FeaturesServiceClientRestJerseyImpl implements FeaturesServiceClien
 		}
 		// success !!!
 	}
+
+	@Override
+	public void featuresUninstallManifest() {
+		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
+
+		Client client = newClient();
+
+		//http://localhost:8181/featuremgr/rest/v1-0/features-uninstallmanifest
+
+		String getStr= baseUrl+basePath+"/rest/v1-0/features-uninstallmanifest";
+
+		WebResource r = client.resource(getStr);
+
+		// POST method
+		ClientResponse response = r.accept(MediaType.APPLICATION_XML)
+				.type(MediaType.APPLICATION_XML).post(ClientResponse.class);
+
+		// check response status code and reply error message
+
+		if (response.getStatus() != 200) {
+			String errMsg= "Uninstall manifest Failed : HTTP error code : "+ response.getStatus();
+			String replyString=null;
+			Object replyObject=null;
+			try {
+				replyString = response.getEntity(String.class);
+				// unmarshalling reply
+				replyObject = Util.fromXml(replyString);
+			} catch (Exception e) {
+				throw new RuntimeException(errMsg+"cannot parse reply: replyString="+replyString,e);
+			}
+
+			if (replyObject instanceof ErrorMessage){
+				ErrorMessage errorm= (ErrorMessage)replyObject;
+				throw new RuntimeException("could not uninstall manifest."
+						+" status:"+ errorm.getStatus()
+						+" message:"+ errorm.getMessage()
+						+" code:"+ errorm.getCode()
+						+" developer message:"+errorm.getDeveloperMessage());
+			} else throw new RuntimeException("received unexpected reply object replyString="+replyString);
+		}
+		// success !!!
+	}
+	
 }

@@ -216,13 +216,23 @@ public class SessionPluginManager {
 	}
 	
 	public void addPluginToManifest(String selectedProductId) {
-		pluginManager.addPluginToManifest(selectedProductId, karafInstance);
-		
+		pluginManager.addPluginToManifest(selectedProductId, karafInstance);	
 	}
 	
+	public String getPluginsManifestFeatures(){
+		return pluginManager.getPluginsManifestFeatures(karafInstance);
+	}
+	
+	public void installPluginsManifestFeatures(){
+		pluginManager.installPluginsManifestFeatures(karafInstance);
+	}
+	
+	public void uninstallPluginsManifestFeatures(){
+		pluginManager.uninstallPluginsManifestFeatures(karafInstance);
+	}
+
 	public void addUserDefinedPluginToManifest(ProductMetadata productMetadata) {
 		pluginManager.addUserDefinedPluginToManifest(productMetadata, karafInstance);
-		
 	}
 	
 	public void removePluginFromManifest(String selectedProductId) {

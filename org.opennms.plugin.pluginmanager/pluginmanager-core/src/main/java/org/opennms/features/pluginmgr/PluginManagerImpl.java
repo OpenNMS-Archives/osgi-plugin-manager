@@ -888,6 +888,43 @@ public class PluginManagerImpl implements PluginManager {
 					+ ": ", e);
 		}
 	}
+	
+	@Override
+	public void uninstallPluginsManifestFeatures(String karafInstance) {
+		if(karafInstance==null) throw new RuntimeException("karafInstance cannot be null");
+		
+		SortedMap<String, KarafManifestEntryJaxb> karafInstances = getKarafInstances();
+		if (! karafInstances.containsKey(karafInstance)) throw new RuntimeException("system does not know karafInstance="+karafInstance);
+		KarafManifestEntryJaxb karafManifest = karafInstances.get(karafInstance);
+		String karafInstanceUrl=karafManifest.getKarafInstanceUrl();
+
+		// only update remote if accessible
+		if (karafManifest.getRemoteIsAccessible()==null || ! karafManifest.getRemoteIsAccessible()){
+			throw new RuntimeException("karafInstance="+karafInstance+" is not accessable remotely");
+		}
+
+		FeaturesServiceClientRestJerseyImpl featuresServiceClient = new FeaturesServiceClientRestJerseyImpl(); 
+		featuresServiceClient.setBaseUrl(karafInstanceUrl);
+		featuresServiceClient.setUserName(karafManifest.getKarafInstanceUserName());
+		featuresServiceClient.setPassword(karafManifest.getKarafInstancePassword());
+		featuresServiceClient.setBasePath(FEATURE_MGR_BASE_PATH);
+
+		String manifest=null;
+		try {
+			// uninstall feature manifest
+			featuresServiceClient.featuresUninstallManifest();
+
+			// refresh karaf instance - note the remote may not update features immediately
+			refreshKarafEntry(karafInstance);
+		} catch (Exception e) {
+			throw new RuntimeException("problem installing plugins manifest "+manifest
+					+ " for Karaf Instance="+karafInstance
+					+ " karafInstanceUrl="+karafInstanceUrl
+					+ ": ", e);
+		}
+
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see org.opennms.features.pluginmgr.PluginManager#addPluginToManifest(java.lang.String, java.lang.String)

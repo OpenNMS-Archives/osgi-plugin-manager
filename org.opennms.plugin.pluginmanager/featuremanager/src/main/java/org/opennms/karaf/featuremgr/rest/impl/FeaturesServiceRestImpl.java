@@ -364,5 +364,28 @@ public class FeaturesServiceRestImpl {
 		return Response.status(200).entity(new ReplyMessage(200, 0, "successfully deployed features in manifest", "", "")).build();
 
 	}
+	
+	@POST
+	@Path("/features-uninstallmanifest")
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response  featuresUninstallManifest() throws Exception {
+
+		PluginFeatureManagerService pluginFeatureManagerService = ServiceLoader.getPluginFeatureManagerService();
+		if (pluginFeatureManagerService == null) throw new RuntimeException("ServiceLoader.getPluginFeatureManagerService() cannot be null.");
+
+		FeaturesService featuresService = ServiceLoader.getFeaturesService();
+		if (featuresService == null) throw new RuntimeException("ServiceLoader.getFeaturesService() cannot be null.");
+
+		try {
+			pluginFeatureManagerService.uninstallManifest();
+		} catch(Exception ex) {
+			//return status 400 Error
+			return Response.status(400).entity(new ErrorMessage(400, 0, "problem uninstalling manifest ", null, ex)).build();
+		}
+
+		return Response.status(200).entity(new ReplyMessage(200, 0, "successfully uninstalled manifest", "", "")).build();
+
+	}
 
 } 
