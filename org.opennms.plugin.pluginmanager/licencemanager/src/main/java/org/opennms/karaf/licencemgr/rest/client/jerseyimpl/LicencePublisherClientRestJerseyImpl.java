@@ -15,9 +15,12 @@
 
 package org.opennms.karaf.licencemgr.rest.client.jerseyimpl;
 
+import java.util.List;
+
 import javax.ws.rs.core.MediaType;
 
 import org.opennms.karaf.licencemgr.metadata.jaxb.ErrorMessage;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecList;
@@ -399,6 +402,52 @@ public class LicencePublisherClientRestJerseyImpl implements LicencePublisherCli
 
         return licenceStr;
         
+	}
+	
+	/**
+	 * /createmultilicence (POST licenceMetadata) 
+	 * @param licenceMetadataList
+	 * @return list of licence strings
+	 */
+	@Override
+	public LicenceList createMultiLicenceInstance(LicenceMetadataList licenceMetadataList){
+		if(baseUrl==null || basePath==null) throw new RuntimeException("basePath and baseUrl must both be set");
+		if(licenceMetadataList==null ) throw new RuntimeException("licenceMetadata must be set");
+	    
+		Client client = newClient();
+		
+		//http://localhost:8181/licencemgr/rest/v1-0/licence-pub/createmultilicence
+		
+		String getStr= baseUrl+basePath+"/createmultilicence";
+		
+		WebResource r = client.resource(getStr);
+		
+		// POST method
+		ClientResponse response = r.accept(MediaType.APPLICATION_XML)
+                .type(MediaType.APPLICATION_XML).post(ClientResponse.class, licenceMetadataList);
+
+        // check response status code and reply error message
+        if (response.getStatus() != 200) {
+        	ErrorMessage errorMessage=null;
+        	try {
+        		errorMessage = response.getEntity(ErrorMessage.class);
+        	} catch (Exception e) {
+        	}
+        	String errMsg= "Failed : HTTP error code : "+ response.getStatus();
+        	if (errorMessage!=null){
+        		errMsg=errMsg+" message:"+ errorMessage.getMessage()
+					+" code:"+ errorMessage.getCode()
+					+" developer message:"+errorMessage.getDeveloperMessage();
+        	}
+            throw new RuntimeException(errMsg);
+        }
+        // success !!!
+        
+        ReplyMessage replyMessage = response.getEntity(ReplyMessage.class);
+        
+        LicenceList licenceList =  replyMessage.getLicenceList();
+
+        return licenceList;
 	}
 
 

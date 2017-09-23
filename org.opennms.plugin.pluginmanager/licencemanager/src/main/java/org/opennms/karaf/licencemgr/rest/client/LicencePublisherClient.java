@@ -15,7 +15,7 @@
 
 package org.opennms.karaf.licencemgr.rest.client;
 
-
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecList;
@@ -133,6 +133,14 @@ public interface LicencePublisherClient {
 	 * @return
 	 */
 	public String createLicenceInstanceStr(LicenceMetadata licenceMetadata);
+
+
+	/**
+	 * /createmultilicence (POST licenceMetadata) 
+	 * @param licenceMetadataList
+	 * @return list of licence strings
+	 */
+	public LicenceList createMultiLicenceInstance(LicenceMetadataList licenceMetadataList);
 	
 
 	

@@ -15,14 +15,19 @@
 
 package org.opennms.karaf.licencepub;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.opennms.karaf.licencemgr.metadata.Licence;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceEntry;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
 
@@ -93,15 +98,15 @@ public class LicencePublisherImpl implements LicencePublisher {
 	@Override
 	public synchronized  String createLicenceInstanceStr(LicenceMetadata createLicenceMetadata) throws IllegalArgumentException {
 		if (createLicenceMetadata==null) throw new IllegalArgumentException("licenceMetadata cannot be null");
-		
+
 		String productId = createLicenceMetadata.getProductId();
-		
+
 		if (! licenceSpecMap.containsKey(productId))
 			throw new IllegalArgumentException("no Licence Specification exists for productId="+productId);
-		
+
 		LicenceSpecification licenceSpec = licenceSpecMap.get(productId);
 		LicenceMetadata metadataSpec = licenceSpec.getLicenceMetadataSpec();
-		
+
 		// check that the licensor is the same as in the licence specification
 		if (! metadataSpec.getLicensor().equals(createLicenceMetadata.getLicensor())) 
 			throw new IllegalArgumentException("createLicenceMetadata licensor='"+createLicenceMetadata.getLicensor()
@@ -110,20 +115,22 @@ public class LicencePublisherImpl implements LicencePublisher {
 		// check that when maxSizeSystemIds= 0 there are no systemId's defined in specification
 		Integer maxSizeSystemIds=null;
 		try {
-			maxSizeSystemIds = Integer.parseInt(createLicenceMetadata.getMaxSizeSystemIds());
+			maxSizeSystemIds = (createLicenceMetadata.getMaxSizeSystemIds()==null) ? null : Integer.parseInt(createLicenceMetadata.getMaxSizeSystemIds());
 		} catch (Exception e){
 			throw new RuntimeException("the maxSizeSystemIds '"+createLicenceMetadata.getMaxSizeSystemIds()
 					+ "' cannot be parsed as int in licence for productId='"+createLicenceMetadata.getProductId()+"'", e);
 		}
-		
-		if ( maxSizeSystemIds==0 && createLicenceMetadata.getSystemIds().size()>0){
-			throw new IllegalArgumentException("createLicenceMetadata maxSizeSystemIds= 0 but number of systemIds defined is greater than 0 in licence for productId="+productId);
-		}
-		
-		// check that the actual number of systemIds in the licence specification is not greater than the max number in
-		// the supplied licenceMetadata
-		if ( maxSizeSystemIds< createLicenceMetadata.getSystemIds().size()){
-			throw new IllegalArgumentException("createLicenceMetadata maxSizeSystemIds is less than the number of systemIds defined in licence for productId="+productId);
+
+		if (maxSizeSystemIds!=null){
+			if ( maxSizeSystemIds==0 && createLicenceMetadata.getSystemIds().size()>0){
+				throw new IllegalArgumentException("createLicenceMetadata maxSizeSystemIds= 0 but number of systemIds defined is greater than 0 in licence for productId="+productId);
+			}
+
+			// check that the actual number of systemIds in the licence specification is not greater than the max number in
+			// the supplied licenceMetadata
+			if ( maxSizeSystemIds< createLicenceMetadata.getSystemIds().size()){
+				throw new IllegalArgumentException("createLicenceMetadata maxSizeSystemIds is less than the number of systemIds defined in licence for productId="+productId);
+			}
 		}
 
 		// check that the options in the licence specification match the options in
@@ -134,16 +141,16 @@ public class LicencePublisherImpl implements LicencePublisher {
 		Set<OptionMetadata> licenceOptions = createLicenceMetadata.getOptions();
 		if (specOptions.size()!=licenceOptions.size()) 
 			throw new IllegalArgumentException("licenceMetadata options do not match specification for productId="+productId);
-		
+
 		HashSet<String> specOptionNames=new HashSet<String>();
 		for ( OptionMetadata option: specOptions){
 			specOptionNames.add(option.getName());
 		}
 		for ( OptionMetadata option: licenceOptions){
 			if(! specOptionNames.contains(option.getName()))
-					throw new IllegalArgumentException("licenceMetadata option name="+option.getName()+" is not in specification for productId="+productId);
+				throw new IllegalArgumentException("licenceMetadata option name="+option.getName()+" is not in specification for productId="+productId);
 		}
-		
+
 		// create and return a new licence with the supplied Metadata
 		Licence licence= new Licence(createLicenceMetadata, licenceSpec.getPublicKeyStr(), licenceSpec.getAesSecretKeyStr());
 		return licence.getLicenceStrPlusCrc();
@@ -157,10 +164,31 @@ public class LicencePublisherImpl implements LicencePublisher {
 	@Override
 	public synchronized String createLicenceInstanceStr(String licenceMetadataXml) {
 		if (licenceMetadataXml==null) throw new IllegalArgumentException("licenceMetadataXml cannot be null");
-        LicenceMetadata licenceMetadata= new LicenceMetadata();
-        licenceMetadata.fromXml(licenceMetadataXml);
-        return createLicenceInstanceStr(licenceMetadata);
+		LicenceMetadata licenceMetadata= new LicenceMetadata();
+		licenceMetadata.fromXml(licenceMetadataXml);
+		return createLicenceInstanceStr(licenceMetadata);
 	}
 
+	/**
+	 * creates a list of licences from a list of licence metadata
+	 * throws exception if licence metadata cannot be parsed
+	 */
+	@Override
+	public LicenceList createMultiLicences(LicenceMetadataList licenceMetadataList) {
+		if (licenceMetadataList==null) throw new IllegalArgumentException("licenceMetadataXml cannot be null");
+		LicenceList licenceStrings= new LicenceList();
+		for(LicenceMetadata licenceMetadata: licenceMetadataList.getLicenceMetadataList()){
+			try {
+				String licenceStr = createLicenceInstanceStr(licenceMetadata);
+				LicenceEntry licenceEntry= new LicenceEntry();
+				licenceEntry.setProductId(licenceMetadata.getProductId());
+				licenceEntry.setLicenceStr(licenceStr);
+				licenceStrings.getLicenceList().add(licenceEntry);
+			} catch (Exception e){
+				throw new RuntimeException("problem creating licences for licence metadata list",e);
+			}
+		}
+		return licenceStrings;
+	}
 
 }

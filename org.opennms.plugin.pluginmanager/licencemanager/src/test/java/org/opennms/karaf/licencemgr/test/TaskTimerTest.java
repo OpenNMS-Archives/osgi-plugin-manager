@@ -13,20 +13,24 @@
  * limitations under the License.
  */
 
-package org.opennms.karaf.featuremgr.test;
+package org.opennms.karaf.licencemgr.test;
 
 import static org.junit.Assert.*;
+
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
-import org.opennms.karaf.featuremgr.TaskTimer;
-import org.opennms.karaf.featuremgr.TaskTimer.ScheduledTask;
+import org.opennms.karaf.licencemgr.TaskTimer;
+import org.opennms.karaf.licencemgr.TaskTimer.ScheduledTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TaskTimerTest {
 	private static final Logger LOG = LoggerFactory.getLogger(TaskTimerTest.class);
+
+
+
 
 	@Test
 	public void test() {

@@ -94,8 +94,8 @@
             <exclude>**/org/opennms/karaf/licencemgr/rest/client/test/manual/*.java</exclude>
           </excludes>
           <!-- allows tests to run in order with static variable passed between tests -->
-          <reuseForks>false</reuseForks>
-          <forkCount>0</forkCount>
+          <!-- <reuseForks>false</reuseForks> -->
+          <!-- <forkCount>0</forkCount> -->
         </configuration>
       </plugin>
     </plugins>

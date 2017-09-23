@@ -18,9 +18,12 @@ package org.opennms.karaf.licencemgr.rest.client.test.manual;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 import org.junit.Test;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceEntry;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecList;
@@ -144,6 +147,7 @@ public class LicencePublisherClientRestJerseyTest {
 		getLicenceSpecTest();
 		getLicenceMetadataTest();
         createLicenceInstanceStrTest();
+        createMultiLicenceTest();
 		removeLicenceSpecTest();
 		deleteLicenceSpecificationsTest(); // final clean up
 		getLicenceMetadataListTest(); //  just to confirm licences gone
@@ -300,11 +304,41 @@ public class LicencePublisherClientRestJerseyTest {
 			LOG.debug("Licence instance="+licenceInstanceStr);
 			
 		} catch (Exception e) {
-			LOG.error("@Test - addLicenceSpecTest() failed. Exception:",e);
-			fail("@Test - addLicenceSpecTest() failed. See stack trace in error log");
+			LOG.error("@Test - createLicenceInstanceStrTest() failed. Exception:",e);
+			fail("@Test - createLicenceInstanceStrTest() failed. See stack trace in error log");
 		}
 		
 		LOG.debug("@Test - createLicenceInstanceStrTest().FINISH");
+
+	}
+	
+	//@Test 
+	public void createMultiLicenceTest(){
+		LOG.debug("@Test - createMultiLicenceTest().START");
+
+		LicencePublisherClient licencePublisherClient = getLicencePublisherClient();
+		try {
+			// load test product specification
+			LicenceMetadata licenceMetadataSpec = (LicenceMetadata) Util.fromXml(test_create_licence_metadata);
+
+			LicenceMetadataList licenceMetadataList = new LicenceMetadataList();
+			licenceMetadataList.getLicenceMetadataList().add(licenceMetadataSpec);
+			
+			LicenceList licenceInstances = licencePublisherClient.createMultiLicenceInstance(licenceMetadataList);
+			
+			StringBuffer sb = new StringBuffer("Licence list received=");
+			for (LicenceEntry licenceEntry:licenceInstances.getLicenceList()){
+				sb.append("  productId:"+licenceEntry.getProductId()
+						+ "  licence: \""+licenceEntry.getLicenceStr()+"\"\n");
+			}
+			LOG.debug(sb.toString());
+			
+		} catch (Exception e) {
+			LOG.error("@Test - createMultiLicenceTest() failed. Exception:",e);
+			fail("@Test - createMultiLicenceTest() failed. See stack trace in error log");
+		}
+		
+		LOG.debug("@Test - createMultiLicenceTest().FINISH");
 
 	}
 

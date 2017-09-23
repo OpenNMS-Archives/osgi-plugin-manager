@@ -15,9 +15,12 @@
 
 package org.opennms.karaf.licencepub;
 
+import java.util.List;
 import java.util.Map;
 
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 
 public interface LicencePublisher {
@@ -70,6 +73,9 @@ public interface LicencePublisher {
 	 * 
 	 */
 	public String createLicenceInstanceStr(String licenceMetadataXml);
+
+	
+	public LicenceList createMultiLicences(LicenceMetadataList licenceMetadataList);
 
 	
 }

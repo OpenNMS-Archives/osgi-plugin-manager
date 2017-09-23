@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.opennms.karaf.licencemgr.metadata.jaxb.ErrorMessage;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecList;
@@ -258,6 +259,34 @@ public class LicencePublisherRestImpl implements LicencePublisherRest {
 		ReplyMessage reply= new ReplyMessage();
         reply.setReplyComment("Successfully created licence instance");
         reply.setLicence(licenceInstanceStr);
+		
+		return Response.status(200).entity(reply).build();
+
+	}
+	
+	
+	@POST
+	@Path("/createmultilicence")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.APPLICATION_XML)
+	@Override()
+	public Response createMultiLicenceInstance(LicenceMetadataList licenceMetadataList){
+
+		LicencePublisher licencePublisher= ServiceLoader.getLicencePublisher();
+		if (licencePublisher == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+
+		LicenceList licenceList=null;
+		try{
+			if (licenceMetadataList == null) throw new RuntimeException("icenceMetadataList cannot be null.");
+			licenceList = licencePublisher.createMultiLicences(licenceMetadataList);
+		} catch (Exception exception){
+			//return status 400 Error
+			return Response.status(400).entity(new ErrorMessage(400, 0, "Unable to create icenceMetadataList", null, exception)).build();
+		}
+
+		ReplyMessage reply= new ReplyMessage();
+        reply.setReplyComment("Successfully created licence instance");
+        reply.setLicenceList(licenceList);
 		
 		return Response.status(200).entity(reply).build();
 

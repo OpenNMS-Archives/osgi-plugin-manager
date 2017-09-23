@@ -17,6 +17,7 @@ package org.opennms.karaf.licencemgr;
 
 import java.util.Map;
 
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 
 public interface LicenceService {
@@ -123,5 +124,11 @@ public interface LicenceService {
 	 * @return true if the productId is in the list, false if not in the list
 	 */
 	public boolean isAuthenticatedProductId(String productId);
+
+	/**
+	 * installs all licences in supplied licence list
+	 * @param licenceList
+	 */
+	void installLicenceList(LicenceList licenceList);
 
 }

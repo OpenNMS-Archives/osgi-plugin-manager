@@ -47,5 +47,37 @@ public class LicenceMetadataList  {
 	public void setLicenceMetadataList(List<LicenceMetadata> licenceMetadataList) {
 		this.licenceMetadataList = licenceMetadataList;
 	}
+	
+
+	// YOU MUST UPDATE hashCode() and equals(Object obj) if you change the fields in this class
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((licenceMetadataList == null) ? 0 : licenceMetadataList
+						.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LicenceMetadataList other = (LicenceMetadataList) obj;
+		if (licenceMetadataList == null) {
+			if (other.licenceMetadataList != null)
+				return false;
+		} else if (!licenceMetadataList.equals(other.licenceMetadataList))
+			return false;
+		return true;
+	}
+	
+	
 
 }

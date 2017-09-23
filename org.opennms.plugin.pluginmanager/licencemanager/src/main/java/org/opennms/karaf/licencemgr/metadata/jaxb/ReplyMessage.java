@@ -15,6 +15,8 @@
 
 package org.opennms.karaf.licencemgr.metadata.jaxb;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -58,6 +60,10 @@ public class ReplyMessage {
 	
 	@XmlElement()
 	private Boolean isAuthenticated=null;
+	
+	@XmlElement()
+	private LicenceList licenceList=null;
+
 
 	/**
 	 * @return the replyComment
@@ -197,6 +203,22 @@ public class ReplyMessage {
 	 */
 	public void setIsAuthenticated(Boolean isAuthenticated) {
 		this.isAuthenticated = isAuthenticated;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public LicenceList getLicenceList() {
+		return licenceList;
+	}
+
+	/**
+	 * 
+	 * @param licenceList
+	 */
+	public void setLicenceList(LicenceList licenceList) {
+		this.licenceList = licenceList;
 	}
 	
 	

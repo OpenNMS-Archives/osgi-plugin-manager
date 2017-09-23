@@ -25,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 
 @Path("/licence-pub")
@@ -81,5 +82,11 @@ public interface LicencePublisherRest {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response createLicenceInstanceStr(LicenceMetadata licenceMetadata);
+
+	@POST
+	@Path("/createmultilicence")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.APPLICATION_XML)
+	public Response createMultiLicenceInstance(LicenceMetadataList licenceMetadataList);
 	
 }

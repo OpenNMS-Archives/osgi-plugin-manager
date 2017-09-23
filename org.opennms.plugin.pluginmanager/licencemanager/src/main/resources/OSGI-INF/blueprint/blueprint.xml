@@ -13,11 +13,9 @@
 <!-- See the License for the specific language governing permissions and -->
 <!-- limitations under the License. -->
 
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
-    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0"
-    xsi:schemaLocation="
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+  xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0"
+  xsi:schemaLocation="
                 http://www.osgi.org/xmlns/blueprint/v1.0.0
                 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
                 http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
@@ -26,20 +24,39 @@
                 http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.1.xsd
 ">
 
-  <!-- load default properties from  org.opennms.features.licencemgr.config.cfg if exists -->
+  <!-- load default properties from org.opennms.features.licencemgr.config.cfg if exists -->
   <cm:property-placeholder persistent-id="org.opennms.features.licencemgr.config" update-strategy="reload">
     <cm:default-properties>
       <!-- local location to persist licence file -->
       <cm:property name="org.opennms.karaf.licencemanager.licencefile" value="./etc/pluginLicenceData.xml" />
+
+      <!-- local location of licenceRequestMetadata (if present ) -->
+      <cm:property name="org.opennms.karaf.licencemanager.licenceRequestMetadataFile" value="./etc/pluginLicenceRequestMetaData.xml" />
+
       <!-- if true, will try to download licence list from remote urls -->
       <cm:property name="org.opennms.karaf.licencemanager.use-remote-licence-managers" value="false" />
       <!-- comma separated local list of urls to contact remote licence managers -->
       <!-- in order to download licence list for this system. Urls will be tried in order -->
-      <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers" value="" />
+      <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers_urls" value="" />
       <!-- basic authentication username to access remote licence manager -->
       <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers-username" value="admin" />
       <!-- basic authentication password to access remote licence manager -->
       <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers-password" value="admin" />
+      <!-- interval (ms) before retrying unsuccessful download of licences -->
+      <cm:property name="org.opennms.karaf.licencemanager.retryInterval" value="60000" />
+
+      <!-- number of retrys if unsuccessful -1= forever until successful -->
+      <cm:property name="org.opennms.karaf.licencemanager.retryNumber" value="1" />
+
+      <!-- long term update interval (ms) before attempting to reload config. -1= only try on startup -->
+      <cm:property name="org.opennms.karaf.licencemanager.updateInterval" value="-1" />
+
+      <!-- interval between checks that licences are still valid and voiding plugin authentications. -1= only try on startup -->
+      <cm:property name="org.opennms.karaf.licencemanager.checkLicenceInterval" value="-1" />
+
+      <!-- if true, will try to download licence using licence request metadata -->
+      <cm:property name="org.opennms.karaf.licencemanager.useLicenceRequestMetadata" value="false" />
+
     </cm:default-properties>
   </cm:property-placeholder>
 
@@ -48,10 +65,20 @@
 
   <bean id="licenceServiceImpl" class="org.opennms.karaf.licencemgr.LicenceServiceImpl" init-method="init" destroy-method="close">
     <property name="fileUri" value="${org.opennms.karaf.licencemanager.licencefile}" />
+  </bean>
+
+  <bean id="licenceManagerController" class="org.opennms.karaf.licencemgr.LicenceManagerController" init-method="init" destroy-method="close">
+    <property name="licenceService" ref="licenceServiceImpl" />
     <property name="useRemoteLicenceManagers" value="${org.opennms.karaf.licencemanager.use-remote-licence-managers}" />
-    <property name="remoteLicenceMgrs" value="${org.opennms.karaf.licencemanager.remote-licence-managers}" />
+    <property name="remoteLicenceManagersUrls" value="${org.opennms.karaf.licencemanager.remote-licence-managers_urls}" />
     <property name="remoteLicenceManagerUserName" value="${org.opennms.karaf.licencemanager.remote-licence-managers-username}" />
     <property name="remoteLicenceManagerPassword" value="${org.opennms.karaf.licencemanager.remote-licence-managers-password}" />
+    <property name="retryInterval" value="${org.opennms.karaf.licencemanager.retryInterval}" />
+    <property name="retryNumber" value="${org.opennms.karaf.licencemanager.retryNumber}" />
+    <property name="updateInterval" value="${org.opennms.karaf.licencemanager.updateInterval}" />
+    <property name="checkLicenceInterval" value="${org.opennms.karaf.licencemanager.checkLicenceInterval}" />
+    <property name="useLicenceRequestMetadata" value="${org.opennms.karaf.licencemanager.useLicenceRequestMetadata}" />
+    <property name="licenceRequestMetadataFile" value="${org.opennms.karaf.licencemanager.licenceRequestMetadataFile}" />
   </bean>
 
   <!-- licence publisher -->
@@ -197,6 +224,30 @@
         <property name="productRegister" ref="productRegisterImpl" />
       </action>
     </command>
+
+    <!-- Licence update schedule commands -->
+    <command name="licence-mgr/installLicenceFromUrl">
+      <action class="org.opennms.karaf.licencemgr.cmd.InstallNewLicenceFromUrlCommand">
+        <property name="licenceManagerController" ref="licenceManagerController" />
+      </action>
+    </command>
+    <command name="licence-mgr/scheduleLicencesDownload">
+      <action class="org.opennms.karaf.licencemgr.cmd.SetScheduleLicencesDownloadCommand">
+        <property name="licenceManagerController" ref="licenceManagerController" />
+      </action>
+    </command>
+    <command name="licence-mgr/setRemoteLicenceServers">
+      <action class="org.opennms.karaf.licencemgr.cmd.SetRemoteLicenceServersCommand">
+        <property name="licenceManagerController" ref="licenceManagerController" />
+      </action>
+    </command>
+        <command name="licence-mgr/persistConfiguration">
+      <action class="org.opennms.karaf.licencemgr.cmd.PersistCfgConfigurationCommand">
+        <property name="licenceManagerController" ref="licenceManagerController" />
+      </action>
+    </command>
+
+
   </command-bundle>
 
   <!-- ReST Servlet configuration -->
@@ -211,7 +262,7 @@
     </service-properties>
   </service>
 
-  <bean id="licenceManagerRestApplication" class="org.opennms.karaf.licencemgr.rest.impl.LicenceManagerRestApplication" destroy-method="destroyMethod"/>
+  <bean id="licenceManagerRestApplication" class="org.opennms.karaf.licencemgr.rest.impl.LicenceManagerRestApplication" destroy-method="destroyMethod" />
 
   <!-- ServiceLoader(LicenceService licenceService, LicencePublisher licencePublisher, ProductPublisher productPublisher, ProductRegister productRegister ) -->
   <bean id="serviceLoader" class="org.opennms.karaf.licencemgr.rest.impl.ServiceLoader">
