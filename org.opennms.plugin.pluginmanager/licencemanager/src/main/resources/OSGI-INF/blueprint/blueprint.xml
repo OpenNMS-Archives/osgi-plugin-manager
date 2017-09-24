@@ -37,7 +37,7 @@
       <cm:property name="org.opennms.karaf.licencemanager.use-remote-licence-managers" value="false" />
       <!-- comma separated local list of urls to contact remote licence managers -->
       <!-- in order to download licence list for this system. Urls will be tried in order -->
-      <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers_urls" value="" />
+      <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers-urls" value="http://localhost:8181" />
       <!-- basic authentication username to access remote licence manager -->
       <cm:property name="org.opennms.karaf.licencemanager.remote-licence-managers-username" value="admin" />
       <!-- basic authentication password to access remote licence manager -->
@@ -62,6 +62,9 @@
 
   <!-- licence manager -->
   <service ref="licenceServiceImpl" interface="org.opennms.karaf.licencemgr.LicenceService" />
+  
+  <!-- karaf configuration admin service -->
+  <reference id="configurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin"/>
 
   <bean id="licenceServiceImpl" class="org.opennms.karaf.licencemgr.LicenceServiceImpl" init-method="init" destroy-method="close">
     <property name="fileUri" value="${org.opennms.karaf.licencemanager.licencefile}" />
@@ -69,8 +72,9 @@
 
   <bean id="licenceManagerController" class="org.opennms.karaf.licencemgr.LicenceManagerController" init-method="init" destroy-method="close">
     <property name="licenceService" ref="licenceServiceImpl" />
+    <property name="configurationAdmin" ref="configurationAdmin" />
     <property name="useRemoteLicenceManagers" value="${org.opennms.karaf.licencemanager.use-remote-licence-managers}" />
-    <property name="remoteLicenceManagersUrls" value="${org.opennms.karaf.licencemanager.remote-licence-managers_urls}" />
+    <property name="remoteLicenceManagersUrls" value="${org.opennms.karaf.licencemanager.remote-licence-managers-urls}" />
     <property name="remoteLicenceManagerUserName" value="${org.opennms.karaf.licencemanager.remote-licence-managers-username}" />
     <property name="remoteLicenceManagerPassword" value="${org.opennms.karaf.licencemanager.remote-licence-managers-password}" />
     <property name="retryInterval" value="${org.opennms.karaf.licencemanager.retryInterval}" />

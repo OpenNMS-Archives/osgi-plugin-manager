@@ -53,6 +53,12 @@ public class SetScheduleLicencesDownloadCommand extends OsgiCommandSupport {
 	
 	@Option(name = "-c", aliases =  "--checkLicenceInterval", description = "(integer ms) interval between rechecking validity of licences . -1= only try on startup", required = false, multiValued = false)
 	String checkLicenceIntervalStr;
+	
+	@Option(name = "-m", aliases =  "--useLicenceRequestMetadata", description = "use request metadata when requesting licences", required = false, multiValued = false)
+	String useLicenceRequestMetadataStr;
+
+	
+	
 
 	@Override
 	protected Object doExecute() throws Exception {
@@ -62,8 +68,9 @@ public class SetScheduleLicencesDownloadCommand extends OsgiCommandSupport {
 			Integer retryNumber= (retryNumberStr==null || "".equals(retryNumberStr)) ? null : Integer.parseInt(retryNumberStr);
 			Integer updateInterval = (updateIntervalStr==null || "".equals(updateIntervalStr)) ? null : Integer.parseInt(updateIntervalStr);
 			Integer checkLicenceInterval = (checkLicenceIntervalStr==null || "".equals(checkLicenceIntervalStr)) ? null : Integer.parseInt(checkLicenceIntervalStr);
-			
-			String schedule = getLicenceManagerController().updateSchedule(useRemotePluginManagers, retryInterval, retryNumber, updateInterval, checkLicenceInterval);
+			Boolean useLicenceRequestMetadata =  (useLicenceRequestMetadataStr==null || "".equals(useLicenceRequestMetadataStr)) ? null : Boolean.parseBoolean(useLicenceRequestMetadataStr);
+
+			String schedule = getLicenceManagerController().updateSchedule(useRemotePluginManagers, retryInterval, retryNumber, updateInterval, checkLicenceInterval, useLicenceRequestMetadata);
 
 			String msg="licences schedule command result: "+schedule;
 			LOG.info(msg);

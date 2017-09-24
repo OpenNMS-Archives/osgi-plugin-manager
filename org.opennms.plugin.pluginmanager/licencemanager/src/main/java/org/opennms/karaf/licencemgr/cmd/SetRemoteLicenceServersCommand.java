@@ -39,21 +39,21 @@ public class SetRemoteLicenceServersCommand extends OsgiCommandSupport {
 		_licenceManagerController = licenceManagerController;
 	}
 	
-	@Argument(index = 0, name = "urlList", description = "comma separated list of licence manger urls to ask for licences", required = true, multiValued = false)
-    String urls = null;
-	
-	@Argument(index = 0, name = "RemoteUsername", description = "Remote Username to download licence", required = false, multiValued = false)
+	@Option(name = "-u", aliases =  "--urlList", description = "comma separated list of licence manger urls to ask for licences", required = false, multiValued = false)
+    String urlList = null;
+
+	@Option(name = "-n", aliases = "--remoteUsername", description = "Remote Username to download licence", required = false, multiValued = false)
     String remoteUsername = null;
 	
-	@Argument(index = 0, name = "RemotePassword", description = "Remote Password to download licence", required = false, multiValued = false)
+	@Option(name = "-p", aliases = "--remotePassword", description = "Remote Password to download licence", required = false, multiValued = false)
     String remotePassword = null;
 
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-			getLicenceManagerController().updateRemoteLicenceManagersUrls(urls, remoteUsername, remotePassword);
+			getLicenceManagerController().updateRemoteLicenceManagersUrls(urlList, remoteUsername, remotePassword);
 			
-			String msg="set remote plugin servers urls="+urls;
+			String msg="set remote plugin servers urls="+urlList;
 			LOG.info(msg);
 			System.out.println(msg);
 		} catch (Exception e) {

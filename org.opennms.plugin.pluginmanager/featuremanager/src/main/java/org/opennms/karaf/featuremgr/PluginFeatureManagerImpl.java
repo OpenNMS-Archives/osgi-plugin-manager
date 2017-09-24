@@ -370,8 +370,8 @@ public class PluginFeatureManagerImpl implements PluginFeatureManagerService {
 
 			props.put(USE_REMOTE_PLUGIN_MANAGER_KEY,Boolean.toString(m_useRemotePluginManagers));
 			props.put(REMOTE_PLUGIN_MANAGER_URLS_KEY,listToStringCsvProperty(m_remotePluginManagersUrls));
-			props.put(REMOTE_PLUGIN_MANAGER_USERNAME_KEY,m_remoteUsername);
-			props.put(REMOTE_PLUGIN_MANAGER_PASSWORD_KEY,m_remotePassword);
+			props.put(REMOTE_PLUGIN_MANAGER_USERNAME_KEY,(m_remoteUsername==null) ? "" : m_remoteUsername);
+			props.put(REMOTE_PLUGIN_MANAGER_PASSWORD_KEY,(m_remotePassword==null) ? "" : m_remotePassword);
 			props.put(KARAF_INSTANCE_KEY,m_karafInstance);
 			props.put(RETRY_INTERVAL_KEY,Integer.toString(m_retryInterval));
 			props.put(RETRY_NUMBER_KEY,Integer.toString(m_retryNumber));

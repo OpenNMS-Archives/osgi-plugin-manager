@@ -23,6 +23,7 @@ import javax.xml.bind.Unmarshaller;
 import org.opennms.karaf.licencemgr.TaskTimer;
 import org.opennms.karaf.licencemgr.TaskTimer.ScheduledTask;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.LicenceManagerClientRestJerseyImpl;
 import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.LicencePublisherClientRestJerseyImpl;
@@ -36,7 +37,7 @@ public class LicenceManagerController {
 
 	public static final String PERSISTANT_ID = "org.opennms.features.licencemgr.config";
 	public static final String USE_REMOTE_LICENCE_MANAGERS_KEY = "org.opennms.karaf.licencemanager.use-remote-licence-managers";
-	public static final String REMOTE_LICENCE_MANAGERS_URLS_KEY = "org.opennms.karaf.licencemanager.remote-licence-managers_urls";
+	public static final String REMOTE_LICENCE_MANAGERS_URLS_KEY = "org.opennms.karaf.licencemanager.remote-licence-managers-urls";
 	public static final String REMOTE_LICENCE_MANAGERS_USERNAME_KEY = "org.opennms.karaf.licencemanager.remote-licence-managers-username";
 	public static final String REMOTE_LICENCE_MANAGERS_PASSWORD_KEY = "org.opennms.karaf.licencemanager.remote-licence-managers-password";
 	public static final String RETRY_INTERVAL_KEY = "org.opennms.karaf.licencemanager.retryInterval";
@@ -108,10 +109,10 @@ public class LicenceManagerController {
 		} else throw new RuntimeException("m_useRemoteLicenceManagers set to ("+useRemoteLicenceManagersStr+") but must be set to boolean true or false");
 	}
 
-	public synchronized void setRemoteLicenceManagersUrls(String remoteLicenceMgrsStr){
-		if (remoteLicenceMgrsStr ==null) throw new RuntimeException("remoteLicenceMgrsStr should not be set to null.");
-		if (! "".equals(remoteLicenceMgrsStr)) {
-			String[] urls = remoteLicenceMgrsStr.split(",");
+	public synchronized void setRemoteLicenceManagersUrls(String urlList){
+		if (urlList ==null) throw new RuntimeException("urlList should not be set to null.");
+		if (! "".equals(urlList)) {
+			String[] urls = urlList.split(",");
 
 			Set<String> licenceMgrs = new LinkedHashSet<String>();
 			for (String urlstr: urls){
@@ -134,16 +135,16 @@ public class LicenceManagerController {
 	}
 
 	/**
-	 * @param remoteLicenceMgrsStr comma separated local list of urls to contact remote licence managers
+	 * @param urlList comma separated local list of urls to contact remote licence managers
 	 * in order to download licence list for this system. Urls will be tried in order. -->
 	 */
-	public synchronized void updateRemoteLicenceManagersUrls(String remoteLicenceMgrsStr, String remoteUsername, String remotePassword) {
-		setRemoteLicenceManagersUrls(remoteLicenceMgrsStr);
+	public synchronized void updateRemoteLicenceManagersUrls(String urlList, String remoteUsername, String remotePassword) {
+		setRemoteLicenceManagersUrls(urlList);
 		setRemoteLicenceManagerPassword(remotePassword);
 		setRemoteLicenceManagerUserName(remoteUsername);
-        String msg = "Licence manager remoteUsername set to:"+remoteUsername+" remotePassword(obfuscated):";
+		String msg = "Licence manager remoteUsername set to:"+remoteUsername+" remotePassword(obfuscated):";
 		String msg2 = (remotePassword==null || "".equals(remotePassword) ) ? remotePassword : "xxxxxx";
-        LOG.info(msg+msg2);
+		LOG.info(msg+msg2);
 		System.out.println(msg);
 	}
 
@@ -246,7 +247,7 @@ public class LicenceManagerController {
 			throw new RuntimeException("    Licence Manager Cannot get remote licences from remoteLicenceManagerUrl="+remoteLicenceManagerUrl,e);
 		}
 	}
-	
+
 	public synchronized String installRemoteLicencesFromLicenceMetadata(String remoteLicenceManagerUrl, LicenceMetadataList licenceMetadataList, String remoteLicenceManagerUserName, String remoteLicenceManagerPassword ){
 		if (m_licenceService==null)  throw new RuntimeException("m_licenceService must not be null");
 		if (remoteLicenceManagerUrl==null) throw new RuntimeException("Licence Manager remoteLicenceManagerUrl must not be null");
@@ -267,7 +268,6 @@ public class LicenceManagerController {
 
 			LicenceList licenceList = licencePublisherClient.createMultiLicenceInstance(licenceMetadataList);
 
-
 			m_licenceService.installLicenceList(licenceList);
 
 			return remoteLicenceManagerUrl;
@@ -276,7 +276,47 @@ public class LicenceManagerController {
 			throw new RuntimeException("    Licence Manager Cannot get remote licences from remoteLicenceManagerUrl="+remoteLicenceManagerUrl,e);
 		}
 	}
-	
+
+	public synchronized String installRemoteLicencesUsingMetadataFromUrlList(String systemIdStr){
+
+		// fetch list of remote licence metadata to ask for and add the local systemId
+		LicenceMetadataList licenceMetadataList;
+		try{
+			licenceMetadataList = loadLicenceMetadataListFile();
+			for (LicenceMetadata licenceMetadata :licenceMetadataList.getLicenceMetadataList()){
+				licenceMetadata.getSystemIds().add(systemIdStr);
+			}
+		} catch (Exception e){
+			throw new RuntimeException("problem loading licenceMetadataListFile",e);
+		}
+
+		// try all urls to download licences
+		String successRemoteLicenceManagerUrl=null;
+		for (String remoteLicenceManagerUrl : m_remoteLicenceMgrs ){
+			try {
+
+				successRemoteLicenceManagerUrl=installRemoteLicencesFromLicenceMetadata(remoteLicenceManagerUrl, licenceMetadataList,  m_remoteLicenceManagerUserName, m_remoteLicenceManagerPassword );
+
+			} catch (Exception e){
+				System.err.println("   Licence Manager could not load licences from from licence manager at "+remoteLicenceManagerUrl
+						+" for systemIdStr='"+systemIdStr+"' Exception:"+e);
+				LOG.error("   Licence Manager could not load licences from from licence manager at "+remoteLicenceManagerUrl
+						+" for systemIdStr='"+systemIdStr+"' Exception:",e);
+			}
+			if (null != successRemoteLicenceManagerUrl) {
+				System.out.println("Licence Manager succeeded in loading licences from licence manager at "+successRemoteLicenceManagerUrl);
+				LOG.info("Licence Manager succeeded in loading licences from licence manager at "+successRemoteLicenceManagerUrl);
+				break;
+			}
+		}
+		if (null == successRemoteLicenceManagerUrl) {
+			System.err.println("Licence Manager Could not load licences from any remote licence manager.");
+			LOG.error("Licence Manager Could not load licences from any remote licence manager.");
+		}
+
+		return successRemoteLicenceManagerUrl;
+	}
+
 
 	/**
 	 * blueprint destroy-method
@@ -293,58 +333,65 @@ public class LicenceManagerController {
 		System.out.println("Licence Manager Starting");
 		LOG.info("Licence Manager Starting");
 
-		// licence service will load current values from file on init
-		String systemId=m_licenceService.getSystemId();
-
-		String installedFromLicenceMgr=null;
 		if (m_useRemoteLicenceManagers!=null && m_useRemoteLicenceManagers==true){
-			System.out.println("Licence Manager system attempting to load remote licences");
-			LOG.info("Licence Manager system attempting to load remote licences");
-			if(m_remoteLicenceMgrs !=null && ! m_remoteLicenceMgrs.isEmpty()){
-				installedFromLicenceMgr=installRemoteLicencesFromUrlList(systemId);
-			} else {
-				System.out.println("WARNING: list of remote licence managers is empty");
-				LOG.info("WARNING: list of remote licence managers is empty");
-			}
-			if (installedFromLicenceMgr!=null) {
-				System.out.println("Licence Manager loaded remote licences from url="+installedFromLicenceMgr);
-				LOG.info("Licence Manager loaded remote licences from url="+installedFromLicenceMgr);
-			} else {
-				System.out.println("WARNING Licence Manager unabled to load remote licences from any supplied url");
-				LOG.info("WARNING Licence Manager unabled to load remote licences from any supplied url");
+			System.out.println("Licence Manager system schedulling load of remote licences");
+			try{
+				restartSchedule();
+			}catch(Exception ex){
+				LOG.error("PluginFeatureManager problem starting licence download schedule",ex);
 			}
 		} else {
 			System.out.println("Licence Manager system set to not load remote licences");
 			LOG.info("Licence Manager system set to not load remote licences");
 		}
+
 		System.out.println("Licence Manager Started");
 		LOG.info("Licence Manager Started");
 	}
 
-	private class ScheduledManifestUpdate implements ScheduledTask{
-		private LicenceManagerController licenceManagerController;
-		private AtomicInteger count = new AtomicInteger(0);
+	private class ScheduledLicenceUpdate implements ScheduledTask{
+		private LicenceManagerController s_licenceManagerController;
+		private AtomicInteger s_count = new AtomicInteger(0);
+		private boolean s_useLicenceRequestMetadata=false;
+		private String s_systemId;
 
-		ScheduledManifestUpdate(LicenceManagerController licenceManagerController2){
-			this.licenceManagerController=Objects.requireNonNull(licenceManagerController2);
+		ScheduledLicenceUpdate(LicenceManagerController licenceManagerController){
+			this.s_licenceManagerController=Objects.requireNonNull(licenceManagerController);
+			this.s_useLicenceRequestMetadata= licenceManagerController.m_useLicenceRequestMetadata;
+			this.s_systemId=licenceManagerController.m_licenceService.getSystemId();
 		}
 
 		@Override
 		public boolean runScheduledTask() {
-			int c = count.incrementAndGet();
+			int c = s_count.incrementAndGet();
 			boolean success=false;
 
-			LOG.info("Running scheduled manifest update. Times this schedule has run: "+c);
+			LOG.info("Running scheduled licence update. Times this schedule has run: "+c);
 			try{
-				String systemIdStr=null; //todo;
-
-				success=installRemoteLicencesFromUrlList(systemIdStr)!=null;
+				if(s_useLicenceRequestMetadata){
+					// install licences using systemId and request metadata
+					LOG.info("trying to installed remote licences using metadata and systemId");
+					String installedUrl= s_licenceManagerController.installRemoteLicencesUsingMetadataFromUrlList(s_systemId);
+					if(installedUrl!=null){
+						success=true;
+						LOG.info("installed remote licences using metadata for systemId="+s_systemId
+								+ "from url="+installedUrl);
+					}
+				} else {
+					// install licences using only systemId
+					LOG.info("trying to installed remote licences using systemId");
+					String installedUrl= s_licenceManagerController.installRemoteLicencesFromUrlList(s_systemId);
+					if(installedUrl!=null){
+						success=true;
+						LOG.info("installed remote licences for systemId="+s_systemId
+								+ "from url="+installedUrl);
+					}
+				}
 			} catch(Exception e){
-				LOG.error("problem running schedule updating manifest from plugin managers",e);
+				LOG.error("problem running schedule updating licence from plugin managers",e);
 			}
 			return success;
 		}
-
 	}
 
 	public synchronized void restartSchedule(){
@@ -359,7 +406,7 @@ public class LicenceManagerController {
 			m_timer.setUpdateInterval(this.m_updateInterval);
 
 			LicenceManagerController licenceManagerController=this;
-			ScheduledTask task = new ScheduledManifestUpdate(licenceManagerController);
+			ScheduledTask task = new ScheduledLicenceUpdate(licenceManagerController);
 
 			m_timer.setTask(task);
 
@@ -372,7 +419,7 @@ public class LicenceManagerController {
 	}
 
 	//@Override
-	public synchronized String updateSchedule(Boolean useRemoteLicenceManagers, Integer retryInterval, Integer retryNumber, Integer updateInterval, Integer checkLicenceInterval) {
+	public synchronized String updateSchedule(Boolean useRemoteLicenceManagers, Integer retryInterval, Integer retryNumber, Integer updateInterval, Integer checkLicenceInterval, Boolean useLicenceRequestMetadata) {
 		boolean justlist=true;
 		String msg="";
 		if(retryInterval!=null) {
@@ -395,6 +442,10 @@ public class LicenceManagerController {
 			justlist=false;
 			this.m_checkLicenceInterval=checkLicenceInterval;
 		}
+		if(useLicenceRequestMetadata!=null) {
+			justlist=false;
+			this.m_useLicenceRequestMetadata=useLicenceRequestMetadata;
+		}
 
 
 		if(!justlist){
@@ -407,7 +458,8 @@ public class LicenceManagerController {
 		} else msg=msg+"Schedule Stopped\n";
 
 		msg=msg+"Schedule configuration = useRemoteLicenceManagers="+ this.m_useRemoteLicenceManagers
-				+", retryInterval="+this.m_retryInterval
+				+", useLicenceRequestMetadata="+this.m_useLicenceRequestMetadata
+				+ ", retryInterval="+this.m_retryInterval
 				+", retryNumber="+this.m_retryNumber
 				+", updateInterval="+this.m_updateInterval;
 
@@ -416,6 +468,7 @@ public class LicenceManagerController {
 	}
 
 	public synchronized String persistConfiguration() {
+		if(m_configurationAdmin==null) throw new RuntimeException("m_configurationAdmin cannot be null");
 
 		try {
 			Configuration config = m_configurationAdmin.getConfiguration(PERSISTANT_ID);
@@ -430,8 +483,8 @@ public class LicenceManagerController {
 
 			props.put(USE_REMOTE_LICENCE_MANAGERS_KEY,Boolean.toString(m_useRemoteLicenceManagers));
 			props.put(REMOTE_LICENCE_MANAGERS_URLS_KEY,listToStringCsvProperty(m_remoteLicenceMgrs));
-			props.put(REMOTE_LICENCE_MANAGERS_USERNAME_KEY,m_remoteLicenceManagerUserName);
-			props.put(REMOTE_LICENCE_MANAGERS_PASSWORD_KEY,m_remoteLicenceManagerPassword);
+			props.put(REMOTE_LICENCE_MANAGERS_USERNAME_KEY,(m_remoteLicenceManagerUserName==null) ? "" : m_remoteLicenceManagerUserName);
+			props.put(REMOTE_LICENCE_MANAGERS_PASSWORD_KEY,(m_remoteLicenceManagerPassword==null) ? "" : m_remoteLicenceManagerPassword);
 			props.put(RETRY_INTERVAL_KEY,Integer.toString(m_retryInterval));
 			props.put(RETRY_NUMBER_KEY,Integer.toString(m_retryNumber));
 			props.put(UPDATE_INTERVAL_KEY,Integer.toString(m_updateInterval));
@@ -496,7 +549,7 @@ public class LicenceManagerController {
 
 		LicenceMetadataList licenceMetadata =null;
 		try {
-			
+
 			File licenceMetadataFile = new File(m_licenceRequestMetadataFile);
 			LOG.debug("reading licenceMetadataFile:"+licenceMetadataFile.getAbsolutePath());
 
@@ -532,7 +585,7 @@ public class LicenceManagerController {
 
 			File licenceMetadataFile = new File(m_licenceRequestMetadataFile);
 			LOG.debug("writing licenceMetadataFile:"+licenceMetadataFile.getAbsolutePath());
-			
+
 			JAXBContext jaxbContext = JAXBContext.newInstance(LicenceMetadataList.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
