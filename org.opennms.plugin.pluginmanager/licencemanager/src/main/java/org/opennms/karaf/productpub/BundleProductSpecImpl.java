@@ -155,8 +155,8 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 	public void unregisterSpecificationList(){
 		if (productPublisher!=null){
 			try{
-				System.out.println("Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource());
-				LOG.info("Specification List Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource());
+				System.out.println("Unregistering Product Specifications from productListSource="+productSpecList.getProductListSource());
+				LOG.info("Specification List Unregistering Product Specifications from productListSource="+productSpecList.getProductListSource());
 				List<ProductMetadata> prodSpecList = productSpecList.getProductSpecList();
 				for(ProductMetadata pmeta: prodSpecList){
 					boolean unregistered =productPublisher.removeProductDescription(pmeta.getProductId());
@@ -169,8 +169,8 @@ public class BundleProductSpecImpl implements BundleProductSpec {
 					}
 				}
 			} catch (Exception e){
-				System.err.println("Specification List Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  "+e);
-				LOG.error("Specification List Problem Unregestering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  ",e);
+				System.err.println("Specification List Problem Unregistering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  "+e);
+				LOG.error("Specification List Problem Unregistering Product Specifications from productListSource="+productSpecList.getProductListSource()+"  ",e);
 			}  finally {
 				productPublisher=null; //release resources
 			}
