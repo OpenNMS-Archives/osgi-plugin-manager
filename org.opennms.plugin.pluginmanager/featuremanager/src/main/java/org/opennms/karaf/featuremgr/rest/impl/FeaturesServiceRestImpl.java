@@ -301,7 +301,7 @@ public class FeaturesServiceRestImpl {
 		try{
 			if ( uriStr == null) throw new RuntimeException("you must supply ?uri= paramater.");
 			URI url= new URI(uriStr);
-			featuresService.validateRepository(url); // will throw exception if not a valid repository
+			// featuresService.validateRepository(url); //TODO REMOVE this call now throws an UnsupportedOperationException exception in karaf 4.x
 			featuresService.addRepository(url);
 		} catch (URISyntaxException uriException){
 			//return status 400 Error
