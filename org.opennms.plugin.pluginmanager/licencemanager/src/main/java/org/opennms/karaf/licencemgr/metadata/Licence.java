@@ -200,7 +200,7 @@ public class Licence {
 		if (durationStr!=null && ! durationStr.trim().isEmpty()) try {
 			duration = Integer.parseInt(durationStr);
 		} catch(Exception ex){
-			throw new Exception("cannot parse duration string "+durationStr+" from licence for productId="+productId, ex);
+			throw new Exception("cannot parse duration "+durationStr+" from licence for productId="+productId, ex);
 		}
 		
 		if(duration!=null && duration==0) return null; // duration == 0 no expiry date
