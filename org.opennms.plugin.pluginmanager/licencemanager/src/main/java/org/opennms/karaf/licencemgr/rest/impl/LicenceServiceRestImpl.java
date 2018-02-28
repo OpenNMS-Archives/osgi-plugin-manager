@@ -16,6 +16,7 @@
 package org.opennms.karaf.licencemgr.rest.impl;
 
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -143,21 +144,25 @@ public class LicenceServiceRestImpl implements LicenceServiceRest {
 		LicenceService licenceService= ServiceLoader.getLicenceService();
 		if (licenceService == null)	throw new RuntimeException("ServiceLoader.getLicenceService() cannot be null.");
 
+		Long daysUntilExpiry = null;
 		String licence=null;
 		boolean isAuthenticated=false;
+		
 		try{
 			if (productId == null) throw new RuntimeException("productId cannot be null.");
+
+			licence = licenceService.getLicence(productId);
+			
+			// check if licence installed
+			if (licence==null) {
+				String devMessage=null;
+				return Response.status(400).entity(new ErrorMessage(400, 0, "Licence not installed for productId="+productId, null, devMessage)).build();
+			} else {
+				daysUntilExpiry  = Licence.daysToExpiry(licence, new Date());
+			}
 			
 			isAuthenticated = licenceService.isAuthenticatedProductId(productId);
-
-			if(!isAuthenticated){
-				// check if licence installed
-				licence = licenceService.getLicence(productId);
-				String devMessage=null;
-				if (licence==null) {
-					return Response.status(400).entity(new ErrorMessage(400, 0, "Licence not installed for productId="+productId, null, devMessage)).build();
-				}
-			}
+			
 		} catch (Exception exception){
 			//return status 400 Error
 			return Response.status(400).entity(new ErrorMessage(400, 0, "Problem finding if productId is authenticated", null, exception)).build();
@@ -170,6 +175,10 @@ public class LicenceServiceRestImpl implements LicenceServiceRest {
 			reply.setReplyComment("Licence is authenticated for productId="+productId);
 		} else {
 			reply.setReplyComment("Licence is not authenticated for productId="+productId);
+		}
+		
+		if(daysUntilExpiry!=null){
+			reply.setDaysUntilExpiry(daysUntilExpiry.toString());
 		}
 
 		return Response.status(200).entity(reply).build();

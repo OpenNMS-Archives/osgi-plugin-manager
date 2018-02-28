@@ -15,6 +15,9 @@
 
 package org.opennms.karaf.licencemgr.metadata;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.opennms.karaf.licencemgr.AesSymetricKeyCipher;
 import org.opennms.karaf.licencemgr.ClientKeys;
 import org.opennms.karaf.licencemgr.PublisherKeys;
@@ -42,14 +45,14 @@ public class Licence {
 		return licenceStrPlusCrc;
 	}
 
-	
+
 	/**
 	 * Creates a new licence object from LicenceMetadata and PublisherKeys object
 	 */
 	public Licence(LicenceMetadata licenceMetadata, PublisherKeys publisherKeys ){
 		this(licenceMetadata, publisherKeys.getPublicKeyStr(), publisherKeys.getAesSecretKeyStr());
 	}
-	
+
 	/**
 	 * Creates a new licence object from LicenceMetadata and cipher key strings
 	 * @param licenceMetadata metadata object to be encoded as a licence
@@ -79,7 +82,7 @@ public class Licence {
 			// add checksum
 			StringCrc32Checksum stringCrc32Checksum = new StringCrc32Checksum();
 			licenceStrPlusCrc=stringCrc32Checksum.addCRC(licenceStr);
-			
+
 		} catch (Exception e){
 			throw new RuntimeException("could not instantiate new licence with supplied paramaters:",e);
 		}
@@ -93,7 +96,7 @@ public class Licence {
 	public Licence(String licenceStrPlusCrc, ClientKeys clientKeys){
 		this(licenceStrPlusCrc, clientKeys.getPrivateKeyEnryptedStr());
 	}
-	
+
 	/**
 	 * Creates a new licence object from a licence string and an encrypted public key
 	 * This method will ONLY CREATE A VALID LICENCE AND SHOULD BE USED TO VALIDATE received licenceStrPlusCrc
@@ -107,7 +110,7 @@ public class Licence {
 		try{ 
 			if (licenceStrPlusCrc==null) throw new RuntimeException("licencewithCRC cannot be null");
 			if (privateKeyEnryptedStr==null) throw new RuntimeException("privateKeyEnryptedStr cannot be null");
-			
+
 			this.licenceStrPlusCrc=licenceStrPlusCrc;
 
 			// check and remove checksum
@@ -126,12 +129,12 @@ public class Licence {
 			licenceMetadata= new LicenceMetadata();
 			licenceMetadata.fromHexString(receivedLicenceMetadataHexStr);
 			String sha256Hash = licenceMetadata.sha256Hash();
-			
+
 			// decode licence private key before using
 			AesSymetricKeyCipher aesCipher = new AesSymetricKeyCipher();
 			aesCipher.setEncodedSecretKeyStr(receivedAesSecretKeyStr);
 			String decryptedPrivateKeyStr = aesCipher.aesDecryptStr(privateKeyEnryptedStr);
-			
+
 			//verify hashprivateKeyStr
 			RsaAsymetricKeyCipher rsaAsymetricKeyCipher = new RsaAsymetricKeyCipher();
 			rsaAsymetricKeyCipher.setPrivateKeyStr(decryptedPrivateKeyStr);
@@ -143,7 +146,7 @@ public class Licence {
 		}
 
 	}
-	
+
 	/**
 	 * Static Helper method to return only the LicenceMetadata from a licenceStrPlusCrc. 
 	 * The CRC is checked but the licence is NOT VALIDATED by this method. This only allows easy access to the metadata
@@ -167,12 +170,75 @@ public class Licence {
 
 			LicenceMetadata licenceMetadata= new LicenceMetadata();
 			licenceMetadata.fromHexString(receivedLicenceMetadataHexStr);
-			
+
 			return licenceMetadata;
-			
+
 		} catch (Exception e){
 			throw new RuntimeException("could not instantiate LicenceMetadata from supplied licencewithCRC parameter:",e);
 		}
+
+	}
+	
+	/**
+	 * calculates expiry date for a licence. Returns null if no expiry set or can be calculated
+	 * 	duration - alternative to expiry date. Duration of licence in days. If null (and expiryDate is null) there is no expiry date.
+	 *  If duration =0, there is no expiry date. If both defined, duration has precedence over expiryDate.
+	 * @param licenceStrPlusCrc
+	 * @return
+	 * @throws Exception
+	 */
+	public static Date calculateExpiryDate(String licenceStrPlusCrc) throws Exception {
+		LicenceMetadata meta = Licence.getUnverifiedMetadata(licenceStrPlusCrc);
 		
+		Date expiryDate = meta.getExpiryDate();
+		Date startDate = meta.getStartDate();
+		String productId = meta.getProductId();
+
+		Integer duration = null;
+		String durationStr = meta.getDuration();
+
+		if (durationStr!=null && ! durationStr.trim().isEmpty()) try {
+			duration = Integer.parseInt(durationStr);
+		} catch(Exception ex){
+			throw new Exception("cannot parse duration string "+durationStr+" from licence for productId="+productId, ex);
+		}
+		
+		if(duration!=null && duration==0) return null; // duration == 0 no expiry date
+
+		if(expiryDate!=null){
+			return expiryDate;
+			
+		} else {
+			if(duration==null || startDate==null) return null; // expiryDate = null duration ==null or startDate== null and  no expiry date
+			
+			Calendar cal = Calendar.getInstance();
+	        cal.setTime(startDate);
+	        cal.add(Calendar.DATE, duration); 
+	        expiryDate = cal.getTime();
+	        return expiryDate;
+		}
+		
+	}
+
+	/**
+	 * 
+	 * @param licenceStrPlusCrc
+	 * @return timeToExpiry in days null if no expiration time set or cannot be calculated
+	 * @throws Exception
+	 */
+	public static Long daysToExpiry(String licenceStrPlusCrc, Date currentDate) throws Exception {
+		// duration - alternative to expiry date. Duration of licence in days. If null (and expiryDate is null) there is no expiry date.
+		// If duration =0, there is no expiry date. If both defined, duration has precedence over expiryDate.
+
+		Long timeToExpiry=null;
+		
+		Date expiryDate = calculateExpiryDate(licenceStrPlusCrc);
+		
+		if (expiryDate==null) return null;
+		
+	    // this is quick and dirty way to calculate days to expiry	
+		timeToExpiry =  (expiryDate.getTime()-currentDate.getTime())/86400000;
+
+		return timeToExpiry;
 	}
 }
