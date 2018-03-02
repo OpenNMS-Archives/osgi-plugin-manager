@@ -446,7 +446,6 @@
       </releases>
       <url>http://maven.opennms.org/content/groups/opennms.org-snapshot</url>
     </repository>
-
   </repositories>
   <pluginRepositories>
     <pluginRepository>
