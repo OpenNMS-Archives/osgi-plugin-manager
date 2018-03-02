@@ -15,6 +15,9 @@
 
 package org.opennms.karaf.licencemgr.metadata;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.opennms.karaf.licencemgr.AesSymetricKeyCipher;
 import org.opennms.karaf.licencemgr.ClientKeys;
 import org.opennms.karaf.licencemgr.PublisherKeys;
@@ -175,4 +178,68 @@ public class Licence {
 		}
 		
 	}
+	
+	/**
+	 * calculates expiry date for a licence. Returns null if no expiry set or can be calculated
+	 * 	duration - alternative to expiry date. Duration of licence in days. If null (and expiryDate is null) there is no expiry date.
+	 *  If duration =0, there is no expiry date. If both defined, duration has precedence over expiryDate.
+	 * @param licenceStrPlusCrc
+	 * @return
+	 * @throws Exception
+	 */
+	public static Date calculateExpiryDate(String licenceStrPlusCrc) throws Exception {
+		LicenceMetadata meta = Licence.getUnverifiedMetadata(licenceStrPlusCrc);
+		
+		Date expiryDate = meta.getExpiryDate();
+		Date startDate = meta.getStartDate();
+		String productId = meta.getProductId();
+
+		Integer duration = null;
+		String durationStr = meta.getDuration();
+
+		if (durationStr!=null && ! durationStr.trim().isEmpty()) try {
+			duration = Integer.parseInt(durationStr);
+		} catch(Exception ex){
+			throw new Exception("cannot parse duration "+durationStr+" from licence for productId="+productId, ex);
+		}
+		
+		if(duration!=null && duration==0) return null; // duration == 0 no expiry date
+
+		if(expiryDate!=null){
+			return expiryDate;
+			
+		} else {
+			if(duration==null || startDate==null) return null; // expiryDate = null duration ==null or startDate== null and  no expiry date
+			
+			Calendar cal = Calendar.getInstance();
+	        cal.setTime(startDate);
+	        cal.add(Calendar.DATE, duration); 
+	        expiryDate = cal.getTime();
+	        return expiryDate;
+		}
+		
+	}
+
+	/**
+	 * 
+	 * @param licenceStrPlusCrc
+	 * @return timeToExpiry in days null if no expiration time set or cannot be calculated
+	 * @throws Exception
+	 */
+	public static Long daysToExpiry(String licenceStrPlusCrc, Date currentDate) throws Exception {
+		// duration - alternative to expiry date. Duration of licence in days. If null (and expiryDate is null) there is no expiry date.
+		// If duration =0, there is no expiry date. If both defined, duration has precedence over expiryDate.
+
+		Long timeToExpiry=null;
+		
+		Date expiryDate = calculateExpiryDate(licenceStrPlusCrc);
+		
+		if (expiryDate==null) return null;
+		
+	    // this is quick and dirty way to calculate days to expiry	
+		timeToExpiry =  (expiryDate.getTime()-currentDate.getTime())/86400000;
+
+		return timeToExpiry;
+	}
+
 }

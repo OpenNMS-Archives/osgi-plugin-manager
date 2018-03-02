@@ -62,6 +62,9 @@ public class ReplyMessage {
 	private Boolean isAuthenticated=null;
 	
 	@XmlElement()
+	private String daysUntilExpiry=null;
+	
+	@XmlElement()
 	private LicenceList licenceList=null;
 
 
@@ -205,6 +208,14 @@ public class ReplyMessage {
 		this.isAuthenticated = isAuthenticated;
 	}
 	
+	public String getDaysUntilExpiry() {
+		return daysUntilExpiry;
+	}
+
+	public void setDaysUntilExpiry(String daysToExpiry) {
+		this.daysUntilExpiry = daysToExpiry;
+	}
+
 	/**
 	 * 
 	 * @return

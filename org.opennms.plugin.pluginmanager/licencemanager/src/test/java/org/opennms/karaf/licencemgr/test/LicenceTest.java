@@ -17,6 +17,8 @@ package org.opennms.karaf.licencemgr.test;
 
 import static org.junit.Assert.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Test;
@@ -122,5 +124,145 @@ public class LicenceTest {
 		
 		
 		LOG.debug("@Test testLicence End");
+	}
+	
+	
+	@Test 
+	public void testExpiryDate() throws Exception{
+
+		LOG.debug("@Test testExpiryDate Start");
+		
+		SimpleDateFormat sdfmt = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Date startDate = sdfmt.parse("15/10/2016");
+		LOG.debug("startDate="+sdfmt.format( startDate));
+		
+		Date expiryDate = sdfmt.parse("14/10/2017");
+		LOG.debug("expiryDate="+sdfmt.format( expiryDate));
+		
+		Date currentDate = sdfmt.parse("14/7/2017");
+		LOG.debug("currentDate="+sdfmt.format( currentDate));
+		
+		
+		// generating licence keys
+		GeneratedKeys generatedKeys = new GeneratedKeys();
+		aesSecretKeyStr=generatedKeys.getAesSecretKeyStr();
+		privateKeyEnryptedStr=generatedKeys.getPrivateKeyEnryptedStr();
+		privateKeyStr=generatedKeys.getPrivateKeyStr();
+		publicKeyStr=generatedKeys.getPublicKeyStr();
+		
+		LOG.debug("@Test testExpiryDate aesSecretKeyStr="+aesSecretKeyStr);
+		LOG.debug("@Test testExpiryDate privateKeyStr="+privateKeyStr);
+		LOG.debug("@Test testExpiryDate privateKeyEnryptedStr="+privateKeyEnryptedStr);
+		LOG.debug("@Test testExpiryDate publicKeyStrr="+publicKeyStr);
+		
+		// create licence metadata
+		LicenceMetadata createLicenceMetadata = new LicenceMetadata();
+		
+		createLicenceMetadata.setLicensee("Mr Craig Gallen");
+		createLicenceMetadata.setLicensor("OpenNMS UK");
+		createLicenceMetadata.setProductId("org.opennms/org.opennms.karaf.licencemanager.testbundle/1.0-SNAPSHOT");
+		createLicenceMetadata.setFeatureRepository("mvn:org.opennms.licencemgr/licence.manager.example/2.10.0/xml/features");
+		
+		createLicenceMetadata.setMaxSizeSystemIds("1");
+		createLicenceMetadata.getSystemIds().add("4ad72a34e3635c1b-99da3323");
+
+		OptionMetadata option1 = new OptionMetadata("newname", "newvalue", "this is the description");
+		createLicenceMetadata.getOptions().add(option1);
+		
+		// *****************************************************
+		// test create new licence with start and expiry dates set
+		createLicenceMetadata.setExpiryDate(expiryDate);
+		createLicenceMetadata.setStartDate(startDate);
+
+		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
+		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
+		
+		Date calculatedExpiry=null;
+		Long daysToExpiry=null;
+		
+		try {
+			calculatedExpiry = Licence.calculateExpiryDate(licenceStrPlusCrc);
+			daysToExpiry = Licence.daysToExpiry(licenceStrPlusCrc,currentDate);
+		} catch (Exception e) {
+			throw new RuntimeException("cannot decode licence string",e);
+		}
+		
+		LOG.debug("@Test testExpiryDate start and expiry dates calculatedExpiry: "+((calculatedExpiry==null) ? "null": sdfmt.format(calculatedExpiry)));
+		LOG.debug("@Test testExpiryDate start and expiry dates daysToExpiry: "+((daysToExpiry==null) ? "": daysToExpiry));
+		
+		assertNotNull(calculatedExpiry);
+		assertEquals(daysToExpiry,Long.valueOf(92));
+		
+		// *****************************************************
+		// test create new licence with start and duration 0 set
+		createLicenceMetadata.setExpiryDate(expiryDate);
+		createLicenceMetadata.setStartDate(startDate);
+		createLicenceMetadata.setDuration("0");
+
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
+		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
+		
+		try {
+			calculatedExpiry = Licence.calculateExpiryDate(licenceStrPlusCrc);
+			daysToExpiry = Licence.daysToExpiry(licenceStrPlusCrc,currentDate);
+		} catch (Exception e) {
+			throw new RuntimeException("cannot decode licence string",e);
+		}
+		
+     	LOG.debug("@Test testExpiryDate start and duration 0 set calculatedExpiry: "+ ((calculatedExpiry==null) ? "null": sdfmt.format(calculatedExpiry)));
+		LOG.debug("@Test testExpiryDate start and duration 0 set daysToExpiry: "+ ((daysToExpiry==null) ? "null": daysToExpiry));
+		
+		assertNull(calculatedExpiry);
+		assertNull(daysToExpiry);
+		// *****************************************************
+		// test create new licence with start and duration set
+		createLicenceMetadata.setExpiryDate(null);
+		createLicenceMetadata.setStartDate(startDate);
+		createLicenceMetadata.setDuration("365");
+
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
+		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
+		
+		try {
+			calculatedExpiry = Licence.calculateExpiryDate(licenceStrPlusCrc);
+			daysToExpiry = Licence.daysToExpiry(licenceStrPlusCrc,currentDate);
+		} catch (Exception e) {
+			throw new RuntimeException("cannot decode licence string",e);
+		}
+		
+		LOG.debug("@Test testExpiryDate start and duration set calculatedExpiry: "+((calculatedExpiry==null) ? "null": sdfmt.format(calculatedExpiry)));
+		LOG.debug("@Test testExpiryDate start and duration set daysToExpiry: "+((daysToExpiry==null) ? "": daysToExpiry));
+		
+		assertNotNull(calculatedExpiry);
+		assertEquals(Long.valueOf(93),daysToExpiry);
+		
+		// *****************************************************
+		// test create new licence with start and duration set so long expired
+		createLicenceMetadata.setExpiryDate(null);
+		createLicenceMetadata.setStartDate(startDate);
+		createLicenceMetadata.setDuration("30");
+
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
+		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
+		
+		try {
+			calculatedExpiry = Licence.calculateExpiryDate(licenceStrPlusCrc);
+			daysToExpiry = Licence.daysToExpiry(licenceStrPlusCrc,currentDate);
+		} catch (Exception e) {
+			throw new RuntimeException("cannot decode licence string",e);
+		}
+		
+		LOG.debug("@Test testExpiryDate start and duration set long expired calculatedExpiry: "+((calculatedExpiry==null) ? "null": sdfmt.format(calculatedExpiry)));
+		LOG.debug("@Test testExpiryDate start and duration set long expired daysToExpiry: "+((daysToExpiry==null) ? "": daysToExpiry));
+		
+		assertNotNull(calculatedExpiry);
+		assertEquals(Long.valueOf(-241),daysToExpiry);
+		
+		LOG.debug("@Test testExpiryDate End");
 	}
 }

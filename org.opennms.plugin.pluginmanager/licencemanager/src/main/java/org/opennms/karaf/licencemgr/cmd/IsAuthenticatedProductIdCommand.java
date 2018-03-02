@@ -15,10 +15,13 @@
 
 package org.opennms.karaf.licencemgr.cmd;
 
+import java.util.Date;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.opennms.karaf.licencemgr.LicenceService;
+import org.opennms.karaf.licencemgr.metadata.Licence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,10 +45,18 @@ public class IsAuthenticatedProductIdCommand extends OsgiCommandSupport {
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-
+			Long daysToExpire=null;
+			String licence = getLicenceService().getLicence(productId);
+			
+			if (licence!=null){
+				daysToExpire = Licence.daysToExpiry(licence, new Date());
+			}
+			
 			if (getLicenceService().isAuthenticatedProductId(productId)){
-				System.out.println("Licence Authenticated for ProductId='"+productId + "'");
-				LOG.info("Licence Authenticated for ProductId='"+productId + "'");
+				String msg = "Licence Authenticated for ProductId='"+productId + "' "
+						+ ( (daysToExpire==null)?"" : "daysToExpire="+daysToExpire);
+				System.out.println(msg);
+				LOG.info(msg);
 			} else {
 				System.out.println("Licence Not Authenticated for ProductId='"+productId + "'");
 				LOG.info("Licence Not Authenticated for ProductId='"+productId + "'");
@@ -59,5 +70,6 @@ public class IsAuthenticatedProductIdCommand extends OsgiCommandSupport {
 			LOG.error("Error Checking Licence for productId. Exception=",e);
 		}
 		return null;
+
 	}
 }
