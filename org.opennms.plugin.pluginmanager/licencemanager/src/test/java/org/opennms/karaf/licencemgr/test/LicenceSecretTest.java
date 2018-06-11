@@ -18,7 +18,10 @@ package org.opennms.karaf.licencemgr.test;
 import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.junit.Test;
 import org.opennms.karaf.licencemgr.GeneratedKeys;
@@ -28,8 +31,11 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LicenceTest {
-	private static final Logger LOG = LoggerFactory.getLogger(LicenceTest.class);
+/*
+ * Test of licence with secret options 
+ */
+public class LicenceSecretTest {
+	private static final Logger LOG = LoggerFactory.getLogger(LicenceSecretTest.class);
 	
 	/*
 	 * test data - (generated using TestEncodeDecodeLicenceComplete)
@@ -77,12 +83,18 @@ public class LicenceTest {
 		createLicenceMetadata.setMaxSizeSystemIds("1");
 		createLicenceMetadata.getSystemIds().add("4ad72a34e3635c1b-99da3323");
 
-
 		OptionMetadata option1 = new OptionMetadata("newname", "newvalue", "this is the description");
 		createLicenceMetadata.getOptions().add(option1);
+		
+		// create secret properties
+		Map<String,String> secretProperties = new LinkedHashMap<String,String>();
+		secretProperties.put("secret.a.a.a.a", "xxxyyy");
+		secretProperties.put("secret.a.a.a.b", "xxxzzz");
+		secretProperties.put("secret.a.a.a.c", "xxxooo");
+		secretProperties.put("secret.a.a.a.d", "xxxxxx");
 
 		// create new licence
-		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
+		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, secretProperties);
 		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testLicence licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -173,8 +185,10 @@ public class LicenceTest {
 		// test create new licence with start and expiry dates set
 		createLicenceMetadata.setExpiryDate(expiryDate);
 		createLicenceMetadata.setStartDate(startDate);
+		
+		Map<String,String> secretProperties=null;
 
-		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
+		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, secretProperties);
 		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -199,8 +213,10 @@ public class LicenceTest {
 		createLicenceMetadata.setExpiryDate(expiryDate);
 		createLicenceMetadata.setStartDate(startDate);
 		createLicenceMetadata.setDuration("0");
+		
+		secretProperties=null;
 
-		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr,	secretProperties);
 		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -221,8 +237,10 @@ public class LicenceTest {
 		createLicenceMetadata.setExpiryDate(null);
 		createLicenceMetadata.setStartDate(startDate);
 		createLicenceMetadata.setDuration("365");
+		
+		secretProperties=null;
 
-		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, secretProperties);
 		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -244,8 +262,10 @@ public class LicenceTest {
 		createLicenceMetadata.setExpiryDate(null);
 		createLicenceMetadata.setStartDate(startDate);
 		createLicenceMetadata.setDuration("30");
+		
+		secretProperties=null;
 
-		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr,secretProperties);
 		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		

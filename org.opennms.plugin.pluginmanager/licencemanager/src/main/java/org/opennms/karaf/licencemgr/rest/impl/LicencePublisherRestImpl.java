@@ -16,6 +16,7 @@
 package org.opennms.karaf.licencemgr.rest.impl;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -24,8 +25,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.opennms.karaf.licencemgr.metadata.jaxb.ErrorMessage;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
@@ -242,15 +246,22 @@ public class LicencePublisherRestImpl implements LicencePublisherRest {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	@Override()
-	public Response createLicenceInstanceStr(LicenceMetadata licenceMetadata){
+	public Response createLicenceInstanceStr(LicenceMetadata licenceMetadata, @Context UriInfo uriInfo){
 
 		LicencePublisher licencePublisher= ServiceLoader.getLicencePublisher();
 		if (licencePublisher == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		
+		MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+		Map<String,String> secretProperties= new LinkedHashMap<String,String>();
+		for(String key : queryParams.keySet()){
+			String value = queryParams.getFirst(key);
+			secretProperties.put(key, value);
+		}
 
 		String licenceInstanceStr=null;
 		try{
 			if (licenceMetadata == null) throw new RuntimeException("licenceMetadata cannot be null.");
-			licenceInstanceStr = licencePublisher.createLicenceInstanceStr(licenceMetadata);
+			licenceInstanceStr = licencePublisher.createLicenceInstanceStr(licenceMetadata, secretProperties); 
 		} catch (Exception exception){
 			//return status 400 Error
 			return Response.status(400).entity(new ErrorMessage(400, 0, "Unable to create licence instance", null, exception)).build();
@@ -270,22 +281,29 @@ public class LicencePublisherRestImpl implements LicencePublisherRest {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	@Override()
-	public Response createMultiLicenceInstance(LicenceMetadataList licenceMetadataList){
+	public Response createMultiLicenceInstance(LicenceMetadataList licenceMetadataList, @Context UriInfo uriInfo){
 
 		LicencePublisher licencePublisher= ServiceLoader.getLicencePublisher();
 		if (licencePublisher == null) throw new RuntimeException("ServiceLoader.getLicencePublisher() cannot be null.");
+		
+		MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+		Map<String,String> secretProperties= new LinkedHashMap<String,String>();
+		for(String key : queryParams.keySet()){
+			String value = queryParams.getFirst(key);
+			secretProperties.put(key, value);
+		}
 
 		LicenceList licenceList=null;
 		try{
-			if (licenceMetadataList == null) throw new RuntimeException("icenceMetadataList cannot be null.");
-			licenceList = licencePublisher.createMultiLicences(licenceMetadataList);
+			if (licenceMetadataList == null) throw new RuntimeException("licenceMetadataList cannot be null.");
+			licenceList = licencePublisher.createMultiLicences(licenceMetadataList,secretProperties);
 		} catch (Exception exception){
 			//return status 400 Error
-			return Response.status(400).entity(new ErrorMessage(400, 0, "Unable to create icenceMetadataList", null, exception)).build();
+			return Response.status(400).entity(new ErrorMessage(400, 0, "Unable to create licenceMetadataList", null, exception)).build();
 		}
 
 		ReplyMessage reply= new ReplyMessage();
-        reply.setReplyComment("Successfully created licence instance");
+        reply.setReplyComment("Successfully created multi licence instances");
         reply.setLicenceList(licenceList);
 		
 		return Response.status(200).entity(reply).build();

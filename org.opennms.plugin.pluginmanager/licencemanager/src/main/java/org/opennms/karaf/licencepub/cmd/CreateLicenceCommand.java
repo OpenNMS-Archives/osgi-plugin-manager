@@ -15,6 +15,8 @@
 
 package org.opennms.karaf.licencepub.cmd;
 
+import java.util.Map;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
@@ -44,10 +46,19 @@ public class CreateLicenceCommand extends OsgiCommandSupport {
 	@Argument(index = 0, name = "licenceMetadataXml", description = "xml encoded licence metadata including productId", required = true, multiValued = false)
 	String licenceMetadataXml = null;
 
+	@Argument(index = 0, name = "licenceSecretProperties", description = "optional csv set of secretproperties a.a.a=xxx,b.b.b=yyy", required = true, multiValued = false)
+	String licenceSecretProperties = null;
+
 	@Override
 	protected Object doExecute() throws Exception {
 		try{
-			String licenceInstanceStr = getLicencePublisher().createLicenceInstanceStr(licenceMetadataXml);
+			Map<String, String> secretProperties=null;
+			
+			if(licenceSecretProperties!=null && ! licenceSecretProperties.trim().isEmpty() ){
+				secretProperties=Licence.fromProperties(licenceSecretProperties);
+			}
+			
+			String licenceInstanceStr = getLicencePublisher().createLicenceInstanceStr(licenceMetadataXml,secretProperties);
 			System.out.println("Created licence instance. licenceInstanceStr='" + licenceInstanceStr+"'");
 			LOG.info("Created licence instance. licenceInstanceStr='" + licenceInstanceStr+"'");
 		} catch (Exception e) {

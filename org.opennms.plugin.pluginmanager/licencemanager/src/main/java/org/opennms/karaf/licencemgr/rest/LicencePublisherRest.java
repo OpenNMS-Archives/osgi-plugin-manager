@@ -21,8 +21,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
@@ -81,12 +83,12 @@ public interface LicencePublisherRest {
 	@Path("/createlicence")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response createLicenceInstanceStr(LicenceMetadata licenceMetadata);
+	public Response createLicenceInstanceStr(LicenceMetadata licenceMetadata, @Context UriInfo uriInfo);
 
 	@POST
 	@Path("/createmultilicence")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response createMultiLicenceInstance(LicenceMetadataList licenceMetadataList);
+	public Response createMultiLicenceInstance(LicenceMetadataList licenceMetadataList, @Context UriInfo uriInfo);
 	
 }

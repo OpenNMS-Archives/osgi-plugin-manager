@@ -15,9 +15,7 @@
 
 package org.opennms.karaf.licencepub;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -94,9 +92,10 @@ public class LicencePublisherImpl implements LicencePublisher {
 	 * @Param createLicenceMetadata this should be created from a copy of the LicenceMetadata in the LicenceSpecfication
 	 * i.e. it must contain the productId and the options must correspond to the
 	 * options in the LicenceSpecification
+	 * @param secretProperties may be null or contains key value pairs to include encrypted with licence
 	 */
 	@Override
-	public synchronized  String createLicenceInstanceStr(LicenceMetadata createLicenceMetadata) throws IllegalArgumentException {
+	public synchronized  String createLicenceInstanceStr(LicenceMetadata createLicenceMetadata, Map<String,String> secretProperties) throws IllegalArgumentException {
 		if (createLicenceMetadata==null) throw new IllegalArgumentException("licenceMetadata cannot be null");
 
 		String productId = createLicenceMetadata.getProductId();
@@ -152,7 +151,7 @@ public class LicencePublisherImpl implements LicencePublisher {
 		}
 
 		// create and return a new licence with the supplied Metadata
-		Licence licence= new Licence(createLicenceMetadata, licenceSpec.getPublicKeyStr(), licenceSpec.getAesSecretKeyStr());
+		Licence licence= new Licence(createLicenceMetadata, licenceSpec.getPublicKeyStr(), licenceSpec.getAesSecretKeyStr(), secretProperties);
 		return licence.getLicenceStrPlusCrc();
 	}
 
@@ -162,24 +161,25 @@ public class LicencePublisherImpl implements LicencePublisher {
 	 * 
 	 */
 	@Override
-	public synchronized String createLicenceInstanceStr(String licenceMetadataXml) {
+	public synchronized String createLicenceInstanceStr(String licenceMetadataXml, Map<String,String> secretProperties) {
 		if (licenceMetadataXml==null) throw new IllegalArgumentException("licenceMetadataXml cannot be null");
 		LicenceMetadata licenceMetadata= new LicenceMetadata();
 		licenceMetadata.fromXml(licenceMetadataXml);
-		return createLicenceInstanceStr(licenceMetadata);
+		return createLicenceInstanceStr(licenceMetadata, secretProperties);
 	}
 
 	/**
 	 * creates a list of licences from a list of licence metadata
 	 * throws exception if licence metadata cannot be parsed
+	 * @param secretProperties may be null or contains key value pairs to include encrypted with ALL licences in list
 	 */
 	@Override
-	public LicenceList createMultiLicences(LicenceMetadataList licenceMetadataList) {
+	public LicenceList createMultiLicences(LicenceMetadataList licenceMetadataList, Map<String,String> secretProperties) {
 		if (licenceMetadataList==null) throw new IllegalArgumentException("licenceMetadataXml cannot be null");
 		LicenceList licenceStrings= new LicenceList();
 		for(LicenceMetadata licenceMetadata: licenceMetadataList.getLicenceMetadataList()){
 			try {
-				String licenceStr = createLicenceInstanceStr(licenceMetadata);
+				String licenceStr = createLicenceInstanceStr(licenceMetadata, secretProperties);
 				LicenceEntry licenceEntry= new LicenceEntry();
 				licenceEntry.setProductId(licenceMetadata.getProductId());
 				licenceEntry.setLicenceStr(licenceStr);
