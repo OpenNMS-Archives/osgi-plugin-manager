@@ -15,6 +15,8 @@
 
 package org.opennms.karaf.licencemgr;
 
+import java.util.Map;
+
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 
 public interface LicenceAuthenticator {
@@ -30,5 +32,11 @@ public interface LicenceAuthenticator {
 	 * @return the licencewithCRC
 	 */
 	public String getLicencewithCRC();
+	
+	/**
+	 * if the class authenticates then the secret properties from the licence will be available
+	 * @return key value pair of secret properties
+	 */
+	public Map<String,String> getLicenceSecretProperties();
 
 }

@@ -206,7 +206,7 @@ Licence Publisher Username	admin
 Licence Publisher Password  admin
 
 Note that within the docker-compose network, the karaf server is running at karaf:8181 not localhost
-and that the karaf instance has no password authentication setso the username doesnt really matter.
+and that the karaf instance has no password authentication set so the username doesnt really matter.
 
 You can view debug messages if you click Debug OSGI Plugin. The debug code will add useful but messy debug information to each of the rendered pages - so dont use in production.
 

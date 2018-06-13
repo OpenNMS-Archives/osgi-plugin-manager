@@ -15,9 +15,12 @@
 
 package org.opennms.karaf.licencemgr;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.opennms.karaf.licencemgr.LicenceAuthenticator;
+import org.opennms.karaf.licencemgr.metadata.Licence;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
 import org.osgi.framework.ServiceException;
 import org.slf4j.Logger;
@@ -30,6 +33,7 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 	private String privateKeyEnryptedStr;
 	private LicenceMetadata licenceMetadata=null;
 	private String licencewithCRC=null;
+	private Map<String,String> secretProperties=null;
 
 	private LicenceService licenceService= null;
 
@@ -144,9 +148,11 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 
 		// split components of licence string
 		String[] components = licenceStr.split(":");
-		if (components.length!=3) {
-			LOG.error("incorrectly formatted licence string for productId:'"+productId+"'");
-			throw new ServiceException("incorrectly formatted licence string for productId:'"+productId+"'");
+		if (components.length< 3 ||components.length>4 ) {
+			LOG.error("incorrectly formatted licence string for productId:'"+productId+"'"+" Incorrect number ("
+					+ components.length + ") of strings split around ':' ");
+			throw new ServiceException("incorrectly formatted licence string for productId:'"+productId+"'"+" Incorrect number ("
+					+ components.length + ") of strings split around ':' ");
 		}
 
 		String receivedLicenceMetadataHexStr=components[0];
@@ -180,6 +186,15 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 			LOG.error("licence productId='"+licenceMetadata.getProductId()+"' does not match expected productId:'"+productId+"'");
 			throw new ServiceException("licence productId='"+licenceMetadata.getProductId()+"' does not match expected productId:'"+productId+"'");
 		}
+		
+		// if encryptedSecretPropertiesStr exists, decode
+		if(components.length==4){
+			String receivedEncryptedSecretPropertiesStr = components[3];
+			String decryptedSecretPropertiesStr= rsaAsymetricKeyCipher.rsaDecryptString(receivedEncryptedSecretPropertiesStr);
+			Map<String,String> p = new LinkedHashMap<String,String>();
+			p.putAll(Licence.fromProperties(decryptedSecretPropertiesStr));
+			secretProperties=p;
+		}
 
 	}
 
@@ -205,6 +220,7 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 	 * if the class authenticates the licence then the metadata will be available
 	 * @return the licenceMetadata
 	 */
+	@Override
 	public LicenceMetadata getLicenceMetadata() {
 		return licenceMetadata;
 	}
@@ -213,8 +229,18 @@ public class LicenceAuthenticatorImpl implements LicenceAuthenticator {
 	 * If the class authenticates the licence then the licence string will be available
 	 * @return the licencewithCRC
 	 */
+	@Override
 	public String getLicencewithCRC() {
 		return licencewithCRC;
+	}
+
+	/**
+	 * if the class authenticates then the secret properties from the licence will be available
+	 * @return key value pair of secret properties
+	 */
+	@Override
+	public Map<String, String> getLicenceSecretProperties() {
+		return secretProperties;
 	}
 
 
