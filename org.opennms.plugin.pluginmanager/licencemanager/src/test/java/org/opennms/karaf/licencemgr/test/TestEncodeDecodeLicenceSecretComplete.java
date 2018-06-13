@@ -19,19 +19,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -47,7 +38,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This test goes through the complete life-cycle of the algorithms for generating and decoding a licence. 
- * It does not use the Licence object.
+ * It does not use the Licence object except to encode the secret properties as a string.
  * This test also tests the additional secret options
  * @author cgallen
  *
@@ -246,52 +237,6 @@ public class TestEncodeDecodeLicenceSecretComplete {
 		LOG.debug("@Test CdecodeLicence() End");
 
 	}
-	
-	// utilities methods
-	
-//	/**
-//	 * Converts propertiesMap<key,value> of name value pairs to properties string key=value separated by CR
-//	 * Throws an exception if resulting string is longer then 245 bytes as cannot be encrypted as part of licence
-//	 * @param propertiesMap
-//	 * @return
-//	 */
-//	public static String toProperties(Map<String,String> propertiesMap ){
-//		Iterator<String> itr = propertiesMap.keySet().iterator();
-//
-//		StringBuffer properties =new StringBuffer();
-//
-//		while (itr.hasNext()) { 
-//			String key = itr.next();
-//			String value =propertiesMap.get(key);
-//			properties.append(key+"="+value+"\n");
-//		}
-//		String propStr = properties.toString();
-//		try {
-//			byte[] bytes = propStr.getBytes("UTF-8");
-//			if (bytes.length>245) 
-//				throw new IllegalArgumentException("cannot encode propertiesMap as block size greater than 245 bytes. Reduce number or size of your name value pairs.");
-//		} catch (UnsupportedEncodingException e) {
-//			throw new IllegalArgumentException("cannot get bytes for string",e);
-//		}
-//		
-//		return propStr;
-//	}
-//
-//	/**
-//	 * Converts properties string of key=value pairs separated by CR to Map<String key, String value> 
-//	 * @param properties
-//	 * @return
-//	 */
-//	public static Map<String,String> fromProperties(String properties){
-//
-//		Map<String,String> propertiesMap = new LinkedHashMap<String,String>();
-//		String[] kvpair = properties.split("\n");
-//		for(String kvStr: kvpair){
-//			String[] kv =kvStr.split("=");
-//			propertiesMap.put(kv[0], kv[1]);
-//		}
-//		return propertiesMap;
-//	}
 
 	
 }

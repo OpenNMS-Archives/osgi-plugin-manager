@@ -28,6 +28,7 @@ import org.opennms.karaf.licencemgr.PublisherKeys;
 import org.opennms.karaf.licencemgr.RsaAsymetricKeyCipher;
 import org.opennms.karaf.licencemgr.StringCrc32Checksum;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
+import org.opennms.karaf.licencemgr.metadata.jaxb.OptionMetadata;
 
 
 public class Licence {
@@ -82,22 +83,32 @@ public class Licence {
 		if (publicKeyStr==null) throw new RuntimeException("publicKeyStr cannot be null");
 		if (aesSecretKeyStr==null) throw new RuntimeException("aesSecretKeyStr cannot be null");
 
-		if (secretPropertiesMap!=null) this.secretProperties.putAll(secretPropertiesMap);
-
 		try{
-			this.licenceMetadata=licenceMetadata;
+			// deal with metadata secret properties before secretPropertiesMap. 
+			if(licenceMetadata.getSecretProperties()!=null){
+				for( OptionMetadata secretProperty: licenceMetadata.getSecretProperties()){
+				    this.secretProperties.put(secretProperty.getName(), secretProperty.getValue());
+				}
+			}
+			
+			this.licenceMetadata=new LicenceMetadata(licenceMetadata);
+			// make sure secret properties are null in the licence metadata before hash 
+			this.licenceMetadata.setSecretProperties(null);
 
 			// generate hex string and hash of metadata
-			String licenceMetadataHexStr = licenceMetadata.toHexString();
-			String licenceMetadataHashStr= licenceMetadata.sha256Hash();
+			String licenceMetadataHexStr = this.licenceMetadata.toHexString();
+			String licenceMetadataHashStr= this.licenceMetadata.sha256Hash();
 
 			// encrypt metadata hash string
 			RsaAsymetricKeyCipher rsaAsymetricKeyCipher = new RsaAsymetricKeyCipher();
 			rsaAsymetricKeyCipher.setPublicKeyStr(publicKeyStr);
 			String encryptedHashStr = rsaAsymetricKeyCipher.rsaEncryptString(licenceMetadataHashStr);
 
-			//create licence string
+			//create initial licence string
 			String licenceStr= licenceMetadataHexStr+":"+encryptedHashStr+":"+aesSecretKeyStr;
+
+			// values supplied in secretPropertiesMap always overrides any metadata secret properties
+			if (secretPropertiesMap!=null) this.secretProperties.putAll(secretPropertiesMap);
 
 			// if secret properties are populated create properties string
 			if(! secretProperties.isEmpty()){
@@ -318,7 +329,7 @@ public class Licence {
 	}
 
 	/**
-	 * Converts properties string of key=value pairs separated by CR to Map<String key, String value> 
+	 * Converts properties string of key=value pairs separated by ',' to Map<String key, String value> 
 	 * @param properties
 	 * @return
 	 */

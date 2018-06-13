@@ -18,10 +18,11 @@ package org.opennms.karaf.licencemgr.test;
 import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 import org.opennms.karaf.licencemgr.GeneratedKeys;
@@ -55,9 +56,9 @@ public class LicenceSecretTest {
 	private static String privateKeyStr=null;
 
 	@Test 
-	public void testLicence(){
+	public void testLicenceWithSecretMetadata(){
 
-		LOG.debug("@Test testLicence Start");
+		LOG.debug("@Test testLicenceWithSecretMetadata Start");
 		
 		GeneratedKeys generatedKeys = new GeneratedKeys();
 		aesSecretKeyStr=generatedKeys.getAesSecretKeyStr();
@@ -65,10 +66,113 @@ public class LicenceSecretTest {
 		privateKeyStr=generatedKeys.getPrivateKeyStr();
 		publicKeyStr=generatedKeys.getPublicKeyStr();
 		
-		LOG.debug("@Test testLicence aesSecretKeyStr="+aesSecretKeyStr);
-		LOG.debug("@Test testLicence privateKeyStr="+privateKeyStr);
-		LOG.debug("@Test testLicence privateKeyEnryptedStr="+privateKeyEnryptedStr);
-		LOG.debug("@Test testLicence publicKeyStrr="+publicKeyStr);
+		LOG.debug("@Test testLicenceWithSecretMetadata aesSecretKeyStr="+aesSecretKeyStr);
+		LOG.debug("@Test testLicenceWithSecretMetadata privateKeyStr="+privateKeyStr);
+		LOG.debug("@Test testLicenceWithSecretMetadata privateKeyEnryptedStr="+privateKeyEnryptedStr);
+		LOG.debug("@Test testLicenceWithSecretMetadata publicKeyStrr="+publicKeyStr);
+		
+		// create licence metadata
+		LicenceMetadata createLicenceMetadata = new LicenceMetadata();
+
+		createLicenceMetadata.setExpiryDate(new Date());
+		createLicenceMetadata.setStartDate(new Date());
+		createLicenceMetadata.setLicensee("Mr Craig Gallen");
+		createLicenceMetadata.setLicensor("OpenNMS UK");
+		createLicenceMetadata.setProductId("org.opennms/org.opennms.karaf.licencemanager.testbundle/1.0-SNAPSHOT");
+		createLicenceMetadata.setFeatureRepository("mvn:org.opennms.licencemgr/licence.manager.example/2.10.0/xml/features");
+		
+		createLicenceMetadata.setMaxSizeSystemIds("1");
+		createLicenceMetadata.getSystemIds().add("4ad72a34e3635c1b-99da3323");
+
+		OptionMetadata option1 = new OptionMetadata("newname", "newvalue", "this is the description");
+		createLicenceMetadata.getOptions().add(option1);
+		
+		// create metadata secret properties
+		// note these will be erased from licence metadata in licence
+		OptionMetadata secretProperty1 = new OptionMetadata("secret1", "secretValue1", "secret metadata1");
+		OptionMetadata secretProperty2 = new OptionMetadata("secret2", "secretValue2", "secret metadata2");
+		Set<OptionMetadata> metadatasecretProperties = new HashSet<OptionMetadata>();
+		metadatasecretProperties.add(secretProperty1);
+		metadatasecretProperties.add(secretProperty2);
+		createLicenceMetadata.setSecretProperties(metadatasecretProperties);
+		LOG.debug("@Test testLicenceWithSecretMetadata createLicenceMetadata="+createLicenceMetadata.toXml());
+	
+		// create additional secret properties
+		Map<String,String> secretProperties = new LinkedHashMap<String,String>();
+		secretProperties.put("secret.a.a.a.a", "xxxyyy");
+		secretProperties.put("secret.a.a.a.b", "xxxzzz");
+		secretProperties.put("secret.a.a.a.c", "xxxooo");
+		secretProperties.put("secret.a.a.a.d", "xxxxxx");
+
+		// create new licence
+		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, secretProperties);
+		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
+		LOG.debug("@Test testLicenceWithSecretMetadata licenceStrPlusCrc="+licenceStrPlusCrc);
+		
+		// get unverified metadata from licence		
+		LicenceMetadata licenceManagerLicenceMetadata;
+		try {
+			licenceManagerLicenceMetadata = Licence.getUnverifiedMetadata(licenceStrPlusCrc);
+		} catch (Exception e) {
+			throw new RuntimeException("cannot decode licence string",e);
+		}
+		LOG.debug("@Test testLicenceWithSecretMetadata licenceManagerLicenceMetadata="+licenceManagerLicenceMetadata.toXml());
+		
+		// check that metadata matches original WITHOUT SECRET PROPERTIES
+		// remove secret properties from original licence metadata and check that received licence metadata is the same
+		createLicenceMetadata.setSecretProperties(null);
+		String metadataxml=createLicenceMetadata.toXml();
+		
+		String metadata2xml=licenceManagerLicenceMetadata.toXml();
+		assertEquals(metadata2xml,metadataxml);
+		
+		// also testing that equals works
+		assertEquals(licenceManagerLicenceMetadata,createLicenceMetadata);
+		
+		// test decode licence
+		Licence receivedLicence=new Licence(licenceStrPlusCrc, privateKeyEnryptedStr);
+		LicenceMetadata receivedLicenceMetadata = receivedLicence.getLicenceMetadata();
+		assertEquals(receivedLicenceMetadata,createLicenceMetadata);
+		
+		// check that metadata matches original
+		String receivedLicenceMetadataxml=receivedLicenceMetadata.toXml();
+		assertEquals(receivedLicenceMetadataxml,metadataxml);
+		
+
+		LOG.debug("@Test testLicenceWithSecretMetadata receivedLicenceMetadataxml="+receivedLicenceMetadataxml);
+		LOG.debug("@Test testLicenceWithSecretMetadata receivedLicenceMetadata.getProductId()="+receivedLicenceMetadata.getProductId());
+		LOG.debug("@Test testLicenceWithSecretMetadata receivedLicenceMetadata.getMaxSizeSystemIds()="+receivedLicenceMetadata.getMaxSizeSystemIds());
+		
+		String msgStr="@Test testLicenceWithSecretMetadata receivedLicenceMetadata.getSystemIds() contains ";
+		for (String systemId :receivedLicenceMetadata.getSystemIds() ){
+			msgStr=msgStr+"'"+systemId+"'  ";
+		}
+		LOG.debug(msgStr);
+		
+		// test that we can now get the secret metadata
+		Map<String, String> receivedSecretProperties = receivedLicence.getSecretProperties();
+		LOG.debug("@Test testLicenceWithSecretMetadata receivedSecretProperties="+receivedSecretProperties );
+		
+		
+		LOG.debug("@Test testLicenceWithSecretMetadata End");
+	}
+	
+	
+	@Test 
+	public void testLicenceNoSecretMetadata(){
+
+		LOG.debug("@Test testLicenceNoSecretMetadata Start");
+		
+		GeneratedKeys generatedKeys = new GeneratedKeys();
+		aesSecretKeyStr=generatedKeys.getAesSecretKeyStr();
+		privateKeyEnryptedStr=generatedKeys.getPrivateKeyEnryptedStr();
+		privateKeyStr=generatedKeys.getPrivateKeyStr();
+		publicKeyStr=generatedKeys.getPublicKeyStr();
+		
+		LOG.debug("@Test testLicenceNoSecretMetadata aesSecretKeyStr="+aesSecretKeyStr);
+		LOG.debug("@Test testLicenceNoSecretMetadata privateKeyStr="+privateKeyStr);
+		LOG.debug("@Test testLicenceNoSecretMetadata privateKeyEnryptedStr="+privateKeyEnryptedStr);
+		LOG.debug("@Test testLicenceNoSecretMetadata publicKeyStrr="+publicKeyStr);
 		
 		// create licence metadata
 		LicenceMetadata createLicenceMetadata = new LicenceMetadata();
@@ -96,7 +200,7 @@ public class LicenceSecretTest {
 		// create new licence
 		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, secretProperties);
 		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
-		LOG.debug("@Test testLicence licenceStrPlusCrc="+licenceStrPlusCrc);
+		LOG.debug("@Test testLicenceNoSecretMetadata licenceStrPlusCrc="+licenceStrPlusCrc);
 		
 		// get metadata from licence		
 		LicenceMetadata licenceManagerLicenceMetadata;
@@ -106,8 +210,8 @@ public class LicenceSecretTest {
 			throw new RuntimeException("cannot decode licence string",e);
 		}
 		
-		// check that metadata matches original
 		String metadata2xml=licenceManagerLicenceMetadata.toXml();
+		
 		String metadataxml=createLicenceMetadata.toXml();
 		assertEquals(metadata2xml,metadataxml);
 		
@@ -123,18 +227,18 @@ public class LicenceSecretTest {
 		String receivedLicenceMetadataxml=receivedLicenceMetadata.toXml();
 		assertEquals(receivedLicenceMetadataxml,metadataxml);
 		
-		LOG.debug("@Test testLicence receivedLicenceMetadataxml="+receivedLicenceMetadataxml);
-		LOG.debug("@Test testLicence receivedLicenceMetadata.getProductId()="+receivedLicenceMetadata.getProductId());
-		LOG.debug("@Test testLicence receivedLicenceMetadata.getMaxSizeSystemIds()="+receivedLicenceMetadata.getMaxSizeSystemIds());
+		LOG.debug("@Test testLicenceNoSecretMetadata receivedLicenceMetadataxml="+receivedLicenceMetadataxml);
+		LOG.debug("@Test testLicenceNoSecretMetadata receivedLicenceMetadata.getProductId()="+receivedLicenceMetadata.getProductId());
+		LOG.debug("@Test testLicenceNoSecretMetadata receivedLicenceMetadata.getMaxSizeSystemIds()="+receivedLicenceMetadata.getMaxSizeSystemIds());
 		
-		String msgStr="@Test testLicence receivedLicenceMetadata.getSystemIds() contains ";
+		String msgStr="@Test testLicenceNoSecretMetadata receivedLicenceMetadata.getSystemIds() contains ";
 		for (String systemId :receivedLicenceMetadata.getSystemIds() ){
 			msgStr=msgStr+"'"+systemId+"'  ";
 		}
 		LOG.debug(msgStr);
 		
 		
-		LOG.debug("@Test testLicence End");
+		LOG.debug("@Test testLicenceNoSecretMetadata End");
 	}
 	
 	
