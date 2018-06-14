@@ -112,9 +112,10 @@
           <instructions>
             <Bundle-SymbolicName>${symbol_dollar}{project.artifactId}</Bundle-SymbolicName>
             <Bundle-Version>${symbol_dollar}{project.version}</Bundle-Version>
-            <Import-Package>
-              *
-            </Import-Package>
+            <Export-Package>${symbol_dollar}{licenceClassPath}.authenticator.*;uses:="org.opennms.karaf.licencemgr";version="${symbol_dollar}{org.opennms.plugin.licencemanager.version}"</Export-Package>
+            <!-- <Import-Package> -->
+            <!-- * -->
+            <!-- </Import-Package> -->
             <!-- <Import-Package> -->
             <!-- org.apache.felix.service.command, -->
             <!-- * -->
