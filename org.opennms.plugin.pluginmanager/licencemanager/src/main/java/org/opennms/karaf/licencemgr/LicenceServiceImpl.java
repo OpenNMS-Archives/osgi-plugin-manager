@@ -236,12 +236,18 @@ public class LicenceServiceImpl implements LicenceService {
 		licenceMap.clear();
 	}
 
+	/**
+	 * Persists licence manager file. Creates a backup first
+	 */
 	public synchronized void persist(){
 		if (fileUri==null) throw new RuntimeException("fileUri must be set for licence manager");
 
 		try {
+			
+			// write licence data to a new temp file
+			File tmpLicenceManagerFile = new File(fileUri+".tmp"); // temporary file
+			File backupLicenceManagerFile = new File(fileUri+".back"); //backup file
 
-			File licenceManagerFile = new File(fileUri);
 			JAXBContext jaxbContext = JAXBContext.newInstance(LicenceServiceImpl.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
@@ -249,7 +255,17 @@ public class LicenceServiceImpl implements LicenceService {
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			//jaxbMarshaller.marshal(this, file);
-			jaxbMarshaller.marshal(this, licenceManagerFile);
+			jaxbMarshaller.marshal(this, tmpLicenceManagerFile);
+			
+			// if successfull written remove old backup file
+			backupLicenceManagerFile.delete();
+			
+			// rename current licence file to .back
+			File licenceManagerFile = new File(fileUri);
+			licenceManagerFile.renameTo(backupLicenceManagerFile);
+
+			// rename new temp file to file uri of current licence file
+			tmpLicenceManagerFile.renameTo(licenceManagerFile);
 
 		} catch (JAXBException e) {
 			throw new RuntimeException("Problem persisting Licence Manager Data",e);
