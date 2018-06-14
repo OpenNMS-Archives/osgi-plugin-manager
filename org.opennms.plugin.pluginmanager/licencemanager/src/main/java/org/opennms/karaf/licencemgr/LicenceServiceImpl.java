@@ -193,9 +193,10 @@ public class LicenceServiceImpl implements LicenceService {
 	@Override
 	public synchronized void setSystemId(String systemId) {
 		StringCrc32Checksum stringCrc32Checksum = new StringCrc32Checksum();
+		
 		if (! stringCrc32Checksum.checkCRC(systemId)){
 			throw new RuntimeException("Incorrect checksum or format for systemId="+systemId);
-		};
+		}
 
 		this.systemId=systemId;
 		persist();
@@ -237,7 +238,7 @@ public class LicenceServiceImpl implements LicenceService {
 	}
 
 	/**
-	 * Persists licence manager file. Creates a backup first
+	 * Persists licence manager file. Creates a rolling backup first.
 	 */
 	public synchronized void persist(){
 		if (fileUri==null) throw new RuntimeException("fileUri must be set for licence manager");
@@ -276,7 +277,6 @@ public class LicenceServiceImpl implements LicenceService {
 	public synchronized void load(){
 		if (fileUri==null) throw new RuntimeException("fileUri must be set for licence manager");
 
-		//TODO CREATE ROLLING FILE TO AVOID CORRUPTED LICENCES
 		try {
 
 			File licenceManagerFile = new File(fileUri);
