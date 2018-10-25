@@ -12,6 +12,7 @@
         <bundle dependency="true" start-level="50">mvn:com.sun.jersey/jersey-client/${jerseyVersion}</bundle>
         <bundle dependency="true" start-level="50">mvn:javax.ws.rs/jsr311-api/1.1.1</bundle>
         <bundle dependency="true">mvn:com.google.guava/guava/${guavaVersion}</bundle>
+        <!-- TODO MVR update feature definition here as well? -->
         <bundle dependency="true">mvn:com.vaadin/vaadin-client/${vaadinVersion}</bundle>
         <bundle dependency="true">mvn:com.vaadin/vaadin-client-compiled/${vaadinVersion}</bundle>
         <bundle dependency="true">mvn:com.vaadin/vaadin-server/${vaadinVersion}</bundle>

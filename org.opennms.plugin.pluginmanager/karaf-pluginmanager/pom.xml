@@ -122,31 +122,31 @@
     <!-- vaadin dependencies -->
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-server</artifactId>
+      <artifactId>vaadin-compatibility-server</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client-compiled</artifactId>
+      <artifactId>vaadin-compatibility-client-compiled</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client</artifactId>
+      <artifactId>vaadin-compatibility-client</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-themes</artifactId>
+      <artifactId>vaadin-compatibility-themes</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared</artifactId>
+      <artifactId>vaadin-compatibility-shared</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
@@ -171,14 +171,6 @@
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
-
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared-deps</artifactId>
-      <!-- <scope>provided</scope> -->
-      <scope>compile</scope>
-    </dependency>
-
     <!-- servelet dependencies -->
     <!-- <dependency> -->
     <!-- <groupId>org.eclipse.jetty.orbit</groupId> -->

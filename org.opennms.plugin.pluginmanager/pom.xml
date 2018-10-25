@@ -15,8 +15,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.surefire.plugin.version>2.18</maven.surefire.plugin.version>
     <jerseyVersion>1.19.3</jerseyVersion>
-    <vaadinVersion>7.2.7</vaadinVersion>
-    <vaadinSharedEpsVersion>1.0.2</vaadinSharedEpsVersion>
+    <vaadinVersion>8.0.7</vaadinVersion>
     <vaadin.plugin.version>${vaadinVersion}</vaadin.plugin.version>
     <vaadinExtenderVersion>1.0.0</vaadinExtenderVersion> <!-- NOTE - NOT IN 20 -->
     <licencemanagerVersion>${project.version}</licencemanagerVersion>
@@ -27,9 +26,9 @@
     <log4j2Version>2.8.2</log4j2Version>
     <slf4jVersion>1.7.21</slf4jVersion>
     <karafVersion>4.0.8</karafVersion>
-    <osgiVersion>4.2.0</osgiVersion>
-    <osgiCompendiumVersion>4.2.0</osgiCompendiumVersion>
-    <jsoupVersion>1.7.2</jsoupVersion>
+    <osgiVersion>6.0.0</osgiVersion>
+    <osgiCompendiumVersion>5.0.0</osgiCompendiumVersion>
+    <jsoupVersion>1.11.2</jsoupVersion>
     <junitVersion>4.12</junitVersion>
   </properties>
 
@@ -291,27 +290,27 @@
       <!-- vaadin dependencies -->
       <dependency>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-server</artifactId>
+        <artifactId>vaadin-compatibility-server</artifactId>
         <version>${vaadinVersion}</version>
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-client-compiled</artifactId>
+        <artifactId>vaadin-compatibility-client-compiled</artifactId>
         <version>${vaadinVersion}</version>
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-client</artifactId>
+        <artifactId>vaadin-compatibility-client</artifactId>
         <version>${vaadinVersion}</version>
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-themes</artifactId>
+        <artifactId>vaadin-compatibility-themes</artifactId>
         <version>${vaadinVersion}</version>
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-shared</artifactId>
+        <artifactId>vaadin-compatibility-shared</artifactId>
         <version>${vaadinVersion}</version>
       </dependency>
 
@@ -320,13 +319,6 @@
         <artifactId>json</artifactId>
         <version>0.0.20080701</version>
       </dependency>
-
-      <dependency>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-shared-deps</artifactId>
-        <version>${vaadinSharedEpsVersion}</version>
-      </dependency>
-
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>

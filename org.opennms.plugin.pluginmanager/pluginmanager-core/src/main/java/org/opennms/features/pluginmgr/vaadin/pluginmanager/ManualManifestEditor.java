@@ -23,10 +23,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class ManualManifestEditor extends CustomComponent {
@@ -153,7 +153,6 @@ public class ManualManifestEditor extends CustomComponent {
 	private HorizontalLayout buildMainLayout() {
 		// common part: create layout
 		mainLayout = new HorizontalLayout();
-		mainLayout.setImmediate(false);
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
 		mainLayout.setMargin(true);
@@ -169,7 +168,6 @@ public class ManualManifestEditor extends CustomComponent {
 
 		// newManifestVerticalLayout
 		newManifestVerticalLayout = new VerticalLayout();
-		newManifestVerticalLayout.setImmediate(false);
 		newManifestVerticalLayout.setWidth("-1px");
 		newManifestVerticalLayout.setHeight("-1px");
 		newManifestVerticalLayout.setMargin(true);
@@ -184,7 +182,6 @@ public class ManualManifestEditor extends CustomComponent {
 	private VerticalLayout buildEditManifestControlsVerticalLayout() {
 		// common part: create layout
 		editManifestControlsVerticalLayout = new VerticalLayout();
-		editManifestControlsVerticalLayout.setImmediate(false);
 		editManifestControlsVerticalLayout.setWidth("-1px");
 		editManifestControlsVerticalLayout.setHeight("-1px");
 		editManifestControlsVerticalLayout.setMargin(true);
@@ -193,7 +190,6 @@ public class ManualManifestEditor extends CustomComponent {
 		// saveAndExitButton
 		saveAndExitButton = new Button();
 		saveAndExitButton.setCaption("Save Manifest and Exit");
-		saveAndExitButton.setImmediate(true);
 		saveAndExitButton.setWidth("-1px");
 		saveAndExitButton.setHeight("-1px");
 		editManifestControlsVerticalLayout.addComponent(saveAndExitButton);
@@ -201,7 +197,6 @@ public class ManualManifestEditor extends CustomComponent {
 		// cancelAndExitButton
 		cancelAndExitButton = new Button();
 		cancelAndExitButton.setCaption("Cancel and Exit");
-		cancelAndExitButton.setImmediate(true);
 		cancelAndExitButton.setWidth("-1px");
 		cancelAndExitButton.setHeight("-1px");
 		editManifestControlsVerticalLayout.addComponent(cancelAndExitButton);

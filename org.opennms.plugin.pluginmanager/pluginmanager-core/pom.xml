@@ -131,27 +131,27 @@
     <!-- vaadin dependencies -->
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-server</artifactId>
+      <artifactId>vaadin-compatibility-server</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client-compiled</artifactId>
+      <artifactId>vaadin-compatibility-client-compiled</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client</artifactId>
+      <artifactId>vaadin-compatibility-client</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-themes</artifactId>
+      <artifactId>vaadin-compatibility-themes</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared</artifactId>
+      <artifactId>vaadin-compatibility-shared</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -170,12 +170,6 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared-deps</artifactId>
       <scope>provided</scope>
     </dependency>
 

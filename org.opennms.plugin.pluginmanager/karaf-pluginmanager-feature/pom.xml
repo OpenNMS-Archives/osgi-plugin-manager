@@ -23,34 +23,35 @@
 
     <plugins>
 
-      <plugin>
-        <groupId>org.opennms.maven.plugins</groupId>
-        <artifactId>features-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>features.xml</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>generate-features-xml</goal>
-            </goals>
-            <configuration>
-              <importRepositories>false</importRepositories>
-              <importRepositoryExclusions>
-              </importRepositoryExclusions>
-              <repositories>
-                <repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository>
-                <repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository>
-              </repositories>
-              <features>
-                <feature>http</feature>
-                <feature>http-whiteboard</feature>
-                <feature>org.opennms.plugin.licencemanager</feature>
-                <feature>org.opennms.plugin.featuremanager</feature>
-              </features>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- TODO MVR comment this in again -->
+      <!--<plugin>-->
+        <!--<groupId>org.opennms.maven.plugins</groupId>-->
+        <!--<artifactId>features-maven-plugin</artifactId>-->
+        <!--<executions>-->
+          <!--<execution>-->
+            <!--<id>features.xml</id>-->
+            <!--<phase>process-resources</phase>-->
+            <!--<goals>-->
+              <!--<goal>generate-features-xml</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+              <!--<importRepositories>false</importRepositories>-->
+              <!--<importRepositoryExclusions>-->
+              <!--</importRepositoryExclusions>-->
+              <!--<repositories>-->
+                <!--<repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository>-->
+                <!--<repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository>-->
+              <!--</repositories>-->
+              <!--<features>-->
+                <!--<feature>http</feature>-->
+                <!--<feature>http-whiteboard</feature>-->
+                <!--<feature>org.opennms.plugin.licencemanager</feature>-->
+                <!--<feature>org.opennms.plugin.featuremanager</feature>-->
+              <!--</features>-->
+            <!--</configuration>-->
+          <!--</execution>-->
+        <!--</executions>-->
+      <!--</plugin>-->
 
  
     </plugins>
@@ -76,31 +77,31 @@
     <!-- vaadin dependencies -->
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-server</artifactId>
+      <artifactId>vaadin-compatibility-server</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client-compiled</artifactId>
+      <artifactId>vaadin-compatibility-client-compiled</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client</artifactId>
+      <artifactId>vaadin-compatibility-client</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-themes</artifactId>
+      <artifactId>vaadin-compatibility-themes</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared</artifactId>
+      <artifactId>vaadin-compatibility-shared</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
@@ -126,12 +127,6 @@
       <scope>compile</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared-deps</artifactId>
-      <!-- <scope>provided</scope> -->
-      <scope>compile</scope>
-    </dependency>
 
     <!-- servelet dependencies -->
     <!-- <dependency> -->
