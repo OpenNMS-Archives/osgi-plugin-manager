@@ -29,7 +29,7 @@
     <karafVersion>4.0.8</karafVersion>
     <osgiVersion>6.0.0</osgiVersion>
     <osgiCompendiumVersion>5.0.0</osgiCompendiumVersion>
-    <jsoupVersion>1.11.2</jsoupVersion>
+    <jsoupVersion>1.8.3</jsoupVersion>
     <junitVersion>4.12</junitVersion>
     <gwtVersion>2.8.1</gwtVersion>
   </properties>
