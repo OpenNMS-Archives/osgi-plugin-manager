@@ -255,6 +255,12 @@ public class LicenceServiceImpl implements LicenceService {
 			// output pretty printed
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
+			// Try to create output directory
+			if (!tmpLicenceManagerFile.getParentFile().exists()) {
+				LOG.warn("Parent directory {} does not exist. Attempting to create", tmpLicenceManagerFile.getParentFile());
+				tmpLicenceManagerFile.getParentFile().mkdirs();
+			}
+
 			//jaxbMarshaller.marshal(this, file);
 			jaxbMarshaller.marshal(this, tmpLicenceManagerFile);
 			
