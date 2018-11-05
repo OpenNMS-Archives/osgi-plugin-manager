@@ -20,40 +20,51 @@
   </properties>
 
   <build>
-
     <plugins>
-
-      <!-- TODO MVR comment this in again -->
-      <!--<plugin>-->
-        <!--<groupId>org.opennms.maven.plugins</groupId>-->
-        <!--<artifactId>features-maven-plugin</artifactId>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<id>features.xml</id>-->
-            <!--<phase>process-resources</phase>-->
-            <!--<goals>-->
-              <!--<goal>generate-features-xml</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-              <!--<importRepositories>false</importRepositories>-->
-              <!--<importRepositoryExclusions>-->
-              <!--</importRepositoryExclusions>-->
-              <!--<repositories>-->
-                <!--<repository>mvn:org.opennms.plugins/org.opennms.plugin.licencemanager/${project.version}/xml/features</repository>-->
-                <!--<repository>mvn:org.opennms.plugins/org.opennms.plugin.featuremanager/${project.version}/xml/features</repository>-->
-              <!--</repositories>-->
-              <!--<features>-->
-                <!--<feature>http</feature>-->
-                <!--<feature>http-whiteboard</feature>-->
-                <!--<feature>org.opennms.plugin.licencemanager</feature>-->
-                <!--<feature>org.opennms.plugin.featuremanager</feature>-->
-              <!--</features>-->
-            <!--</configuration>-->
-          <!--</execution>-->
-        <!--</executions>-->
-      <!--</plugin>-->
-
- 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${project.build.outputDirectory}/features.xml</file>
+                  <type>xml</type>
+                  <classifier>features</classifier>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

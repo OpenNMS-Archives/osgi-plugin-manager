@@ -16,6 +16,7 @@
     <maven.surefire.plugin.version>2.18</maven.surefire.plugin.version>
     <jerseyVersion>1.19.3</jerseyVersion>
     <vaadinVersion>8.0.7</vaadinVersion>
+    <vaadinGentyrefVersion>1.2.0.vaadin1</vaadinGentyrefVersion>
     <vaadin.plugin.version>${vaadinVersion}</vaadin.plugin.version>
     <vaadinExtenderVersion>1.0.0</vaadinExtenderVersion> <!-- NOTE - NOT IN 20 -->
     <licencemanagerVersion>${project.version}</licencemanagerVersion>
@@ -30,6 +31,7 @@
     <osgiCompendiumVersion>5.0.0</osgiCompendiumVersion>
     <jsoupVersion>1.11.2</jsoupVersion>
     <junitVersion>4.12</junitVersion>
+    <gwtVersion>2.8.1</gwtVersion>
   </properties>
 
   <modules>
@@ -313,7 +315,23 @@
         <artifactId>vaadin-compatibility-shared</artifactId>
         <version>${vaadinVersion}</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.vaadin.external</groupId>
+        <artifactId>gentyref</artifactId>
+        <version>${vaadinGentryrefVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-elemental</artifactId>
+        <version>${gwtVersion}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-user</artifactId>
+        <version>${gwtVersion}</version>
+        <scope>provided</scope>
+      </dependency>
       <dependency>
         <groupId>com.vaadin.external.json</groupId>
         <artifactId>json</artifactId>
