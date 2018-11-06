@@ -85,6 +85,7 @@
   <service id="pluginManagerRestService" interface="org.opennms.vaadin.extender.ApplicationFactory" ref="pluginManagerAdminApplicationFactory">
     <service-properties>
       <entry key="alias" value="/admin/plugin-manager" />
+      <entry key="init.widgetset" value="org.opennms.features.pluginmgr.AppWidgetset" />
     </service-properties>
   </service>
 
@@ -101,6 +102,7 @@
   <service id="featureDiagnosticsService" interface="org.opennms.vaadin.extender.ApplicationFactory" ref="featureDiagnosticsApplicationFactory">
     <service-properties>
       <entry key="alias" value="/admin/plugin-manager-feature-diagnostics" />
+      <entry key="init.widgetset" value="org.opennms.features.pluginmgr.AppWidgetset" />
     </service-properties>
   </service>
 
@@ -117,6 +119,7 @@
   <service id="licenceDiagnosticsService" interface="org.opennms.vaadin.extender.ApplicationFactory" ref="licenceDiagnosticsApplicationFactory">
     <service-properties>
       <entry key="alias" value="/admin/plugin-manager-licence-diagnostics" />
+      <entry key="init.widgetset" value="org.opennms.features.pluginmgr.AppWidgetset" />
     </service-properties>
   </service>
   
@@ -133,6 +136,7 @@
   <service id="pluginDiagnosticsService" interface="org.opennms.vaadin.extender.ApplicationFactory" ref="pluginDiagnosticsApplicationFactory">
     <service-properties>
       <entry key="alias" value="/admin/plugin-manager-plugin-diagnostics" />
+      <entry key="init.widgetset" value="org.opennms.features.pluginmgr.AppWidgetset" />
     </service-properties>
   </service> 
   
