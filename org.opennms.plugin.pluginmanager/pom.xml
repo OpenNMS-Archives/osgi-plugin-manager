@@ -15,7 +15,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.surefire.plugin.version>2.18</maven.surefire.plugin.version>
     <jerseyVersion>1.19.3</jerseyVersion>
-    <vaadinVersion>8.0.7</vaadinVersion>
+    <vaadinVersion>8.5.2</vaadinVersion>
     <vaadinGentyrefVersion>1.2.0.vaadin1</vaadinGentyrefVersion>
     <vaadin.plugin.version>${vaadinVersion}</vaadin.plugin.version>
     <vaadinExtenderVersion>1.0.0</vaadinExtenderVersion> <!-- NOTE - NOT IN 20 -->
@@ -29,9 +29,9 @@
     <karafVersion>4.0.8</karafVersion>
     <osgiVersion>6.0.0</osgiVersion>
     <osgiCompendiumVersion>5.0.0</osgiCompendiumVersion>
-    <jsoupVersion>1.8.3</jsoupVersion>
+    <jsoupVersion>1.11.2</jsoupVersion>
     <junitVersion>4.12</junitVersion>
-    <gwtVersion>2.8.1</gwtVersion>
+    <gwtVersion>2.8.2</gwtVersion>
   </properties>
 
   <modules>
