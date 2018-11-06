@@ -318,7 +318,7 @@
       <dependency>
         <groupId>com.vaadin.external</groupId>
         <artifactId>gentyref</artifactId>
-        <version>${vaadinGentryrefVersion}</version>
+        <version>${vaadinGentyrefVersion}</version>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
