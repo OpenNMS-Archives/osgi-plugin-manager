@@ -15,8 +15,6 @@
 
 package org.opennms.karaf.licencemgr.metadata.jaxb;
 
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
