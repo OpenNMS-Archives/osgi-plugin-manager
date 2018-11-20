@@ -146,7 +146,6 @@ public class ProductDescriptorTablePanel extends CustomComponent {
 						
 			productDescriptorPanel.setVisible(false);
 
-			// TODO MVR was setReadOnly(true) before
 			productDescriptorPanel.setEnabled(true);
 			productDescriptorPanel.setNoUpdate(true);
 
@@ -165,7 +164,6 @@ public class ProductDescriptorTablePanel extends CustomComponent {
 			//if there are no panels to display display an empty panel
 			selectedProductId=null;
 			ProductDescriptorPanel productDescriptorPanel= new ProductDescriptorPanel();
-			// TODO MVR was setReadOnly(true) before
 			productDescriptorPanel.setEnabled(false);
 			productDescriptorPanel.setNoUpdate(true);
 			productDescriptorPanel.setVisible(true);
@@ -175,7 +173,6 @@ public class ProductDescriptorTablePanel extends CustomComponent {
 			String selectedProdId = pmap.keySet().iterator().next();
 			ProductDescriptorPanel selectedProductDescriptorPanel = panelIds.get(selectedProdId);
 			if (selectedProductDescriptorPanel!=null) {
-				// TODO MVR was added due to setReadOnly(true) see above
 				selectedProductDescriptorPanel.setEnabled(true);
 				selectedProductDescriptorPanel.setVisible(true);
 				synchronized (selectedProductIdLock){

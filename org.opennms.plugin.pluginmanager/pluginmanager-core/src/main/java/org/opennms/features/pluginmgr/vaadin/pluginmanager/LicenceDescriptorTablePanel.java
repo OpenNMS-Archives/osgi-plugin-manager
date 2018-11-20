@@ -142,7 +142,6 @@ public class LicenceDescriptorTablePanel extends CustomComponent {
 
 			licenceDescriptorPanel.setVisible(false);
 
-			// TODO MVR was setReadOnly(true) before
 			licenceDescriptorPanel.setEnabled(false);
 			licenceDescriptorPanel.setNoUpdate(true);
 
@@ -160,7 +159,6 @@ public class LicenceDescriptorTablePanel extends CustomComponent {
 		if (lmap.keySet().isEmpty()) {
 			//if there are no panels to display display an empty panel
 			LicenceDescriptorPanel licenceDescriptorPanel= new LicenceDescriptorPanel();
-			// TODO MVR was setReadOnly(true) before
 			licenceDescriptorPanel.setEnabled(false);
 			licenceDescriptorPanel.setNoUpdate(true);
 			licenceDescriptorPanel.setVisible(true);
