@@ -15,7 +15,6 @@
 
 package org.opennms.karaf.licencemgr.rest.impl;
 
-
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;

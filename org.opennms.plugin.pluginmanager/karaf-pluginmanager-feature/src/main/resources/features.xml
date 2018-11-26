@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features name="vaadin" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
+    <feature name="vaadin" version="${project.version}" description="OpenNMS :: Features :: Vaadin + Dependencies">
+        <details>Feature for running the OSGi plugin manager in a standalone karaf instance.</details>
+        <feature>http</feature>
+        <feature>http-whiteboard</feature>
+        <feature>org.opennms.plugin.licencemanager</feature>
+        <feature>org.opennms.plugin.featuremanager</feature>
+        <bundle>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.karaf-pluginmanager/${project.version}</bundle>
+        <bundle>mvn:org.opennms.plugins/org.opennms.plugin.pluginmanager.pluginmanager-core/${project.version}</bundle>
+        <bundle>wrap:mvn:com.google.gwt/gwt-elemental/${gwtVersion}</bundle>
+        <bundle>wrap:mvn:com.google.gwt/gwt-user/${gwtVersion}/$Export-Package=com.google.*</bundle>
+        <bundle>wrap:mvn:com.vaadin/vaadin-compatibility-server/${vaadinVersion}</bundle>
+        <bundle>wrap:mvn:com.vaadin/vaadin-compatibility-client-compiled/${vaadinVersion}</bundle>
+        <bundle>wrap:mvn:com.vaadin/vaadin-compatibility-client/${vaadinVersion}</bundle>
+        <bundle>wrap:mvn:com.vaadin/vaadin-compatibility-themes/${vaadinVersion}</bundle>
+        <bundle>wrap:mvn:com.vaadin/vaadin-compatibility-shared/${vaadinVersion}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-server/${vaadinVersion}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-client-compiled/${vaadinVersion}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-client/${vaadinVersion}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-themes/${vaadinVersion}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-shared/${vaadinVersion}</bundle>
+        <bundle>mvn:com.vaadin.external/gentyref/${vaadinGentyrefVersion}</bundle>
+        <bundle>mvn:org.jsoup/jsoup/${jsoupVersion}</bundle>
+        <bundle>mvn:org.opennms.vaadin-extender/service/${vaadinExtenderVersion}</bundle>
+        <bundle>mvn:com.google.guava/guava/${guavaVersion}</bundle>
+        <bundle>mvn:com.vaadin.external.json/json/0.0.20080701</bundle>
+        <bundle>mvn:javax.servlet/javax.servlet-api/${servletApiVersion}</bundle>
+    </feature>
+</features>

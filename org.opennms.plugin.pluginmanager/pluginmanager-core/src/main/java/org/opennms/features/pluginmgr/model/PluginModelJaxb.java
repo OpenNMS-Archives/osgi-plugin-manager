@@ -51,19 +51,18 @@ public class PluginModelJaxb {
 	
 	@XmlElementWrapper(name="karafManifestEntryMap")
 	private SortedMap<String, KarafManifestEntryJaxb > karafManifestEntryMap = new TreeMap<String, KarafManifestEntryJaxb >();
-	
-	//TODO REMOVE
-	//@XmlElementWrapper(name="karafManifestMap")
-	//private SortedMap<String, ProductSpecList> karafManifestMap = new TreeMap<String, ProductSpecList>();
-	
-	//@XmlElementWrapper(name="karafManifestSystemIdMap")
-	//private SortedMap<String, String> karafManifestSystemIdMap = new TreeMap<String, String>();
 
 	@XmlElement(name="availablePlugins")
 	private ProductSpecList availablePlugins;
 	
 	@XmlElement(name="availablePluginsLastUpdated")
 	private Date availablePluginsLastUpdated = null;
+	
+	@XmlElement(name="localAvailablePlugins")
+	private ProductSpecList localAvailablePlugins;
+	
+	@XmlElement(name="localAvailablePluginsLastUpdated")
+	private Date localAvailablePluginsLastUpdated = null;
 	
 	/**
 	 * returns the password of the remote plugin server
@@ -168,45 +167,27 @@ public class PluginModelJaxb {
 	public void setAvailablePluginsLastUpdated(Date availablePluginsLastUpdated) {
 		this.availablePluginsLastUpdated = availablePluginsLastUpdated;
 	}
+	
+	public ProductSpecList getLocalAvailablePlugins() {
+		return localAvailablePlugins;
+	}
 
-	//TODO REMOVE
-	/**
-	 * karaf manifest map contains the a map of product manifests 
-	 * key = karaf instance
-	 * value = list of product specs to try and install in system
-	 * @return the karafManifestMap
-	 */
-//	public SortedMap<String, ProductSpecList> getKarafManifestMap() {
-//		return karafManifestMap;
-//	}
+	public void setLocalAvailablePlugins(ProductSpecList localAvailablePlugins) {
+		this.localAvailablePlugins = localAvailablePlugins;
+	}
+	
+	public Date getLocalAvailablePluginsLastUpdated() {
+		return localAvailablePluginsLastUpdated;
+	}
 
-	/**
-	 * @param karafManifestMap the karafManifestMap to set
-	 */
-//	public void setKarafManifestMap( SortedMap<String, ProductSpecList> karafManifestMap) {
-//		this.karafManifestMap = karafManifestMap;
-//	}
+	public void setLocalAvailablePluginsLastUpdated(
+			Date localAvailablePluginsLastUpdated) {
+		this.localAvailablePluginsLastUpdated = localAvailablePluginsLastUpdated;
+	}
 
-	/**
-	 * karaf KarafManifestSystemIdMap contains the a map of manifestSystemId's to karaf instances 
-	 * key = karaf instance
-	 * value = ManifestSystemId
-	 * @return the karafManifestSystemIdMap
-	 */
-//	public SortedMap<String, String> getKarafManifestSystemIdMap() {
-//		return karafManifestSystemIdMap;
-//	}
 
 	/**
-	 * @param karafManifestSystemIdMap the karafManifestSystemIdMap to set
-	 */
-//	public void setKarafManifestSystemIdMap(
-//			SortedMap<String, String> karafManifestSystemIdMap) {
-//		this.karafManifestSystemIdMap = karafManifestSystemIdMap;
-//	}
-
-	/**
-	 * karaf KarafManifestEntryJaxb contains a map static data by karaf instances
+	 * karaf KarafManifestEntryJaxb contains a map of static data by karaf instances
 	 * key = karaf instance
 	 * value = KarafManifestEntryJaxb manifest entry for the karef instance
 	 * @return the karafManifestEntryMap

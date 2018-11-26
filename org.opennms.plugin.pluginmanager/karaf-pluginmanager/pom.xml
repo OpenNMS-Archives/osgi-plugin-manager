@@ -5,15 +5,14 @@
   <parent>
     <groupId>org.opennms.plugins</groupId>
     <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-    <version>1.0.7</version>
+    <version>1.2.0</version>
   </parent>
 
   <artifactId>org.opennms.plugin.pluginmanager.karaf-pluginmanager</artifactId>
   <packaging>bundle</packaging>
   <name>org.opennms.plugin.pluginmanager.karaf-pluginmanager</name>
-  <description>
-    Feature for running the OSGi plugin manager in a standalone karaf instance.
-  </description>
+  <description>Feature for running the OSGi plugin manager in a standalone karaf instance.</description>
+
   <properties>
     <bundle.symbolicName>org.opennms.plugin.pluginmanager.karaf-pluginmanager</bundle.symbolicName>
     <bundle.namespace>UNDEFINED</bundle.namespace>
@@ -86,56 +85,11 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.outputDirectory}/features</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/main/features</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-artifacts</id>
-            <phase>package</phase>
-            <goals>
-              <goal>attach-artifact</goal>
-            </goals>
-            <configuration>
-              <artifacts>
-                <artifact>
-                  <file>${project.build.outputDirectory}/features/features.xml</file>
-                  <type>xml</type>
-                  <classifier>features</classifier>
-                </artifact>
-              </artifacts>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
 
   <dependencies>
+
 
     <!-- Jersey Dependencies -->
     <dependency>
@@ -162,37 +116,37 @@
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
 
     <!-- vaadin dependencies -->
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-server</artifactId>
+      <artifactId>vaadin-compatibility-server</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client-compiled</artifactId>
+      <artifactId>vaadin-compatibility-client-compiled</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-client</artifactId>
+      <artifactId>vaadin-compatibility-client</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-themes</artifactId>
+      <artifactId>vaadin-compatibility-themes</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared</artifactId>
+      <artifactId>vaadin-compatibility-shared</artifactId>
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
@@ -217,19 +171,16 @@
       <!-- <scope>provided</scope> -->
       <scope>compile</scope>
     </dependency>
-
-    <dependency>
-      <groupId>com.vaadin</groupId>
-      <artifactId>vaadin-shared-deps</artifactId>
-      <!-- <scope>provided</scope> -->
-      <scope>compile</scope>
-    </dependency>
-
     <!-- servelet dependencies -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.eclipse.jetty.orbit</groupId> -->
+    <!-- <artifactId>javax.servlet</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
     <dependency>
-      <groupId>org.eclipse.jetty.orbit</groupId>
-      <artifactId>javax.servlet</artifactId>
-      <!-- <scope>provided</scope> -->
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servletApiVersion}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

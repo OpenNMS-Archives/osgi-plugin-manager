@@ -16,10 +16,9 @@
 package org.opennms.features.pluginmgr.vaadin.pluginmanager;
 
 import org.opennms.features.pluginmgr.SessionPluginManager;
-import org.osgi.service.blueprint.container.BlueprintContainer;
 
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.v7.ui.VerticalLayout;
 
 public class ManualManifestEditorWindow extends Window {
 	

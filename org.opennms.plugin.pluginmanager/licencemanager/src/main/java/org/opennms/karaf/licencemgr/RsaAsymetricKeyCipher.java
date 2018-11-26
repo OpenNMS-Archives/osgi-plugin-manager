@@ -47,7 +47,7 @@ import org.opennms.karaf.licencemgr.StringCrc32Checksum;
  */
 public class RsaAsymetricKeyCipher {
 	
-	private static final int keysize = 2048; // key size
+	private static final int KEY_SIZE = 2048; // key size
 
 	private String publicKeyStr=null;
 	private String privateKeyStr=null;
@@ -91,7 +91,7 @@ public class RsaAsymetricKeyCipher {
 		KeyPairGenerator kpg;
 		try {
 			kpg = KeyPairGenerator.getInstance("RSA");
-			kpg.initialize(keysize);
+			kpg.initialize(KEY_SIZE);
 			KeyPair kp = kpg.genKeyPair();
 			Key publicKey = kp.getPublic();
 			Key privateKey = kp.getPrivate();
@@ -143,14 +143,14 @@ public class RsaAsymetricKeyCipher {
 	 * @param publicKeyStr
 	 * @return PublicKey
 	 */
-	private PublicKey readPublicKeyFromString(String privateKeyStr) {
+	private PublicKey readPublicKeyFromString(String publicKeyStr) {
 		try {
-			String[] parts = privateKeyStr.split("-");
+			String[] parts = publicKeyStr.split("-");
 			if (parts.length!=2) throw new RuntimeException("incorrectly formatted keystring");
-			String privateKeyModStr=parts[0];
-			String privateKeyExpStr=parts[1];
-			BigInteger modulus = new BigInteger(privateKeyModStr ,16);
-			BigInteger exponent = new BigInteger(privateKeyExpStr ,16);
+			String publicKeyModStr=parts[0];
+			String publicKeyExpStr=parts[1];
+			BigInteger modulus = new BigInteger(publicKeyModStr ,16);
+			BigInteger exponent = new BigInteger(publicKeyExpStr ,16);
 			RSAPublicKeySpec keySpec = new RSAPublicKeySpec(modulus, exponent);
 			KeyFactory fact = KeyFactory.getInstance("RSA");
 			PublicKey pubKey = fact.generatePublic(keySpec);

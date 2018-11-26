@@ -39,12 +39,20 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="licenceMetadata")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType (propOrder={"productId","featureRepository","licensee","licensor","startDate","expiryDate","duration","maxSizeSystemIds","systemIds","options"})
+@XmlType (propOrder={"productId","featureRepository","licensee","licensor","startDate","expiryDate","duration","maxSizeSystemIds","systemIds","options","secretProperties"})
 public class LicenceMetadata {
 
 	//NOTE IF YOU MODIFY THIS CLASS YOU MUST REGENERATE THE equals and hashCode methods
 	//AND change the fromXml() method
 
+	public LicenceMetadata(){
+		super();
+	}
+	
+	public LicenceMetadata(LicenceMetadata licenceMetadata){
+		super();
+		setLicenceMetadata(licenceMetadata);
+	}
 
 	/**
 	 * productId is expected to contain the name of the product in the form <name>/<version>
@@ -121,8 +129,16 @@ public class LicenceMetadata {
 	/**
 	 * licence options. Each option contains a name/value pair and a description field.
 	 * This is intended to grant/restrict access to particular features
+	 * Note The options list is always present but may be empty.
 	 */
 	Set<OptionMetadata> options=new HashSet<OptionMetadata>();
+	
+	/**
+	 * licence secret properties. Each property contains a name/value pair and a description field.
+	 * This is intended to create secret properties. Note that if secret properties are null then they aren't considered.
+	 * Note the secret properties can be null and then are not included in any generated xml or the hash
+	 */
+	Set<OptionMetadata> secretProperties=null;
 
 	/**
 	 * sets LicenceMetadata values of this object from another licenceMetadata object
@@ -140,6 +156,9 @@ public class LicenceMetadata {
 		this.licensor=licenceMetadata.licensor;
 		this.options.clear();
 		if (licenceMetadata.options!=null) this.options.addAll(licenceMetadata.options);
+		if (licenceMetadata.secretProperties!=null) {
+			this.secretProperties = new HashSet<OptionMetadata>(licenceMetadata.secretProperties);
+		} else this.secretProperties=null;
 	}
 
 
@@ -300,6 +319,25 @@ public class LicenceMetadata {
 	public void setOptions(Set<OptionMetadata> options) {
 		this.options = options;
 	}
+	
+	/**
+	 * 
+	 * @return secret properties. Can be null
+	 */
+	public Set<OptionMetadata> getSecretProperties() {
+		return secretProperties;
+	}
+
+
+	/**
+	 * 
+	 * @param secretProperties. Can be null
+	 */
+	@XmlElementWrapper(name="secretProperties")
+	@XmlElement(name="property")
+	public void setSecretProperties(Set<OptionMetadata> secretProperties) {
+		this.secretProperties = secretProperties;
+	}
 
 
 	/**
@@ -349,6 +387,9 @@ public class LicenceMetadata {
 			this.licensor=licenceMetadata.licensor;
 			this.options.clear();
 			if (licenceMetadata.options!=null) this.options.addAll(licenceMetadata.options);
+			if (licenceMetadata.secretProperties!=null) {
+				this.secretProperties = new HashSet<OptionMetadata>(licenceMetadata.secretProperties);
+			} else this.secretProperties=null;
 		} catch (JAXBException e) {
 			throw new RuntimeException("Problem unmarshalling LicenceMetadata:",e);
 		}
@@ -402,9 +443,6 @@ public class LicenceMetadata {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -421,11 +459,15 @@ public class LicenceMetadata {
 				+ ((licensee == null) ? 0 : licensee.hashCode());
 		result = prime * result
 				+ ((licensor == null) ? 0 : licensor.hashCode());
-		result = prime * result
+		result = prime
+				* result
 				+ ((maxSizeSystemIds == null) ? 0 : maxSizeSystemIds.hashCode());
 		result = prime * result + ((options == null) ? 0 : options.hashCode());
 		result = prime * result
 				+ ((productId == null) ? 0 : productId.hashCode());
+		result = prime
+				* result
+				+ ((secretProperties == null) ? 0 : secretProperties.hashCode());
 		result = prime * result
 				+ ((startDate == null) ? 0 : startDate.hashCode());
 		result = prime * result
@@ -434,9 +476,6 @@ public class LicenceMetadata {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -486,6 +525,11 @@ public class LicenceMetadata {
 				return false;
 		} else if (!productId.equals(other.productId))
 			return false;
+		if (secretProperties == null) {
+			if (other.secretProperties != null)
+				return false;
+		} else if (!secretProperties.equals(other.secretProperties))
+			return false;
 		if (startDate == null) {
 			if (other.startDate != null)
 				return false;
@@ -498,8 +542,6 @@ public class LicenceMetadata {
 			return false;
 		return true;
 	}
-
-
 
 
 }

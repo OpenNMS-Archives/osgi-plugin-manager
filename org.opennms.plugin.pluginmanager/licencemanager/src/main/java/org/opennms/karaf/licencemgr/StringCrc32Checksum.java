@@ -32,8 +32,8 @@ public class StringCrc32Checksum {
 		try {
 			crc.update(valueString.getBytes("UTF-8"));
 		}
-		catch (  UnsupportedEncodingException e) {
-			throw new RuntimeException("UTF-8 encoding is not supported");
+		catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("UTF-8 encoding is not supported",e);
 		}
 		String hexcrc= Long.toHexString(crc.getValue());
 
@@ -51,12 +51,6 @@ public class StringCrc32Checksum {
 	 */
 	public boolean checkCRC(String stringPlusCrc){
 
-		//TODO remove
-		//		String[] parts = stringPlusCrc.split("-");
-		//		if (parts.length!=2) return false;
-		//		String hexSystemIdString=parts[0];
-		//		String hexcrc=parts[1];
-
 		// allows string with dashes but last dash separates crc
 		int lastdashindex = stringPlusCrc.lastIndexOf("-");
 		if (lastdashindex==-1          // no dash in string or no crc <xxx>
@@ -71,8 +65,8 @@ public class StringCrc32Checksum {
 		try {
 			crc.update(valueString.getBytes("UTF-8"));
 		}
-		catch (  UnsupportedEncodingException e) {
-			throw new RuntimeException("UTF-8 encoding is not supported");
+		catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("UTF-8 encoding is not supported",e);
 		}
 
 		String checkHexCrc= Long.toHexString(crc.getValue());

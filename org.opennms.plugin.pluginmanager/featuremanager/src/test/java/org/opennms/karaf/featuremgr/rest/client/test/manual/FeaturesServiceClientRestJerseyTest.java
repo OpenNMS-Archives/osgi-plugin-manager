@@ -52,6 +52,13 @@ public class FeaturesServiceClientRestJerseyTest {
 	private String name="myproject.Feature";
 	private String version="1.0-SNAPSHOT";
 	
+	String manifestStr = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+			+"<features name=\"manifest-features\" xmlns=\"http://karaf.apache.org/xmlns/features/v1.2.0\">"
+			+"  <repository>mvn:org.apache.activemq/activemq-karaf/5.14.5/xml/features</repository>"
+			+"  <feature name=\"manifest\" version=\"1.0-SNAPSHOT\" description=\"Manifest\">"
+			+"</feature>"
+			+"</features>";
+	
 	// constructor loads test properties file if exists
 	public FeaturesServiceClientRestJerseyTest(){
 		super();
@@ -111,7 +118,9 @@ public class FeaturesServiceClientRestJerseyTest {
 		this.featuresInstall();
 		this.getFeaturesInfo();
 		this.featuresUninstall();
-		this.featuresRemoveRepository();		
+		this.featuresRemoveRepository();
+		this.featuresSynchronizeManifest();
+		this.featuresUninstallManifest();
 		
 		LOG.debug("@Test - LICENCE MANAGER TESTS.FINISH");
 	}
@@ -261,6 +270,41 @@ public class FeaturesServiceClientRestJerseyTest {
 		
 		LOG.debug("@Test - featuresRemoveRepository.FINISH");
 	}
+	
+	//@Test
+	public void featuresSynchronizeManifest() {
+		LOG.debug("@Test - featuresSynchronizeManifest.START");
 
+		//http://localhost:8181/featuremgr/rest/v1-0/features-synchronizemanifest
+
+		FeaturesServiceClient featuresService = getFeaturesService(); 
+		try {
+			LOG.debug("@Test - featuresSynchronizeManifest trying to deploy manifestStr="+manifestStr);
+			featuresService.featuresSynchronizeManifest(manifestStr);
+		} catch (Exception e) {
+			LOG.error("problem in test featuresSynchronizeManifest(). Exception:",e);
+			fail("@Test - featuresSynchronizeManifest() failed. See stack trace in consol");
+		}
+		
+		LOG.debug("@Test - featuresSynchronizeManifest.FINISH");
+	}
+	
+	//@Test
+	public void featuresUninstallManifest() {
+		LOG.debug("@Test - featuresUninstallManifest.START");
+
+		//http://localhost:8181/featuremgr/rest/v1-0/features-uninstallmanifest
+
+		FeaturesServiceClient featuresService = getFeaturesService(); 
+		try {
+			LOG.debug("@Test - featuresUninstallManifest trying to uninstall manifest");
+			featuresService.featuresUninstallManifest();
+		} catch (Exception e) {
+			LOG.error("problem in test featuresUninstallManifest(). Exception:",e);
+			fail("@Test - featuresUninstallManifest() failed. See stack trace in consol");
+		}
+		
+		LOG.debug("@Test - featuresUninstallManifest.FINISH");
+	}
 
 }

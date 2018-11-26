@@ -16,15 +16,10 @@
 package org.opennms.karaf.licencemgr;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
@@ -44,8 +39,6 @@ import org.opennms.karaf.licencemgr.metadata.Licence;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceEntry;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
-import org.opennms.karaf.licencemgr.rest.client.jerseyimpl.LicenceManagerClientRestJerseyImpl;
-import org.osgi.framework.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,13 +50,6 @@ public class LicenceServiceImpl implements LicenceService {
 	// used to store location of persistence file
 	private String fileUri=null;
 
-	// if true, will try to download licence list from remote urls
-	private Boolean useRemoteLicenceManagers=false;
-
-	// local list of urls to contact remote licence managers
-	// in order to download licence list for this system. Urls will be tried in order
-	private List<String> remoteLicenceMgrs= new ArrayList<String>();
-
 	// used to store list of productId's with authenticated licences
 	// this is not persisted but rebuilt as products are installed and authenticated
 	private Set<String> authenticatedLicences= new HashSet<String>();
@@ -74,73 +60,12 @@ public class LicenceServiceImpl implements LicenceService {
 	@XmlElement
 	private String systemId="NOT_SET";
 
-	// username to access remote licence manager
-	private String remoteLicenceManagerUserName;
-
-	// password to access remote licence manager
-	private String remoteLicenceManagerPassword;
-
 	/**
 	 * @param fileUri used to store location of persistence file for licence service
 	 */
 	public void setFileUri(String fileUri) {
 		this.fileUri = fileUri;
 	}
-
-
-	/**
-	 * @param remoteLicenceManagerUserName username to access remote licence manager
-	 */
-	public void setRemoteLicenceManagerUserName(String remoteLicenceManagerUserName) {
-		this.remoteLicenceManagerUserName = remoteLicenceManagerUserName;
-	}
-
-	/**
-	 * @param remoteLicenceManagerPassword password to access remote licence manager
-	 */
-	public void setRemoteLicenceManagerPassword(String remoteLicenceManagerPassword) {
-		this.remoteLicenceManagerPassword = remoteLicenceManagerPassword;
-	}
-
-	/**
-	 * @param useRemoteLicenceManagers if 'true', will try to download licence list from remote licence managers
-	 * if 'false' will just use local values. Any other value throws an exception
-	 */
-	public synchronized void setUseRemoteLicenceManagers(String useRemoteLicenceManagersStr) {
-		if(useRemoteLicenceManagersStr !=null && ( useRemoteLicenceManagersStr.equals("true") || useRemoteLicenceManagersStr.equals("false"))) {
-			useRemoteLicenceManagers = Boolean.valueOf(useRemoteLicenceManagersStr);
-		} else throw new RuntimeException("useRemoteLicenceManagers set to ("+useRemoteLicenceManagersStr+") but must be set to boolean true or false");
-	}
-
-	/**
-	 * @param remoteLicenceMgrsStr comma separated local list of urls to contact remote licence managers
-	 * in order to download licence list for this system. Urls will be tried in order. -->
-	 */
-	public synchronized void setRemoteLicenceMgrs(String remoteLicenceMgrsStr) {
-		if (remoteLicenceMgrsStr ==null) throw new RuntimeException("remoteLicenceMgrsStr should not be set to null.");
-		if (! "".equals(remoteLicenceMgrsStr)) {
-			String[] urls = remoteLicenceMgrsStr.split(",");
-			List<String> licenceMgrs= new ArrayList<String>();
-			for (String urlstr: urls){
-				urlstr.trim();
-				if (! "".equals(urlstr)) try {
-					URL url = new URL(urlstr); // if cannot be parsed then reject string
-					URI uri = url.toURI(); // checks uri can be parsed
-					licenceMgrs.add(urlstr);
-				} catch (MalformedURLException | URISyntaxException e){
-					throw new RuntimeException("unparsable URL in remote Licence Managers configuration ",e);
-				}
-			}
-			remoteLicenceMgrs = licenceMgrs;
-			String msg="Licence manager remote licence managers set to:";
-			for (String lmUrl: remoteLicenceMgrs){
-				msg=msg+"'"+lmUrl+"' ";
-			}
-			LOG.info(msg);
-			System.out.println(msg);
-		}
-	}
-
 
 	@Override
 	public synchronized void addAuthenticatedProductId(String productId){
@@ -178,6 +103,24 @@ public class LicenceServiceImpl implements LicenceService {
 		licenceMap.put(productId, licenceStrPlusCrc);
 		return unverifiedMetadata;
 	}
+	
+	/**
+	 * installs all licences in supplied licence list
+	 * @param licenceList
+	 */
+	@Override
+	public synchronized void installLicenceList(LicenceList licenceList){
+		
+		List<LicenceEntry> remoteLicenceEntries = licenceList.getLicenceList();
+
+		for(LicenceEntry le: remoteLicenceEntries){
+			String licenceStrPlusCrc = le.getLicenceStr();
+			localAddLicence(licenceStrPlusCrc);
+			System.out.println("    Licence Manager Added licence for productId="+le.getProductId());
+			LOG.info("    Licence Manager Added licence for productId="+le.getProductId());
+		}
+		persist();
+	}
 
 	/**
 	 * adds and persists new licence string
@@ -205,7 +148,6 @@ public class LicenceServiceImpl implements LicenceService {
 		if (productId==null) throw new RuntimeException("productID cannot be null");
 		return licenceMap.get(productId);
 	}
-
 
 	@Override
 	public synchronized Map<String, String> getLicenceMap() {
@@ -251,9 +193,10 @@ public class LicenceServiceImpl implements LicenceService {
 	@Override
 	public synchronized void setSystemId(String systemId) {
 		StringCrc32Checksum stringCrc32Checksum = new StringCrc32Checksum();
+		
 		if (! stringCrc32Checksum.checkCRC(systemId)){
 			throw new RuntimeException("Incorrect checksum or format for systemId="+systemId);
-		};
+		}
 
 		this.systemId=systemId;
 		persist();
@@ -295,91 +238,41 @@ public class LicenceServiceImpl implements LicenceService {
 	}
 
 	/**
-	 * tries to install remote licences from given list of urls for remote managers
-	 * tries each manager in turn and returns for the first one to succeed
-	 * returns url of remote licence manager which was used or null if none succeeded
-	 * @ param systemIdStr the system id to use to select remote values
-	 * 
+	 * Persists licence manager file. Creates a rolling backup first.
 	 */
-	public synchronized String installRemoteLicencesFromUrlList(String systemIdStr){
-
-		String successRemoteLicenceManagerUrl=null;
-		for (String remoteLicenceManagerUrl : remoteLicenceMgrs ){
-			try {
-				successRemoteLicenceManagerUrl =installRemoteLicences(remoteLicenceManagerUrl, systemIdStr );
-			} catch (Exception e){
-				System.err.println("   Licence Manager could not load licences from from licence manager at "+remoteLicenceManagerUrl
-						+" for systemIdStr='"+systemIdStr+"' Exception:"+e);
-				LOG.error("   Licence Manager could not load licences from from licence manager at "+remoteLicenceManagerUrl
-						+" for systemIdStr='"+systemIdStr+"' Exception:",e);
-			}
-			if (null != successRemoteLicenceManagerUrl) {
-				System.out.println("Licence Manager succeeded in loading licences from licence manager at "+successRemoteLicenceManagerUrl);
-				LOG.info("Licence Manager succeeded in loading licences from licence manager at "+successRemoteLicenceManagerUrl);
-				break;
-			}
-		}
-		if (null == successRemoteLicenceManagerUrl) {
-			System.err.println("Licence Manager Could not load licences from any remote licence manager.");
-			LOG.error("Licence Manager Could not load licences from any remote licence manager.");
-		}
-
-		return successRemoteLicenceManagerUrl;
-	}
-
-	/**
-	 * tries to install remote licences from licence manager at a given url. Updates licences list and persists.
-	 * This will only replace duplicate licence it will not delete licences present locally which are not
-	 * in remote system
-	 * NOTE - because of 'synchronised' you cannot get remote licences from local system
-	 * @param remoteLicencesUrl URL version of remote url
-	 * 
-	 */
-	public synchronized String installRemoteLicences(String remoteLicenceManagerUrl, String systemIdStr ){
-		if (remoteLicenceManagerUrl==null) throw new RuntimeException("Licence Manager remoteLicenceManagerUrl must not be null");
-		if (systemIdStr==null) throw new RuntimeException("Licence Manager systemIdStr must not be null");
-		try {
-			LicenceManagerClientRestJerseyImpl licenceManagerClient = new LicenceManagerClientRestJerseyImpl();
-
-			String basePath = "/licencemgr/rest/v1-0/licence-mgr";
-
-			licenceManagerClient.setBasePath(basePath);
-			licenceManagerClient.setBaseUrl(remoteLicenceManagerUrl);
-			licenceManagerClient.setUserName(remoteLicenceManagerUserName);
-			licenceManagerClient.setPassword(remoteLicenceManagerPassword);
-
-			LicenceList licenceList = licenceManagerClient.getLicenceMapForSystemId(systemIdStr);
-			List<LicenceEntry> remoteLicenceEntries = licenceList.getLicenceList();
-
-			for(LicenceEntry le: remoteLicenceEntries){
-				String licenceStrPlusCrc = le.getLicenceStr();
-				localAddLicence(licenceStrPlusCrc);
-				System.out.println("    Licence Manager Added remote licence from "+remoteLicenceManagerUrl+" for productId="+le.getProductId());
-				LOG.info("    Licence Manager Added remote licence from "+remoteLicenceManagerUrl+" for productId="+le.getProductId());
-			}
-			persist();
-			return remoteLicenceManagerUrl;
-
-		} catch (Exception e){
-			throw new RuntimeException("    Licence Manager Cannot get remote licences from remoteLicenceManagerUrl="+remoteLicenceManagerUrl,e);
-		}
-	}
-
-
 	public synchronized void persist(){
 		if (fileUri==null) throw new RuntimeException("fileUri must be set for licence manager");
 
 		try {
+			
+			// write licence data to a new temp file
+			File tmpLicenceManagerFile = new File(fileUri+".tmp"); // temporary file
+			File backupLicenceManagerFile = new File(fileUri+".back"); //backup file
 
-			File licenceManagerFile = new File(fileUri);
 			JAXBContext jaxbContext = JAXBContext.newInstance(LicenceServiceImpl.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
 			// output pretty printed
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
+			// Try to create output directory
+			if (!tmpLicenceManagerFile.getParentFile().exists()) {
+				LOG.warn("Parent directory {} does not exist. Attempting to create", tmpLicenceManagerFile.getParentFile());
+				tmpLicenceManagerFile.getParentFile().mkdirs();
+			}
+
 			//jaxbMarshaller.marshal(this, file);
-			jaxbMarshaller.marshal(this, licenceManagerFile);
+			jaxbMarshaller.marshal(this, tmpLicenceManagerFile);
+			
+			// if successfull written remove old backup file
+			backupLicenceManagerFile.delete();
+			
+			// rename current licence file to .back
+			File licenceManagerFile = new File(fileUri);
+			licenceManagerFile.renameTo(backupLicenceManagerFile);
+
+			// rename new temp file to file uri of current licence file
+			tmpLicenceManagerFile.renameTo(licenceManagerFile);
 
 		} catch (JAXBException e) {
 			throw new RuntimeException("Problem persisting Licence Manager Data",e);
@@ -390,7 +283,6 @@ public class LicenceServiceImpl implements LicenceService {
 	public synchronized void load(){
 		if (fileUri==null) throw new RuntimeException("fileUri must be set for licence manager");
 
-		//TODO CREATE ROLLING FILE TO AVOID CORRUPTED LICENCES
 		try {
 
 			File licenceManagerFile = new File(fileUri);
@@ -420,44 +312,14 @@ public class LicenceServiceImpl implements LicenceService {
 	/**
 	 * blueprint destroy-method
 	 */
-	public synchronized void close() {
-		System.out.println("Licence Manager Shutting Down ");
-		LOG.info("Licence Manager Shutting Down ");
+	public void close() {
 	}
 
 	/**
 	 * blueprint init-method
 	 */
-	public synchronized void init(){
-
-		System.out.println("Licence Manager Starting");
-		LOG.info("Licence Manager Starting");
-
+	public void init(){
 		load(); // first load the existing persistence file
-
-		String installedFromLicenceMgr=null;
-		if (useRemoteLicenceManagers!=null && useRemoteLicenceManagers==true){
-			System.out.println("Licence Manager system attempting to load remote licences");
-			LOG.info("Licence Manager system attempting to load remote licences");
-			if(remoteLicenceMgrs !=null && ! remoteLicenceMgrs.isEmpty()){
-				installedFromLicenceMgr=installRemoteLicencesFromUrlList(systemId);
-			} else {
-				System.out.println("WARNING: list of remote licence managers is empty");
-				LOG.info("WARNING: list of remote licence managers is empty");
-			}
-			if (installedFromLicenceMgr!=null) {
-				System.out.println("Licence Manager loaded remote licences from url="+installedFromLicenceMgr);
-				LOG.info("Licence Manager loaded remote licences from url="+installedFromLicenceMgr);
-			} else {
-				System.out.println("WARNING Licence Manager unabled to load remote licences from any supplied url");
-				LOG.info("WARNING Licence Manager unabled to load remote licences from any supplied url");
-			}
-		} else {
-			System.out.println("Licence Manager system set to not load remote licences");
-			LOG.info("Licence Manager system set to not load remote licences");
-		}
-		System.out.println("Licence Manager Started");
-		LOG.info("Licence Manager Started");
 	}
 
 }

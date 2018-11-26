@@ -86,7 +86,7 @@ public class LicencePublisherTest {
 		
 		// licenceMetadataXml is sent to licence publisher to publish licence
 		LOG.debug("@test test1LicencePublisher() licenceMetadataXml="+licenceMetadataXml);
-		String licenceInstanceStr = licencePubService.createLicenceInstanceStr(licenceMetadataXml);
+		String licenceInstanceStr = licencePubService.createLicenceInstanceStr(licenceMetadataXml,null); // TODO add secrets
 		LOG.debug("@test test1LicencePublisher() licenceInstanceStr="+licenceInstanceStr);
 		
 		LOG.debug("@test test1LicencePublisher() End");
@@ -149,7 +149,7 @@ public class LicencePublisherTest {
 		
 		// licenceMetadataXml is sent to licence publisher to publish licence
 		LOG.debug("@test test2LicencePublisher() licenceMetadataXml="+licenceMetadataXml);
-		String licenceInstanceStr = licencePubService.createLicenceInstanceStr(licenceMetadataXml);
+		String licenceInstanceStr = licencePubService.createLicenceInstanceStr(licenceMetadataXml,null); // TODO add secrets
 		LOG.debug("@test test2LicencePublisher() licenceInstanceStr="+licenceInstanceStr);
 		
 		// check licenceInstanceStr contains valid licence

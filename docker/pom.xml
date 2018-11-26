@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.opennms.plugins</groupId>
+    <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
+    <version>1.1.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>org.opennms.plugin.shopdockerdeploy</artifactId>
+  <packaging>pom</packaging>
+  <name>org.opennms.plugin.shopdockerdeploy</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.opennms.plugins</groupId>
+                  <artifactId>org.opennms.plugin.pluginmanager.karaf-pluginmanager-kar</artifactId>
+                  <version>${project.version}</version>
+                  <type>kar</type>
+                  <!-- <classifier> [classifier - optional] </classifier> -->
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.basedir}/karaf-deploy/</outputDirectory>
+                  <!-- <destFileName>[ filename ]</destFileName> -->
+                </artifactItem>
+              </artifactItems>
+              <!-- other configurations here -->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>1.9.4</version>
+        <configuration>
+          <providerImplementations>
+            <git>jgit</git>
+          </providerImplementations>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-jgit</artifactId>
+            <version>1.9.4</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>clone-easy-digital-downloads</id>
+            <goals>
+              <goal>checkout</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <checkoutDirectory>${project.basedir}/localgitrepo/easy-digital-downloads</checkoutDirectory>
+              <connectionType>connection</connectionType>
+              <connectionUrl>scm:git:https://github.com/easydigitaldownloads/easy-digital-downloads.git</connectionUrl>
+              <scmVersionType>branch</scmVersionType>
+              <scmVersion>release/2.4</scmVersion>
+              <skipCheckoutIfExists>true</skipCheckoutIfExists>
+            </configuration>
+          </execution>
+          <execution>
+            <id>clone-shop-front-theme</id>
+            <goals>
+              <goal>checkout</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <checkoutDirectory>${project.basedir}/localgitrepo/shop-front</checkoutDirectory>
+              <connectionType>connection</connectionType>
+              <connectionUrl>scm:git:https://github.com/easydigitaldownloads/shop-front.git</connectionUrl>
+              <scmVersionType>branch</scmVersionType>
+              <scmVersion>master</scmVersion>
+              <skipCheckoutIfExists>true</skipCheckoutIfExists>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
+    </plugins>
+  </build>
+
+</project>

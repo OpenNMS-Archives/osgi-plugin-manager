@@ -104,6 +104,12 @@ public interface PluginManager {
 	public ProductSpecList getAvailablePlugins();
 
 	/**
+	 * gets the locally available plugins listed as available in the local system
+	 * @return 
+	 */
+	public ProductSpecList getLocalAvailablePlugins();
+
+	/**
 	 * refreshes complete KarafEntryJaxb from remote karaf server
 	 * throws exception if cannot refresh entry
 	 */
@@ -135,7 +141,7 @@ public interface PluginManager {
 	 * @return the installedLicenceList
 	 */
 	public LicenceList getInstalledLicenceList(String karafInstance);
-	
+
 	/**
 	 * updates the installed licence list in for the karaf instance 
 	 * if the karaf instance is known to the system
@@ -143,7 +149,7 @@ public interface PluginManager {
 	 * @param karafInstance
 	 */
 	public void updateInstalledLicenceList(LicenceList licenceList, String karafInstance);
-	
+
 	/**
 	 * updates the installed plugins list in for the karaf instance 
 	 * if the karaf instance is known to the system
@@ -210,6 +216,26 @@ public interface PluginManager {
 	public ProductSpecList getPluginsManifest(String karafInstance);
 
 	/**
+	 * returns the manifest of plugins scheduled to be installed in the given karaf instance
+	 * as the contents of a features file
+	 * returns an empty features file if no entries are found
+	 * @return the manifest feature
+	 */
+	public String getPluginsManifestFeatures(String karafInstance);
+
+	/**
+	 * installs the plugin manifest in a karafInstance as a karaf features file
+	 * @param karafInstance
+	 */
+	public void installPluginsManifestFeatures(String karafInstance);
+	
+	/**
+	 * uninstalls the plugin manifest in a karafInstance
+	 * @param karafInstance
+	 */
+	public void uninstallPluginsManifestFeatures(String karafInstance);
+
+	/**
 	 * adds a plugin to the manifest of plugins scheduled to be installed in the given karaf instance
 	 * @param selectedProductId
 	 * @param karafInstance
@@ -239,21 +265,21 @@ public interface PluginManager {
 	 * @param karafInstance
 	 */
 	public String getManifestSystemId(String karafInstance);
-	
+
 	/**
 	 * remoteIsAccessible tells the plugin manager that this karaf instance is updatable using ReST
 	 * @param karafInstance
 	 * @return Boolen true this karaf instance is updatable using ReST
 	 */
 	public Boolean getRemoteIsAccessible(String karafInstance);
-	
+
 	/**
 	 * remoteIsAccessible tells the plugin manager that this karaf instance is updatable using ReST
 	 * @param remoteIsAccessible
 	 * @param karafInstance
 	 */
 	public void setRemoteIsAccessible(Boolean remoteIsAccessible, String karafInstance);
-	
+
 	/**
 	 * allowUpdateMessages tells the plugin manager that this karaf instance is a parent and should not have licences and installed plugins
 	 * updated from an external ReST push
@@ -261,7 +287,7 @@ public interface PluginManager {
 	 * @return
 	 */
 	public Boolean getAllowUpdateMessages(String karafInstance);
-	
+
 	/**
 	 * allowUpdateMessages tells the plugin manager that this karaf instance is a parent and should not have licences and installed plugins
 	 * @param allowUpdateMessages
@@ -269,14 +295,14 @@ public interface PluginManager {
 	 * @return
 	 */
 	public void setAllowUpdateMessages(Boolean allowUpdateMessages, String karafInstance);
-	
+
 	/**
 	 * adds new karaf instance based on karafManifestEntryJaxb
 	 * throws exception entry already exists or name not set
 	 * @param karafManifestEntryJaxb
 	 */
 	public void addNewKarafInstance(KarafManifestEntryJaxb karafManifestEntryJaxb);
-	
+
 	/**
 	 * deletes karaf instance from plugin manager. Throws error and will not delete localhost instance.
 	 * @param karafInstance

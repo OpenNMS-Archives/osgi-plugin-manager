@@ -105,7 +105,7 @@ public class ProductPublisherClientRestJerseyImpl implements ProductPublisherCli
 	
 	private Client newClient(){
 		Client client = Client.create();
-		if (userName!=null) client.addFilter(new HTTPBasicAuthFilter(userName, password));
+		if ((userName!=null&& !"".equals(userName))) client.addFilter(new HTTPBasicAuthFilter(userName, password));
 		return  client;
 	}
 	

@@ -19,7 +19,7 @@ import org.opennms.features.pluginmgr.SimpleStackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.TextArea;
+import com.vaadin.v7.ui.TextArea;
 
 /**
  * used to manage user feedback and logging messages

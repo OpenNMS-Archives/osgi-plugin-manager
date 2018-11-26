@@ -61,6 +61,10 @@ public class ReplyMessage {
 	
 	@XmlElement()
 	private String daysUntilExpiry=null;
+	
+	@XmlElement()
+	private LicenceList licenceList=null;
+
 
 	/**
 	 * @return the replyComment
@@ -201,13 +205,29 @@ public class ReplyMessage {
 	public void setIsAuthenticated(Boolean isAuthenticated) {
 		this.isAuthenticated = isAuthenticated;
 	}
-
+	
 	public String getDaysUntilExpiry() {
 		return daysUntilExpiry;
 	}
 
 	public void setDaysUntilExpiry(String daysToExpiry) {
 		this.daysUntilExpiry = daysToExpiry;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public LicenceList getLicenceList() {
+		return licenceList;
+	}
+
+	/**
+	 * 
+	 * @param licenceList
+	 */
+	public void setLicenceList(LicenceList licenceList) {
+		this.licenceList = licenceList;
 	}
 	
 	

@@ -19,6 +19,7 @@ package org.opennms.karaf.featuremgr.rest.impl;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.karaf.features.FeaturesService;
+import org.opennms.karaf.featuremgr.PluginFeatureManagerService;
 
 
 /** 
@@ -29,14 +30,17 @@ import org.apache.karaf.features.FeaturesService;
 public class ServiceLoader {
 
 	private static AtomicReference<FeaturesService> featuresService = new AtomicReference<>();
+	
+	private static AtomicReference<PluginFeatureManagerService> pluginFeatureManagerService = new AtomicReference<>();
 
 	public ServiceLoader(){
 		super();
 	}
 
-	public ServiceLoader(FeaturesService featuresService ){
+	public ServiceLoader(FeaturesService featuresService, PluginFeatureManagerService pluginFeatureManagerService ){
 		super();
 		setFeaturesService(featuresService);
+		setPluginFeatureManagerService(pluginFeatureManagerService);
 	}
 
 	/**
@@ -51,6 +55,15 @@ public class ServiceLoader {
 	 */
 	public static void setFeaturesService(FeaturesService featuresService) {
 		ServiceLoader.featuresService.set(featuresService);
+	}
+	
+	
+	public static PluginFeatureManagerService getPluginFeatureManagerService() {
+		return ServiceLoader.pluginFeatureManagerService.get();
+	}
+
+	public static void setPluginFeatureManagerService(PluginFeatureManagerService pluginFeatureManagerService) {
+		ServiceLoader.pluginFeatureManagerService.set(pluginFeatureManagerService);
 	}
 
 }

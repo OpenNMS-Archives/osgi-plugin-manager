@@ -255,6 +255,13 @@ public class LicenceArtifactsGenerator {
 				+"    <argument ref=\"licenceService\" />\n"
 				+"  </bean>\n"
 				+"\n"
+				+"  <!-- The licenceMetadataPrinter is a simple class to print out licence metadata and secret properties once a licence authenticates -->\n"
+				+"  <!-- Use this class as a template for accessing secret properties and metadata programatically from an authenticated licence -->\n"
+				+"  <!-- NOTE do not use this class if you dont want secret data to be persisted in the logs -->\n"
+				+"  <bean id=\"licenceMetadataPrinter\" class=\"org.opennms.karaf.licencemgr.LicenceMetadataPrinter\" init-method=\"init\">\n"
+				+"    <property name=\"licenceAuthenticator\" ref=\"licenceAuthenticator\" />\n"
+				+"  </bean>\n"
+				+"\n"
 				+"</blueprint>\n"
 				+ "";
 

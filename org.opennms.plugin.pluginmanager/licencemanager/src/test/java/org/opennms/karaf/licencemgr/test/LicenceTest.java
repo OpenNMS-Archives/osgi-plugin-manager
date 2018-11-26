@@ -18,7 +18,6 @@ package org.opennms.karaf.licencemgr.test;
 import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Test;
@@ -83,7 +82,7 @@ public class LicenceTest {
 		createLicenceMetadata.getOptions().add(option1);
 
 		// create new licence
-		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
 		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testLicence licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -175,7 +174,7 @@ public class LicenceTest {
 		createLicenceMetadata.setExpiryDate(expiryDate);
 		createLicenceMetadata.setStartDate(startDate);
 
-		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		Licence licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
 		String licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -201,7 +200,7 @@ public class LicenceTest {
 		createLicenceMetadata.setStartDate(startDate);
 		createLicenceMetadata.setDuration("0");
 
-		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
 		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -223,7 +222,7 @@ public class LicenceTest {
 		createLicenceMetadata.setStartDate(startDate);
 		createLicenceMetadata.setDuration("365");
 
-		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
 		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		
@@ -246,7 +245,7 @@ public class LicenceTest {
 		createLicenceMetadata.setStartDate(startDate);
 		createLicenceMetadata.setDuration("30");
 
-		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr);
+		licence = new Licence(createLicenceMetadata, publicKeyStr, aesSecretKeyStr, null);
 		licenceStrPlusCrc = licence.getLicenceStrPlusCrc();
 		LOG.debug("@Test testExpiryDate licenceStrPlusCrc="+licenceStrPlusCrc);
 		

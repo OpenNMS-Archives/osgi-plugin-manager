@@ -40,7 +40,7 @@ import org.opennms.karaf.licencemgr.metadata.jaxb.ProductSpecList;
 @Path("/")
 public class PluginManagerRestImpl implements PluginManagerRest {
 
-
+//TODO CHANGE TO USING KARAF INSTANCE
 	/**
 	 * Returns manifest list in XML format in response to HTTP GET request.
 	 * e.g. http://localhost:8181/pluginmgr/rest/v1-0/manifest-list?systemId=
@@ -87,6 +87,37 @@ public class PluginManagerRestImpl implements PluginManagerRest {
 	}
 	
 	/**
+	 * Returns manifest list in XML features file format in response to HTTP GET request.
+	 * e.g. http://localhost:8181/pluginmgr/rest/v1-0/manifest-feature-list?karafInstance=
+	 * @param karafInstance the karaf instance for which to get the manifest
+	 * @return response containing manifest feature list or an error message if not found
+	 * @throws Exception 
+	 */
+	@GET
+	@Path("/manifest-feature-list")
+	@Produces(MediaType.APPLICATION_XML)
+	@Override
+	public Response  getManifestFeatureList(@QueryParam("karafInstance") String karafInstance) throws Exception {
+		
+		PluginManager pluginManager = ServiceLoader.getPluginManager();
+		if (pluginManager == null) throw new RuntimeException("ServiceLoader.getPluginManager() cannot be null.");
+
+		try{
+			if(karafInstance==null || "".equals(karafInstance)){
+				throw new RuntimeException("karafInstance cannot be null or empty string");
+			}
+			String manifestFeatures = pluginManager.getPluginsManifestFeatures(karafInstance);
+			
+            return Response.status(200).entity(manifestFeatures).build();
+			
+		} catch (Exception exception){
+			//return status 400 Error
+			return Response.status(400).entity(new ErrorMessage(400, 0, "Unable to get plugin manifest features", null, exception)).build();
+		}
+
+	}
+	
+	/**
 	 * Updates the karaf state known to the plugin manager using a RemoteKarafState xml message
 	 * 
 	 * http://localhost:8181/pluginmgr/rest/v1-0/updateremotekarafstate
@@ -104,7 +135,8 @@ public class PluginManagerRestImpl implements PluginManagerRest {
 	@Path("/updateremotekarafstate")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response updateRemoteKaraState(RemoteKarafState remoteKarafState) throws Exception {
+	@Override
+	public Response updateRemoteKarafState(RemoteKarafState remoteKarafState) throws Exception {
 		
 		PluginManager pluginManager = ServiceLoader.getPluginManager();
 		if (pluginManager == null) throw new RuntimeException("ServiceLoader.getPluginManager() cannot be null.");

@@ -1,0 +1,92 @@
+version: '2'
+
+services:
+
+  # from https://hub.docker.com/r/mkroli/karaf/
+  karaf:
+      image: mkroli/karaf:4.0 # 4.1 docker image broken
+      container_name: karaf
+      ports:
+        - "11099:1099"
+        - "54444:44444"
+        - "18101:8101"
+        - "18181:8181" # web consol
+      volumes:
+        - ./karaf-deploy:/deploy
+        - ./karaf-log:/opt/karaf/data/log
+        - ./karaf-config/org.ops4j.pax.logging.cfg:/opt/karaf/etc/org.ops4j.pax.logging.cfg
+        - ./karaf-config/org.ops4j.pax.url.mvn.cfg:/opt/karaf/etc/org.ops4j.pax.url.mvn.cfg
+        
+      #  - ./karaf-etc:/opt/karaf/etc
+      #  - ./karaf-data:/opt/karaf/data
+      # restart: always
+      env_file:
+        - .karaf.env
+      networks:
+        - opennms-plugin-shop-network
+      entrypoint: /opt/karaf/bin/karaf
+
+# from https://github.com/nezhar/wordpress-docker-compose/blob/master/docker-compose.yml
+  wordpress:
+    image: wordpress:latest # https://hub.docker.com/_/wordpress/
+    ports:
+      - 127.0.0.1:80:80 # change ip if required
+    volumes:
+      - ./wp-app:/var/www/html # Full wordpress project
+      # link to easy digtal downloads git clone checked out from Git
+      # Easy Digital Downloads from https://github.com/easydigitaldownloads/easy-digital-downloads
+      # Use release/2.4 branch
+      - ./localgitrepo/easy-digital-downloads/:/var/www/html/wp-content/plugins/easy-digital-downloads 
+      
+      # Use Shop Front Theme checked out from git
+      - ./localgitrepo/shop-front/:/var/www/html/wp-content/themes/shop-front
+      
+      # Local osgi manager extension to EDD 
+      - ../edd-downloads-as-osgi:/var/www/html/wp-content/plugins/edd-downloads-as-osgi # Plugin development
+     
+      # any other plugins
+      #- ./plugin-name/trunk/:/var/www/html/wp-content/plugins/plugin-name # Plugin development
+      #- ./theme-name/trunk/:/var/www/html/wp-content/themes/theme-name # Theme development
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+    depends_on:
+      - db
+    networks:
+      - opennms-plugin-shop-network
+  db:
+    image: mysql:latest # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
+    ports:
+      - 127.0.0.1:3306:3306 # change ip if required
+    volumes:
+      - ./wp-data:/docker-entrypoint-initdb.d
+      - ./mysql-data:/var/lib/mysql # persistant store mysql
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - opennms-plugin-shop-network
+
+
+  # nexus repo manager from https://github.com/sonatype/docker-nexus
+  # http://localhost:28081/nexus/
+  # Default credentials are: admin / admin123
+  nexus:
+    image: sonatype/nexus
+    volumes:
+        - "nexus-data:/sonatype-work"
+    ports:
+        - "28081:8081"
+    networks:
+        - opennms-plugin-shop-network
+      
+networks:
+    opennms-plugin-shop-network:
+      driver: bridge
+      
+# data container for nexus - remember to remove if no longer needed (docker volume ls -f dangling=true)
+# note not using host volume because need to change owner id to 200
+volumes:
+    nexus-data: {}

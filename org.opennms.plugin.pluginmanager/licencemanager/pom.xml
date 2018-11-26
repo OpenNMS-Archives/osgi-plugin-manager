@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.opennms.plugins</groupId>
     <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-    <version>1.0.7</version>
+    <version>1.2.0</version>
   </parent>
 
   <artifactId>org.opennms.plugin.licencemanager</artifactId>
@@ -94,8 +94,8 @@
             <exclude>**/org/opennms/karaf/licencemgr/rest/client/test/manual/*.java</exclude>
           </excludes>
           <!-- allows tests to run in order with static variable passed between tests -->
-          <reuseForks>false</reuseForks>
-          <forkCount>0</forkCount>
+          <!-- <reuseForks>false</reuseForks> -->
+          <!-- <forkCount>0</forkCount> -->
         </configuration>
       </plugin>
     </plugins>

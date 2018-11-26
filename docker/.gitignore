@@ -1,0 +1,11 @@
+/wp-app/
+/karaf-data/
+/karaf-log/
+/target/
+/karaf-deploy/
+/localgitrepo/
+/mysql-data/
+/trialproject/
+/.directory
+/.settings/
+/.project

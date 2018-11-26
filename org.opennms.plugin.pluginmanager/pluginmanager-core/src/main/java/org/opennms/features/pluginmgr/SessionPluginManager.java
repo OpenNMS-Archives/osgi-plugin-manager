@@ -103,7 +103,13 @@ public class SessionPluginManager {
 	public ProductSpecList getAvailablePlugins() {
 		return pluginManager.getAvailablePlugins();
 	}
-
+	/**
+	 * 
+	 * @return the localAvailablePlugins
+	 */
+	public ProductSpecList getLocalAvailablePlugins() {
+		return pluginManager.getLocalAvailablePlugins();
+	}
 
 
 	/**
@@ -205,14 +211,28 @@ public class SessionPluginManager {
 		return pluginManager.getPluginsManifest(karafInstance);
 	}
 	
-	public void addPluginToManifest(String selectedProductId) {
-		pluginManager.addPluginToManifest(selectedProductId, karafInstance);
-		
+	public String getPluginsManifestFeatures(String karafInstance) {
+		return pluginManager.getPluginsManifestFeatures(karafInstance);
 	}
 	
+	public void addPluginToManifest(String selectedProductId) {
+		pluginManager.addPluginToManifest(selectedProductId, karafInstance);	
+	}
+	
+	public String getPluginsManifestFeatures(){
+		return pluginManager.getPluginsManifestFeatures(karafInstance);
+	}
+	
+	public void installPluginsManifestFeatures(){
+		pluginManager.installPluginsManifestFeatures(karafInstance);
+	}
+	
+	public void uninstallPluginsManifestFeatures(){
+		pluginManager.uninstallPluginsManifestFeatures(karafInstance);
+	}
+
 	public void addUserDefinedPluginToManifest(ProductMetadata productMetadata) {
 		pluginManager.addUserDefinedPluginToManifest(productMetadata, karafInstance);
-		
 	}
 	
 	public void removePluginFromManifest(String selectedProductId) {
@@ -302,6 +322,8 @@ public class SessionPluginManager {
 	public BlueprintContainer getBlueprintContainer() {
 		return blueprintContainer;
 	}
+
+
 
 
 }

@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.opennms.plugins</groupId>
     <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
-    <version>1.0.7</version>
+    <version>1.2.0</version>
   </parent>
 
   <artifactId>org.opennms.plugin.featuremanager</artifactId>
@@ -61,10 +61,50 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- generating our own feature classes because not included in karaf 2.4.x in foundation2017 -->
+      <!-- version of karaf 3.x and above have their own jaxb models which can be accessed directly -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>xjc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>${project.build.directory}/generated-sources/jaxb</outputDirectory>
+          <!-- Set the package of the generated code -->
+          <packageName>org.opennms.karaf.featuremgr.jaxb.karaf.feature</packageName>
+          <sourceType>xsd</sourceType>
+          <sources>
+            <source>src/main/xsd</source>
+          </sources>
+          <!-- <catalog>src/main/catalog.xml</catalog> -->
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/jaxb</source>
+              </sources>
+            </configuration>
+          </execution>
+
           <execution>
             <id>attach-artifacts</id>
             <phase>package</phase>
@@ -92,6 +132,7 @@
           <excludes>
             <!-- prevent tests running in this package. These are one off development tests -->
             <exclude>**/org/opennms/karaf/featuremgr/rest/client/test/manual/*.java</exclude>
+            <exclude>**/org/opennms/karaf/featuremgr/manifest/client/test/jerseyimpl/manual/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -105,6 +146,23 @@
     <dependency>
       <groupId>org.apache.karaf.features</groupId>
       <artifactId>org.apache.karaf.features.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.karaf.shell</groupId>
+      <artifactId>org.apache.karaf.shell.console</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
       <scope>provided</scope>
     </dependency>
 

@@ -224,15 +224,16 @@
     </pluginRepository>
   </pluginRepositories>
 
-  <!-- Change this to match your repo for the licenced product modules (i.e. containing the authenticator) -->
+  <!-- Change this to match your repo for the licenced product modules (i.e. plugins containing the authenticator) -->
+  <!-- NOTE use maven settings.xml in production project NOT Url basic auth http://admin:admin123@localhost-->
   <distributionManagement>
     <repository>
-      <id>osgi-licenced-products</id>
-      <url>http://devel2.entimoss.org:8081/nexus/content/repositories/osgi-licenced-products</url>
+      <id>osgi-plugins</id>
+      <url>http://admin:admin123@localhost:28081/nexus/content/repositories/osgi-plugins</url>
     </repository>
     <snapshotRepository>
-      <id>osgi-licenced-products-snapshots</id>
-      <url>http://devel2.entimoss.org:8081/nexus/content/repositories/osgi-licenced-products-snapshots</url>
+      <id>osgi-plugins-snapshots</id>
+      <url>http://admin:admin123@localhost:28081/nexus/content/repositories/osgi-plugins-snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 

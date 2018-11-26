@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.opennms.plugins</groupId>
+    <artifactId>org.opennms.plugin.pluginmanager.parent</artifactId>
+    <version>1.2.0</version>
+  </parent>
+
+  <artifactId>org.opennms.plugin.pluginmanager.karaf-pluginmanager-feature</artifactId>
+  <packaging>pom</packaging>
+
+  <name>org.opennms.plugin.pluginmanager.karaf-pluginmanager-feature</name>
+  <description>Feature for running the OSGi plugin manager in a standalone karaf instance.</description>
+  <properties>
+    <bundle.symbolicName>org.opennms.plugin.pluginmanager.karaf-pluginmanager-feature</bundle.symbolicName>
+    <bundle.namespace>UNDEFINED</bundle.namespace>
+    <productName>org.opennms.plugin.pluginmanager.karaf-pluginmanager-feature</productName>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${project.build.outputDirectory}/features.xml</file>
+                  <type>xml</type>
+                  <classifier>features</classifier>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+
+    <!-- karaf project -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>org.opennms.plugin.pluginmanager.karaf-pluginmanager</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.opennms.plugins</groupId>
+      <artifactId>org.opennms.plugin.pluginmanager.pluginmanager-core</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- vaadin dependencies -->
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-compatibility-server</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-compatibility-client-compiled</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-compatibility-client</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-compatibility-themes</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-compatibility-shared</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.vaadin.external.json</groupId>
+      <artifactId>json</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+
+
+    <!-- servelet dependencies -->
+    <!-- <dependency> -->
+    <!-- <groupId>org.eclipse.jetty.orbit</groupId> -->
+    <!-- <artifactId>javax.servlet</artifactId> -->
+    <!-- <scope>compile</scope> -->
+    <!-- </dependency> -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servletApiVersion}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.opennms.vaadin-extender</groupId>
+      <artifactId>service</artifactId>
+      <!-- <scope>provided</scope> -->
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- OSGi / Karaf dependencies -->
+    <dependency>
+      <groupId>org.apache.karaf.shell</groupId>
+      <artifactId>org.apache.karaf.shell.console</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+
+    <!--test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+</project>

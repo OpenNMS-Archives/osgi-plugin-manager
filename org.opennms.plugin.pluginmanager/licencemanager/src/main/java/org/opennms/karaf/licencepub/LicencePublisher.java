@@ -17,7 +17,9 @@ package org.opennms.karaf.licencepub;
 
 import java.util.Map;
 
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadata;
+import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceMetadataList;
 import org.opennms.karaf.licencemgr.metadata.jaxb.LicenceSpecification;
 
 public interface LicencePublisher {
@@ -61,15 +63,23 @@ public interface LicencePublisher {
 	 * @Param createLicenceMetadata this should be created from a copy of the LicenceMetadata in the LicenceSpecfication
 	 * i.e. it must contain the productId and the options must correspond to the
 	 * options in the LicenceSpecification
+	 * @param secretProperties may be null or contains key value pairs to include encrypted with licence
 	 */
-	public String createLicenceInstanceStr(LicenceMetadata licenceMetadata);
+	public String createLicenceInstanceStr(LicenceMetadata licenceMetadata, Map<String,String> secretProperties);
 	
 	/**
 	 * Creates an encoded String instance of a licence from the supplied licenceMetadata in xml form
 	 * using same criteria as in createLicenceInstance(licenceMetadata)
 	 * 
 	 */
-	public String createLicenceInstanceStr(String licenceMetadataXml);
+	public String createLicenceInstanceStr(String licenceMetadataXml, Map<String,String> secretProperties);
+
+	/**
+	 * creates a list of licences from a list of licence metadata
+	 * throws exception if licence metadata cannot be parsed
+	 * @param secretProperties may be null or contains key value pairs to include encrypted with ALL licences in list
+	 */
+	public LicenceList createMultiLicences(LicenceMetadataList licenceMetadataList, Map<String,String> secretProperties);
 
 	
 }

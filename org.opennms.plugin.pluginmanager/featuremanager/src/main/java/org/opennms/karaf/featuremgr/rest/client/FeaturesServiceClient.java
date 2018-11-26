@@ -15,6 +15,13 @@
 
 package org.opennms.karaf.featuremgr.rest.client;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.opennms.karaf.featuremgr.jaxb.FeatureList;
 import org.opennms.karaf.featuremgr.jaxb.FeatureWrapperJaxb;
 import org.opennms.karaf.featuremgr.jaxb.RepositoryList;
@@ -88,5 +95,22 @@ public interface FeaturesServiceClient {
 	 * @param String uri locating the repository
 	 */
 	public void  featuresAddRepository( String uriStr) throws Exception ;
+
+
+	/**
+	 * Sets manifest of features to install in remote karaf
+	 * @param manifest as karaf XML format features file
+	 * @return
+	 * @throws Exception
+	 */
+	public void  featuresSynchronizeManifest(String manifest) throws Exception;
+
+	/**
+	 * Uninstalls manifest of features in remote karaf
+	 * @param manifest as karaf XML format features file
+	 * @return
+	 * @throws Exception
+	 */
+	void featuresUninstallManifest();
 
 } 

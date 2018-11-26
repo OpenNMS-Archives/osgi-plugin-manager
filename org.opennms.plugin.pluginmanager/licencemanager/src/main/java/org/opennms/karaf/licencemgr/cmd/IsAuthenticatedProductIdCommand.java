@@ -70,5 +70,6 @@ public class IsAuthenticatedProductIdCommand extends OsgiCommandSupport {
 			LOG.error("Error Checking Licence for productId. Exception=",e);
 		}
 		return null;
+
 	}
 }
