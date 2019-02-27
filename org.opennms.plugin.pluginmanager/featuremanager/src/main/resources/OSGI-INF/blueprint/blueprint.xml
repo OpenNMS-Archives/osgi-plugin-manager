@@ -89,7 +89,7 @@
 
   <service interface="javax.servlet.Servlet" ref="featureManagerRestServlet">
     <service-properties>
-      <entry key="alias" value="/featuremgr/rest/v1-0" />
+      <entry key="osgi.http.whiteboard.servlet.pattern" value="/featuremgr/rest/v1-0/*" />
     </service-properties>
   </service>
 

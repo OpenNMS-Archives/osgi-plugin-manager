@@ -266,7 +266,7 @@
 
   <service interface="javax.servlet.Servlet" ref="licenceManagerRestServlet">
     <service-properties>
-      <entry key="alias" value="/licencemgr/rest/v1-0" />
+      <entry key="osgi.http.whiteboard.servlet.pattern" value="/licencemgr/rest/v1-0/*" />
     </service-properties>
   </service>
 
