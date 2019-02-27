@@ -102,12 +102,13 @@
   </bean>
 
   <!-- Maps in the test resource files for serving basic test pages -->
-  <bean id="testResourceMapping" class="org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping">
-    <property name="alias" value="/featuremgr/diagnostics" />
-    <property name="path" value="/diagnostics" />
-  </bean>
-
-  <service id="testResources" ref="testResourceMapping" auto-export="interfaces" />
+  <bean id="testResources" class="org.opennms.karaf.featuremgr.ResourceDummy"/>
+  <service ref="testResources" auto-export="interfaces" >
+    <service-properties>
+      <entry key="osgi.http.whiteboard.resource.pattern" value="/featuremgr/diagnostics/*" />
+      <entry key="osgi.http.whiteboard.resource.prefix" value="/diagnostics" />
+    </service-properties>
+  </service>
 
   <!-- command line commands -->
   <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">

@@ -135,18 +135,19 @@
 
   <service id="pluginDiagnosticsService" interface="org.opennms.vaadin.extender.ApplicationFactory" ref="pluginDiagnosticsApplicationFactory">
     <service-properties>
-      <entry key="alias" value="/admin/plugin-manager-plugin-diagnostics" />
-      <entry key="init.widgetset" value="org.opennms.features.pluginmgr.AppWidgetset" />
+      <entry key="osgi.http.whiteboard.servlet.pattern" value="/admin/plugin-manager-plugin-diagnostics/*" />
+      <entry key="servlet.init.widgetset" value="org.opennms.features.pluginmgr.AppWidgetset" />
     </service-properties>
   </service> 
   
   <!-- Maps in the test resource files for serving basic test pages -->
-  <bean id="testResourceMapping" class="org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping">
-    <property name="alias" value="/pluginmgr/diagnostics" />
-    <property name="path" value="/diagnostics" />
-  </bean>
-
-  <service id="testResources" ref="testResourceMapping" auto-export="interfaces" />
+  <bean id="testResources" class="org.opennms.karaf.pluginmgr.ResourceDummy" />
+  <service ref="testResources" auto-export="interfaces">
+      <service-properties>
+          <entry key="osgi.http.whiteboard.resource.pattern" value="/pluginmgr/diagnostics/*" />
+          <entry key="osgi.http.whiteboard.resource.prefix" value="/diagnostics" />
+      </service-properties>
+  </service>
 
   <!-- load default properties from  org.opennms.features.pluginmgr.config.cfg if exists -->
   <cm:property-placeholder persistent-id="org.opennms.features.pluginmgr.config" update-strategy="reload">
