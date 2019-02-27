@@ -1,0 +1,37 @@
+<blueprint
+    xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0"
+    xsi:schemaLocation="
+        http://www.osgi.org/xmlns/blueprint/v1.0.0 
+        http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+        http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
+        http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
+        http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.1.0
+        http://aries.apache.org/schemas/blueprint-ext/blueprint-ext-1.1.xsd
+">
+
+    <!-- configure the rest service for plugin manager -->
+    <!-- ReST Servlet configuration for jersey -->
+    <bean id="pluginManagerRestApplication" class="org.opennms.features.pluginmgr.rest.impl.PluginManagerRestApplication" destroy-method="destroyMethod"/>
+    <bean  id="pluginManagerRestServlet" class="com.sun.jersey.spi.container.servlet.ServletContainer">
+        <argument ref="pluginManagerRestApplication" />
+    </bean>
+    <service interface="javax.servlet.Servlet" ref="pluginManagerRestServlet">
+        <service-properties>
+            <entry key="osgi.http.whiteboard.servlet.pattern" value="/pluginmgr/rest/v1-0/*" />
+        </service-properties>
+    </service>
+
+    <!-- Maps in the test resource files for serving basic test pages -->
+    <!-- See https://osgi.org/specification/osgi.cmpn/7.0.0/service.http.whiteboard.html#d0e121459 for more details. -->
+    <bean id="testResources" class="java.lang.String" />
+    <service ref="testResources" auto-export="interfaces">
+        <service-properties>
+            <entry key="osgi.http.whiteboard.resource.pattern" value="/pluginmgr/diagnostics/*" />
+            <entry key="osgi.http.whiteboard.resource.prefix" value="/diagnostics" />
+        </service-properties>
+    </service>
+
+</blueprint>

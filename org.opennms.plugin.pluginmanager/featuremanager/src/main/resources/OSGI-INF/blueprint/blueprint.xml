@@ -102,7 +102,8 @@
   </bean>
 
   <!-- Maps in the test resource files for serving basic test pages -->
-  <bean id="testResources" class="org.opennms.karaf.featuremgr.ResourceDummy"/>
+  <!-- See https://osgi.org/specification/osgi.cmpn/7.0.0/service.http.whiteboard.html#d0e121459 for more details. -->
+  <bean id="testResources" class="java.lang.String"/>
   <service ref="testResources" auto-export="interfaces" >
     <service-properties>
       <entry key="osgi.http.whiteboard.resource.pattern" value="/featuremgr/diagnostics/*" />
